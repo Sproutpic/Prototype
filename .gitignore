@@ -1,0 +1,11 @@
+*.DS_Store
+*bin
+*gen
+*build
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*UserInterfaceState.xcuserstate
+*xcuserdata*
+*xcshareddata*
+mockups

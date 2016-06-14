@@ -15,6 +15,11 @@
 		5A1519FB1D0E7CE800A253C3 /* SproutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1519FA1D0E7CE800A253C3 /* SproutTests.m */; };
 		5A151A061D0E7CE900A253C3 /* SproutUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A151A051D0E7CE900A253C3 /* SproutUITests.m */; };
 		5A151A161D0E7EEF00A253C3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A151A151D0E7EEF00A253C3 /* MainViewController.m */; };
+		5A406E691D0FEF8600F4FD9F /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A406E601D0FEF8600F4FD9F /* SVIndefiniteAnimatedView.m */; };
+		5A406E6A1D0FEF8600F4FD9F /* SVProgressAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A406E621D0FEF8600F4FD9F /* SVProgressAnimatedView.m */; };
+		5A406E6B1D0FEF8600F4FD9F /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A406E641D0FEF8600F4FD9F /* SVProgressHUD.bundle */; };
+		5A406E6C1D0FEF8600F4FD9F /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A406E661D0FEF8600F4FD9F /* SVProgressHUD.m */; };
+		5A406E6D1D0FEF8600F4FD9F /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A406E681D0FEF8600F4FD9F /* SVRadialGradientLayer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +56,16 @@
 		5A151A071D0E7CE900A253C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A151A141D0E7EEF00A253C3 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		5A151A151D0E7EEF00A253C3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		5A406E5F1D0FEF8600F4FD9F /* SVIndefiniteAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVIndefiniteAnimatedView.h; sourceTree = "<group>"; };
+		5A406E601D0FEF8600F4FD9F /* SVIndefiniteAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVIndefiniteAnimatedView.m; sourceTree = "<group>"; };
+		5A406E611D0FEF8600F4FD9F /* SVProgressAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressAnimatedView.h; sourceTree = "<group>"; };
+		5A406E621D0FEF8600F4FD9F /* SVProgressAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressAnimatedView.m; sourceTree = "<group>"; };
+		5A406E631D0FEF8600F4FD9F /* SVProgressHUD-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD-Prefix.pch"; sourceTree = "<group>"; };
+		5A406E641D0FEF8600F4FD9F /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		5A406E651D0FEF8600F4FD9F /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		5A406E661D0FEF8600F4FD9F /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
+		5A406E671D0FEF8600F4FD9F /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVRadialGradientLayer.h; sourceTree = "<group>"; };
+		5A406E681D0FEF8600F4FD9F /* SVRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVRadialGradientLayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +131,7 @@
 		5A1519E41D0E7CE800A253C3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5A406E5E1D0FEF8600F4FD9F /* SVProgressHUD */,
 				5A1519E51D0E7CE800A253C3 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -146,6 +162,23 @@
 				5A151A151D0E7EEF00A253C3 /* MainViewController.m */,
 			);
 			name = "Main Controller";
+			sourceTree = "<group>";
+		};
+		5A406E5E1D0FEF8600F4FD9F /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				5A406E5F1D0FEF8600F4FD9F /* SVIndefiniteAnimatedView.h */,
+				5A406E601D0FEF8600F4FD9F /* SVIndefiniteAnimatedView.m */,
+				5A406E611D0FEF8600F4FD9F /* SVProgressAnimatedView.h */,
+				5A406E621D0FEF8600F4FD9F /* SVProgressAnimatedView.m */,
+				5A406E631D0FEF8600F4FD9F /* SVProgressHUD-Prefix.pch */,
+				5A406E641D0FEF8600F4FD9F /* SVProgressHUD.bundle */,
+				5A406E651D0FEF8600F4FD9F /* SVProgressHUD.h */,
+				5A406E661D0FEF8600F4FD9F /* SVProgressHUD.m */,
+				5A406E671D0FEF8600F4FD9F /* SVRadialGradientLayer.h */,
+				5A406E681D0FEF8600F4FD9F /* SVRadialGradientLayer.m */,
+			);
+			path = SVProgressHUD;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -254,6 +287,7 @@
 				5A1519F01D0E7CE800A253C3 /* LaunchScreen.storyboard in Resources */,
 				5A1519ED1D0E7CE800A253C3 /* Assets.xcassets in Resources */,
 				5A1519EB1D0E7CE800A253C3 /* Sprout-Prefix.pch in Resources */,
+				5A406E6B1D0FEF8600F4FD9F /* SVProgressHUD.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,9 +312,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A406E6D1D0FEF8600F4FD9F /* SVRadialGradientLayer.m in Sources */,
 				5A1519E91D0E7CE800A253C3 /* AppDelegate.m in Sources */,
+				5A406E6A1D0FEF8600F4FD9F /* SVProgressAnimatedView.m in Sources */,
 				5A151A161D0E7EEF00A253C3 /* MainViewController.m in Sources */,
 				5A1519E61D0E7CE800A253C3 /* main.m in Sources */,
+				5A406E691D0FEF8600F4FD9F /* SVIndefiniteAnimatedView.m in Sources */,
+				5A406E6C1D0FEF8600F4FD9F /* SVProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,7 +454,7 @@
 				INFOPLIST_FILE = Sprout/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.launchlabs.canopy.Sprout;
+				PRODUCT_BUNDLE_IDENTIFIER = com.launchlabs.sprout.Sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -428,7 +466,7 @@
 				INFOPLIST_FILE = Sprout/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.launchlabs.canopy.Sprout;
+				PRODUCT_BUNDLE_IDENTIFIER = com.launchlabs.sprout.Sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -498,6 +536,7 @@
 				5A151A0C1D0E7CE900A253C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5A151A0D1D0E7CE900A253C3 /* Build configuration list for PBXNativeTarget "SproutTests" */ = {
 			isa = XCConfigurationList;
@@ -506,6 +545,7 @@
 				5A151A0F1D0E7CE900A253C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5A151A101D0E7CE900A253C3 /* Build configuration list for PBXNativeTarget "SproutUITests" */ = {
 			isa = XCConfigurationList;
@@ -514,6 +554,7 @@
 				5A151A121D0E7CE900A253C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

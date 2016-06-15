@@ -11,6 +11,7 @@
 
 @interface MainViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property (strong,nonatomic) NSMutableArray * startSprout;
+@property (strong,nonatomic)UIImageView * circleView;
 @property (strong,nonatomic)UIImagePickerController * picker;
 @property (strong,nonatomic)UIImageView * prevImg;
 @property (strong,nonatomic)UIImageView * sproutImg;

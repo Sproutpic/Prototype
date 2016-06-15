@@ -72,13 +72,13 @@
     UIToolbar *toolBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-54, self.view.frame.size.width, 55)];
     
     toolBar.barStyle =  UIBarStyleDefault;
-    //UIButton * switchCameraBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
-    //[switchCameraBtn setImage:[UIImage imageNamed:@"switch_camera"] forState:UIControlStateNormal];
-    //[switchCameraBtn addTarget:self action:@selector(switchCamera) forControlEvents:UIControlEventTouchUpInside];
+    UIButton * switchCameraBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [switchCameraBtn setImage:[UIImage imageNamed:@"circle-outline-xxl"] forState:UIControlStateNormal];
+    [switchCameraBtn addTarget:self action:@selector(cirlcePicture) forControlEvents:UIControlEventTouchUpInside];
     NSArray *items=[NSArray arrayWithObjects:
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel  target:self action:@selector(cancelPicture)],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
-                    // [[UIBarButtonItem alloc] initWithCustomView:switchCameraBtn],
+                    [[UIBarButtonItem alloc] initWithCustomView:switchCameraBtn],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera  target:self action:@selector(shootPicture)],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
@@ -102,6 +102,16 @@
     [overlayView addSubview:_sproutImg];
     // parent view for our overlay
     UIView *cameraView=[[UIView alloc] initWithFrame:self.view.bounds];
+    
+    _circleView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.width / 3, self.view.frame.size.width / 2, self.view.frame.size.width / 2)];
+    _circleView.layer.borderColor = [UIColor redColor].CGColor;
+    _circleView.layer.borderWidth = 1;
+    _circleView.hidden = YES;
+    _circleView.layer.cornerRadius = self.view.frame.size.width / 4;
+    _circleView.clipsToBounds = YES;
+    _circleView.transform = CGAffineTransformMakeScale(-1, 1);
+    _circleView.contentMode = UIViewContentModeScaleAspectFit;
+    [overlayView addSubview:_circleView];
     [cameraView addSubview:overlayView];
     [cameraView addSubview:toolBar];
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == NO){
@@ -125,13 +135,13 @@
     UIToolbar *toolBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-54, self.view.frame.size.width, 55)];
     
     toolBar.barStyle =  UIBarStyleDefault;
-    //UIButton * switchCameraBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
-    //[switchCameraBtn setImage:[UIImage imageNamed:@"switch_camera"] forState:UIControlStateNormal];
-    //[switchCameraBtn addTarget:self action:@selector(switchCamera) forControlEvents:UIControlEventTouchUpInside];
+    UIButton * switchCameraBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [switchCameraBtn setImage:[UIImage imageNamed:@"circle-outline-xxl"] forState:UIControlStateNormal];
+    [switchCameraBtn addTarget:self action:@selector(cirlcePicture) forControlEvents:UIControlEventTouchUpInside];
     NSArray *items=[NSArray arrayWithObjects:
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel  target:self action:@selector(cancelPicture)],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
-                    // [[UIBarButtonItem alloc] initWithCustomView:switchCameraBtn],
+                     [[UIBarButtonItem alloc] initWithCustomView:switchCameraBtn],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera  target:self action:@selector(shootPicture)],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
@@ -154,6 +164,14 @@
     [overlayView addSubview:_sproutImg];
     // parent view for our overlay
     UIView *cameraView=[[UIView alloc] initWithFrame:self.view.bounds];
+    
+    _circleView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.width / 3, self.view.frame.size.width / 2, self.view.frame.size.width / 2)];
+    _circleView.layer.borderColor = [UIColor redColor].CGColor;
+    _circleView.layer.borderWidth = 1;
+    _circleView.hidden = YES;
+    _circleView.layer.cornerRadius = self.view.frame.size.width / 4;
+    _circleView.clipsToBounds = YES;
+    [overlayView addSubview:_circleView];
     [cameraView addSubview:overlayView];
     [cameraView addSubview:toolBar];
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == NO){
@@ -166,8 +184,33 @@
     [_picker setCameraOverlayView:cameraView];
     [self presentViewController:_picker animated:YES completion:nil];
 }
+- (UIImage *)cropImage:(UIImage *)image withRect:(CGRect)rect {
+    CGSize cropSize = rect.size;
+    CGFloat widthScale = image.size.width/self.view.bounds.size.width;
+    CGFloat heightScale = image.size.height/self.view.bounds.size.height;
+    cropSize = CGSizeMake(rect.size.width*widthScale,
+                          rect.size.width*widthScale);
+    CGPoint pointCrop = CGPointMake(rect.origin.x*widthScale,
+                                    rect.origin.y*heightScale);
+    rect = CGRectMake(pointCrop.x, pointCrop.y, cropSize.width, cropSize.height);
+    CGImageRef subImage = CGImageCreateWithImageInRect(image.CGImage, rect);
+    UIImage *croppedImage = [UIImage imageWithCGImage:subImage];
+    CGImageRelease(subImage);
+    
+    return croppedImage;
+}
 -(void) shootPicture {
     [_picker takePicture];
+}
+-(void) cirlcePicture {
+    _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
+    if(_startSprout.count == 0){
+        if(_circleView.hidden){
+            _circleView.hidden = NO;
+        }else{
+            _circleView.hidden = YES;
+        }
+    }
 }
 -(void) playSprout{
     NSLog(@"playing: %@",_isPlaying);
@@ -175,22 +218,48 @@
         _isPlaying = [NSNumber numberWithBool:NO];
         NSArray *animationArray=@[];
         _sproutImg.animationImages=animationArray;
-    }else{
-        _isPlaying = [NSNumber numberWithBool:YES];
-         _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
-        NSMutableArray *imagesArray = [[NSMutableArray alloc]init];
-        for (NSString *str in _startSprout) {
-            [imagesArray addObject:[UIImage imageWithContentsOfFile:str]];
+        _sproutImg.image = [UIImage new];
+        if(!(_circleView.hidden)){
+            _circleView.layer.borderWidth = 1;
         }
-        NSArray *animationArray=[NSArray arrayWithArray:imagesArray];
-        _sproutImg.animationImages=animationArray;
-        _sproutImg.animationDuration=animationArray.count * 0.2;
-        _sproutImg.animationRepeatCount=0;
-        //[SVProgressHUD show];
-        //[self performSelector:@selector(checkAnimate)];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
-            [_sproutImg startAnimating];
-        });
+    }else{
+        if(!(_circleView.hidden)){
+            _circleView.layer.borderWidth = 0;
+            _isPlaying = [NSNumber numberWithBool:YES];
+            _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
+            if(_startSprout.count > 0){
+                NSMutableArray *imagesArray = [[NSMutableArray alloc]init];
+                for (NSString *str in _startSprout) {
+                    [imagesArray addObject:[self cropImage:[UIImage imageWithContentsOfFile:str] withRect:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.height * .25, self.view.frame.size.width * .5, self.view.frame.size.width * .5)]];
+                }
+                NSArray *animationArray=[NSArray arrayWithArray:imagesArray];
+                _sproutImg.image = [UIImage imageWithContentsOfFile:[_startSprout objectAtIndex:0]];
+                _circleView.animationImages=animationArray;
+                _circleView.animationDuration=animationArray.count * 0.2;
+                _circleView.animationRepeatCount=0;
+                //[SVProgressHUD show];
+                //[self performSelector:@selector(checkAnimate)];
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
+                    [_circleView startAnimating];
+                });
+            }
+        }else{
+            _isPlaying = [NSNumber numberWithBool:YES];
+            _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
+            NSMutableArray *imagesArray = [[NSMutableArray alloc]init];
+            for (NSString *str in _startSprout) {
+                [imagesArray addObject:[UIImage imageWithContentsOfFile:str]];
+            }
+            NSArray *animationArray=[NSArray arrayWithArray:imagesArray];
+            _sproutImg.animationImages=animationArray;
+            _sproutImg.animationDuration=animationArray.count * 0.2;
+            _sproutImg.animationRepeatCount=0;
+            //[SVProgressHUD show];
+            //[self performSelector:@selector(checkAnimate)];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
+                [_sproutImg startAnimating];
+            });
+        }
     }
 }
 /*- (IBAction)checkAnimate {
@@ -206,12 +275,14 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (IBAction)saveSprout {
-    [self dismissViewControllerAnimated:YES completion:^{
-        NSMutableArray *savedPathList = (NSMutableArray *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"] mutableCopy];
-        [savedPathList addObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"]];
-        [[NSUserDefaults standardUserDefaults] setObject:savedPathList forKey:@"savedSprout"];
-        [_savedSproutView reloadData];
-    }];
+    if (((NSArray *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy]).count > 0) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            NSMutableArray *savedPathList = (NSMutableArray *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"] mutableCopy];
+            [savedPathList addObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"]];
+            [[NSUserDefaults standardUserDefaults] setObject:savedPathList forKey:@"savedSprout"];
+            [_savedSproutView reloadData];
+        }];
+    }
 }
 - (IBAction)switchCamera {
     NSLog(@"touchme: %ld",(long)_picker.cameraDevice);
@@ -243,7 +314,7 @@
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         
-        NSString *imagePath =[documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"cached-%d-%d.png",_startSprout.count,((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]).count]];
+        NSString *imagePath =[documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"cached-%lu-%lu.png",(unsigned long)_startSprout.count,(unsigned long)((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]).count]];
         
         NSLog((@"pre writing to file"));
         if (![imageData writeToFile:imagePath atomically:NO]){

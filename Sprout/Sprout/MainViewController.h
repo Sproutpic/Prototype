@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SVProgressHUD.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface MainViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property (strong,nonatomic) NSMutableArray * startSprout;

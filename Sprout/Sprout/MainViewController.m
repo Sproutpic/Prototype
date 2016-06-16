@@ -75,10 +75,15 @@
     UIButton * switchCameraBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [switchCameraBtn setImage:[UIImage imageNamed:@"circle-outline-xxl"] forState:UIControlStateNormal];
     [switchCameraBtn addTarget:self action:@selector(cirlcePicture) forControlEvents:UIControlEventTouchUpInside];
+    UIButton * onOff = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [onOff setImage:[UIImage imageNamed:@"letter-t"] forState:UIControlStateNormal];
+    [onOff addTarget:self action:@selector(onOffOpacity) forControlEvents:UIControlEventTouchUpInside];
     NSArray *items=[NSArray arrayWithObjects:
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel  target:self action:@selector(cancelPicture)],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
                     [[UIBarButtonItem alloc] initWithCustomView:switchCameraBtn],
+                    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
+                    [[UIBarButtonItem alloc] initWithCustomView:onOff],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera  target:self action:@selector(shootPicture)],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
@@ -87,7 +92,6 @@
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay  target:self action:@selector(playSprout)],
                     nil];
     [toolBar setItems:items];
-    
     // create the overlay view
     UIView * overlayView = [[UIView alloc] initWithFrame:self.view.bounds];
     
@@ -138,10 +142,15 @@
     UIButton * switchCameraBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [switchCameraBtn setImage:[UIImage imageNamed:@"circle-outline-xxl"] forState:UIControlStateNormal];
     [switchCameraBtn addTarget:self action:@selector(cirlcePicture) forControlEvents:UIControlEventTouchUpInside];
+    UIButton * onOff = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [onOff setImage:[UIImage imageNamed:@"letter-t"] forState:UIControlStateNormal];
+    [onOff addTarget:self action:@selector(onOffOpacity) forControlEvents:UIControlEventTouchUpInside];
     NSArray *items=[NSArray arrayWithObjects:
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel  target:self action:@selector(cancelPicture)],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
                      [[UIBarButtonItem alloc] initWithCustomView:switchCameraBtn],
+                    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
+                    [[UIBarButtonItem alloc] initWithCustomView:onOff],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera  target:self action:@selector(shootPicture)],
                     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace  target:nil action:nil],
@@ -202,6 +211,16 @@
 -(void) shootPicture {
     [_picker takePicture];
 }
+-(void) onOffOpacity {
+    NSLog(@"cruel");
+    if (_prevImg.alpha == (float)0.3) {
+        NSLog(@"close");
+        _prevImg.alpha = 0;
+    }else{
+        NSLog(@"cute-%f",_prevImg.alpha);
+        _prevImg.alpha = 0.3;
+    }
+}
 -(void) cirlcePicture {
     _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
     if(_startSprout.count == 0){
@@ -221,6 +240,8 @@
         _sproutImg.image = [UIImage new];
         if(!(_circleView.hidden)){
             _circleView.layer.borderWidth = 1;
+            _circleView.image = [UIImage new];
+            _circleView.animationImages=@[];
         }
     }else{
         if(!(_circleView.hidden)){
@@ -228,6 +249,8 @@
             _isPlaying = [NSNumber numberWithBool:YES];
             _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
             if(_startSprout.count > 0){
+                _circleView.image = [UIImage new];
+                _circleView.alpha = 1;
                 NSMutableArray *imagesArray = [[NSMutableArray alloc]init];
                 for (NSString *str in _startSprout) {
                     [imagesArray addObject:[self cropImage:[UIImage imageWithContentsOfFile:str] withRect:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.height * .25, self.view.frame.size.width * .5, self.view.frame.size.width * .5)]];
@@ -300,15 +323,34 @@
     NSLog(@"didcancel");
 }
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
-    [SVProgressHUD show];
-    self.picker.view.userInteractionEnabled = NO;
-    //[_startSprout addObject:[self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]]];
-    _prevImg.image = [self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]];
-    
-    NSLog(@"sprout%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"]);
-    _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    if (![_isPlaying boolValue]) {
+        [SVProgressHUD show];
+        self.picker.view.userInteractionEnabled = NO;
+        //[_startSprout addObject:[self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]]];
+        if(!(_circleView.hidden)){
+            _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
+            if (_startSprout.count == 0) {
+                int radius = self.view.frame.size.width/4;
+                UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, _prevImg.bounds.size.width, _prevImg.bounds.size.height) cornerRadius:0];
+                UIBezierPath *circlePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(radius, radius*4/3, 2.0*radius, 2.0*radius) cornerRadius:radius];
+                [path appendPath:circlePath];
+                [path setUsesEvenOddFillRule:YES];
+                CAShapeLayer *maskLayer = [CAShapeLayer layer];
+                maskLayer.fillRule  = kCAFillRuleEvenOdd;
+                maskLayer.fillColor = [UIColor blackColor].CGColor;
+                maskLayer.path      = path.CGPath;
+                maskLayer.opacity = 1;
+                _prevImg.layer.mask = maskLayer;
+                _prevImg.image = [self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]];
+            }
+        }else{
+            _prevImg.image = [self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]];
+        }
+        
+        NSLog(@"sprout%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"]);
+        _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
+        
+        //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSData *imageData = UIImagePNGRepresentation([self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]]);
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -327,13 +369,14 @@
             [SVProgressHUD dismiss];
             self.picker.view.userInteractionEnabled = YES;
         }
-    });
-    
-    if(_picker.cameraDevice == UIImagePickerControllerCameraDeviceFront){
-        _prevImg.transform = CGAffineTransformMakeScale(-1, 1);
+        //});
+        
+        if(_picker.cameraDevice == UIImagePickerControllerCameraDeviceFront){
+            _prevImg.transform = CGAffineTransformMakeScale(-1, 1);
+        }
+        
+        [_picker dismissViewControllerAnimated:NO completion:^{[self presentViewController:_picker animated:NO completion:^{}];}];
     }
-    
-    [_picker dismissViewControllerAnimated:NO completion:^{[self presentViewController:_picker animated:NO completion:^{}];}];
 }
 -(UIImage *)fixOrientation:(UIImage *)image{
     if (image.imageOrientation == UIImageOrientationUp) {
@@ -346,7 +389,13 @@
     UIImage *normalizedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    return normalizedImage;
+    CGSize newSize=CGSizeMake(self.view.frame.size.width, self.view.frame.size.height - 140);
+    UIGraphicsBeginImageContext(newSize);
+    [normalizedImage drawInRect:CGRectMake(0,0,newSize.width, newSize.height)];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
 }
 /*
 #pragma mark - Navigation

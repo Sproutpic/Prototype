@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "SVProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#import <ImageIO/ImageIO.h>
+#import "UIImage+animatedGIF.h"
 
 @interface MainViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property (strong,nonatomic) NSMutableArray * startSprout;

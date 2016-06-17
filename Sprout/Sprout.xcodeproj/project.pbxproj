@@ -20,6 +20,10 @@
 		5A406E6B1D0FEF8600F4FD9F /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A406E641D0FEF8600F4FD9F /* SVProgressHUD.bundle */; };
 		5A406E6C1D0FEF8600F4FD9F /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A406E661D0FEF8600F4FD9F /* SVProgressHUD.m */; };
 		5A406E6D1D0FEF8600F4FD9F /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A406E681D0FEF8600F4FD9F /* SVRadialGradientLayer.m */; };
+		5AACEBAC1D13B09D003A1D32 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AACEBAB1D13B09C003A1D32 /* MobileCoreServices.framework */; };
+		5AACEBAE1D13B0A6003A1D32 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AACEBAD1D13B0A6003A1D32 /* QuartzCore.framework */; };
+		5AACEBB01D13B152003A1D32 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AACEBAF1D13B152003A1D32 /* ImageIO.framework */; };
+		5AACEBB41D13B58E003A1D32 /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AACEBB31D13B58E003A1D32 /* UIImage+animatedGIF.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +70,11 @@
 		5A406E661D0FEF8600F4FD9F /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		5A406E671D0FEF8600F4FD9F /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVRadialGradientLayer.h; sourceTree = "<group>"; };
 		5A406E681D0FEF8600F4FD9F /* SVRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVRadialGradientLayer.m; sourceTree = "<group>"; };
+		5AACEBAB1D13B09C003A1D32 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		5AACEBAD1D13B0A6003A1D32 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		5AACEBAF1D13B152003A1D32 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		5AACEBB21D13B58E003A1D32 /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
+		5AACEBB31D13B58E003A1D32 /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +82,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AACEBB01D13B152003A1D32 /* ImageIO.framework in Frameworks */,
+				5AACEBAE1D13B0A6003A1D32 /* QuartzCore.framework in Frameworks */,
+				5AACEBAC1D13B09D003A1D32 /* MobileCoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +108,9 @@
 		5A1519D81D0E7CE800A253C3 = {
 			isa = PBXGroup;
 			children = (
+				5AACEBAF1D13B152003A1D32 /* ImageIO.framework */,
+				5AACEBAD1D13B0A6003A1D32 /* QuartzCore.framework */,
+				5AACEBAB1D13B09C003A1D32 /* MobileCoreServices.framework */,
 				5A1519E31D0E7CE800A253C3 /* Sprout */,
 				5A1519F91D0E7CE800A253C3 /* SproutTests */,
 				5A151A041D0E7CE900A253C3 /* SproutUITests */,
@@ -131,6 +146,7 @@
 		5A1519E41D0E7CE800A253C3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5AACEBB11D13B57A003A1D32 /* UIImage_animated */,
 				5A406E5E1D0FEF8600F4FD9F /* SVProgressHUD */,
 				5A1519E51D0E7CE800A253C3 /* main.m */,
 			);
@@ -179,6 +195,15 @@
 				5A406E681D0FEF8600F4FD9F /* SVRadialGradientLayer.m */,
 			);
 			path = SVProgressHUD;
+			sourceTree = "<group>";
+		};
+		5AACEBB11D13B57A003A1D32 /* UIImage_animated */ = {
+			isa = PBXGroup;
+			children = (
+				5AACEBB21D13B58E003A1D32 /* UIImage+animatedGIF.h */,
+				5AACEBB31D13B58E003A1D32 /* UIImage+animatedGIF.m */,
+			);
+			name = UIImage_animated;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -317,6 +342,7 @@
 				5A406E6A1D0FEF8600F4FD9F /* SVProgressAnimatedView.m in Sources */,
 				5A151A161D0E7EEF00A253C3 /* MainViewController.m in Sources */,
 				5A1519E61D0E7CE800A253C3 /* main.m in Sources */,
+				5AACEBB41D13B58E003A1D32 /* UIImage+animatedGIF.m in Sources */,
 				5A406E691D0FEF8600F4FD9F /* SVIndefiniteAnimatedView.m in Sources */,
 				5A406E6C1D0FEF8600F4FD9F /* SVProgressHUD.m in Sources */,
 			);

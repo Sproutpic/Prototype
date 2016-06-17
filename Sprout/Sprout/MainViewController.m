@@ -48,17 +48,93 @@
 {
     UICollectionViewCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
     UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
-    imgView.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@",((NSArray *)[((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]) objectAtIndex:indexPath.row])[0]]];
+    if([[((NSDictionary *)[((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]) objectAtIndex:indexPath.row]) objectForKey:@"withCircle"] boolValue]){
+            NSMutableArray *imagesArray = [[NSMutableArray alloc]init];
+            for (NSString *str in ((NSArray *)[((NSDictionary *)[((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]) objectAtIndex:indexPath.row]) objectForKey:@"sprout"])) {
+                UIImage *bottomImage = [UIImage imageWithContentsOfFile:[((NSArray *)[((NSDictionary *)[((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]) objectAtIndex:indexPath.row]) objectForKey:@"sprout"]) objectAtIndex:0]]; //background image
+                UIImage *image       = [self makeRoundCornersWithRadius:self.view.frame.size.width / 4 withImage:[self cropImage:[UIImage imageWithContentsOfFile:str] withRect:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.height * .25, self.view.frame.size.width * .5, self.view.frame.size.width * .5)]]; //foreground image
+                
+                CGSize newSize = CGSizeMake(_sproutImg.frame.size.width, _sproutImg.frame.size.height);
+                UIGraphicsBeginImageContext( newSize );
+                
+                // Use existing opacity as is
+                [bottomImage drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+                
+                // Apply supplied opacity if applicable
+                [image drawInRect:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.width / 3, self.view.frame.size.width * .5, self.view.frame.size.width * .5) blendMode:kCGBlendModeNormal alpha:1];
+                
+                UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+                
+                UIGraphicsEndImageContext();
+                [imagesArray addObject:newImage];
+            }
+            NSUInteger kFrameCount = ((NSArray *)[((NSDictionary *)[((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]) objectAtIndex:indexPath.row]) objectForKey:@"sprout"]).count;
+            NSDictionary *fileProperties = @{
+                                             (__bridge id)kCGImagePropertyGIFDictionary: @{
+                                                     (__bridge id)kCGImagePropertyGIFLoopCount: @0, // 0 means loop forever
+                                                     }
+                                             };
+            NSDictionary *frameProperties = @{
+                                              (__bridge id)kCGImagePropertyGIFDictionary: @{
+                                                      (__bridge id)kCGImagePropertyGIFDelayTime: @0.2f, // a float (not double!) in seconds, rounded to centiseconds in the GIF data
+                                                      }
+                                              };
+            NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
+            NSURL *fileURL = [documentsDirectoryURL URLByAppendingPathComponent:[NSString stringWithFormat:@"animated%ld.png",(long)indexPath.row]];
+            CGImageDestinationRef destination = CGImageDestinationCreateWithURL((__bridge CFURLRef)fileURL, kUTTypeGIF, kFrameCount, NULL);
+            CGImageDestinationSetProperties(destination, (__bridge CFDictionaryRef)fileProperties);
+            for (NSUInteger i = 0; i < kFrameCount; i++) {
+                @autoreleasepool {
+                    CGImageDestinationAddImage(destination, ((UIImage *)[imagesArray objectAtIndex:i]).CGImage, (__bridge CFDictionaryRef)frameProperties);
+                }
+            }
+            if (!CGImageDestinationFinalize(destination)) {
+                NSLog(@"failed to finalize image destination");
+            }
+            CFRelease(destination);
+            imgView.image = [UIImage animatedImageWithAnimatedGIFURL:fileURL];
+    }else{
+        NSMutableArray *imagesArray = [[NSMutableArray alloc]init];
+        for (NSString *str in ((NSArray *)[((NSDictionary *)[((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]) objectAtIndex:indexPath.row]) objectForKey:@"sprout"])) {
+            [imagesArray addObject:[UIImage imageWithContentsOfFile:str]];
+        }
+        NSUInteger kFrameCount = ((NSArray *)[((NSDictionary *)[((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]) objectAtIndex:indexPath.row]) objectForKey:@"sprout"]).count;
+        NSDictionary *fileProperties = @{
+                                         (__bridge id)kCGImagePropertyGIFDictionary: @{
+                                                 (__bridge id)kCGImagePropertyGIFLoopCount: @0, // 0 means loop forever
+                                                 }
+                                         };
+        NSDictionary *frameProperties = @{
+                                          (__bridge id)kCGImagePropertyGIFDictionary: @{
+                                                  (__bridge id)kCGImagePropertyGIFDelayTime: @0.2f, // a float (not double!) in seconds, rounded to centiseconds in the GIF data
+                                                  }
+                                          };
+        NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
+        NSURL *fileURL = [documentsDirectoryURL URLByAppendingPathComponent:[NSString stringWithFormat:@"animated%ld.png",(long)indexPath.row]];
+        CGImageDestinationRef destination = CGImageDestinationCreateWithURL((__bridge CFURLRef)fileURL, kUTTypeGIF, kFrameCount, NULL);
+        CGImageDestinationSetProperties(destination, (__bridge CFDictionaryRef)fileProperties);
+        for (NSUInteger i = 0; i < kFrameCount; i++) {
+            @autoreleasepool {
+                CGImageDestinationAddImage(destination, ((UIImage *)[imagesArray objectAtIndex:i]).CGImage, (__bridge CFDictionaryRef)frameProperties);
+            }
+        }
+        if (!CGImageDestinationFinalize(destination)) {
+            NSLog(@"failed to finalize image destination");
+        }
+        CFRelease(destination);
+        NSLog(@"GIFurl=%@", fileURL);
+        imgView.image = [UIImage animatedImageWithAnimatedGIFURL:fileURL];
+    }
     imgView.layer.cornerRadius = 3;
     imgView.clipsToBounds = YES;
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
+    imgView.contentMode = UIViewContentModeScaleAspectFit;
     [cell addSubview:imgView];
     return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(_savedSproutView.frame.size.width * 0.3, _savedSproutView.frame.size.height * 0.3);
+    return CGSizeMake(_sproutImg.frame.size.width * 0.3, _sproutImg.frame.size.height * 0.3);
 }
 -(IBAction)startSelfSprout:(id)sender{
     //_startSprout = [[NSMutableArray alloc] init];
@@ -253,18 +329,59 @@
                 _circleView.alpha = 1;
                 NSMutableArray *imagesArray = [[NSMutableArray alloc]init];
                 for (NSString *str in _startSprout) {
-                    [imagesArray addObject:[self cropImage:[UIImage imageWithContentsOfFile:str] withRect:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.height * .25, self.view.frame.size.width * .5, self.view.frame.size.width * .5)]];
+                    UIImage *bottomImage = [UIImage imageWithContentsOfFile:[_startSprout objectAtIndex:0]]; //background image
+                    UIImage *image       = [self makeRoundCornersWithRadius:self.view.frame.size.width / 4 withImage:[self cropImage:[UIImage imageWithContentsOfFile:str] withRect:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.height * .25, self.view.frame.size.width * .5, self.view.frame.size.width * .5)]]; //foreground image
+                    
+                    CGSize newSize = CGSizeMake(_sproutImg.frame.size.width, _sproutImg.frame.size.height);
+                    UIGraphicsBeginImageContext( newSize );
+                    
+                    // Use existing opacity as is
+                    [bottomImage drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+                    
+                    // Apply supplied opacity if applicable
+                    [image drawInRect:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.width / 3, self.view.frame.size.width * .5, self.view.frame.size.width * .5) blendMode:kCGBlendModeNormal alpha:1];
+                    
+                    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+                    
+                    UIGraphicsEndImageContext();
+                    [imagesArray addObject:newImage];
                 }
                 NSArray *animationArray=[NSArray arrayWithArray:imagesArray];
-                _sproutImg.image = [UIImage imageWithContentsOfFile:[_startSprout objectAtIndex:0]];
-                _circleView.animationImages=animationArray;
+                NSUInteger kFrameCount = _startSprout.count;
+                NSDictionary *fileProperties = @{
+                                                 (__bridge id)kCGImagePropertyGIFDictionary: @{
+                                                         (__bridge id)kCGImagePropertyGIFLoopCount: @0, // 0 means loop forever
+                                                         }
+                                                 };
+                NSDictionary *frameProperties = @{
+                                                  (__bridge id)kCGImagePropertyGIFDictionary: @{
+                                                          (__bridge id)kCGImagePropertyGIFDelayTime: @0.2f, // a float (not double!) in seconds, rounded to centiseconds in the GIF data
+                                                          }
+                                                  };
+                NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
+                NSURL *fileURL = [documentsDirectoryURL URLByAppendingPathComponent:@"animated.gif"];
+                CGImageDestinationRef destination = CGImageDestinationCreateWithURL((__bridge CFURLRef)fileURL, kUTTypeGIF, kFrameCount, NULL);
+                CGImageDestinationSetProperties(destination, (__bridge CFDictionaryRef)fileProperties);
+                for (NSUInteger i = 0; i < kFrameCount; i++) {
+                    @autoreleasepool {
+                        //UIImage *image = frameImage(CGSizeMake(300, 300), M_PI * 2 * i / kFrameCount);
+                        CGImageDestinationAddImage(destination, ((UIImage *)[imagesArray objectAtIndex:i]).CGImage, (__bridge CFDictionaryRef)frameProperties);
+                    }
+                }
+                if (!CGImageDestinationFinalize(destination)) {
+                    NSLog(@"failed to finalize image destination");
+                }
+                CFRelease(destination);
+                //_circleView.image = [UIImage animatedImageWithAnimatedGIFURL:fileURL];
+                _sproutImg.image = [UIImage animatedImageWithAnimatedGIFURL:fileURL];
+                /*_circleView.animationImages=animationArray;
                 _circleView.animationDuration=animationArray.count * 0.2;
                 _circleView.animationRepeatCount=0;
                 //[SVProgressHUD show];
                 //[self performSelector:@selector(checkAnimate)];
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
                     [_circleView startAnimating];
-                });
+                });*/
             }
         }else{
             _isPlaying = [NSNumber numberWithBool:YES];
@@ -274,16 +391,67 @@
                 [imagesArray addObject:[UIImage imageWithContentsOfFile:str]];
             }
             NSArray *animationArray=[NSArray arrayWithArray:imagesArray];
-            _sproutImg.animationImages=animationArray;
+            NSUInteger kFrameCount = _startSprout.count;
+            NSDictionary *fileProperties = @{
+                                             (__bridge id)kCGImagePropertyGIFDictionary: @{
+                                                     (__bridge id)kCGImagePropertyGIFLoopCount: @0, // 0 means loop forever
+                                                     }
+                                             };
+            NSDictionary *frameProperties = @{
+                                              (__bridge id)kCGImagePropertyGIFDictionary: @{
+                                                      (__bridge id)kCGImagePropertyGIFDelayTime: @0.2f, // a float (not double!) in seconds, rounded to centiseconds in the GIF data
+                                                      }
+                                              };
+            NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
+            NSURL *fileURL = [documentsDirectoryURL URLByAppendingPathComponent:@"animated.gif"];
+            CGImageDestinationRef destination = CGImageDestinationCreateWithURL((__bridge CFURLRef)fileURL, kUTTypeGIF, kFrameCount, NULL);
+            CGImageDestinationSetProperties(destination, (__bridge CFDictionaryRef)fileProperties);
+            for (NSUInteger i = 0; i < kFrameCount; i++) {
+                @autoreleasepool {
+                    //UIImage *image = frameImage(CGSizeMake(300, 300), M_PI * 2 * i / kFrameCount);
+                    CGImageDestinationAddImage(destination, ((UIImage *)[imagesArray objectAtIndex:i]).CGImage, (__bridge CFDictionaryRef)frameProperties);
+                }
+            }
+            if (!CGImageDestinationFinalize(destination)) {
+                NSLog(@"failed to finalize image destination");
+            }
+            CFRelease(destination);
+           _sproutImg.image = [UIImage animatedImageWithAnimatedGIFURL:fileURL];
+            NSLog(@"GIFurl=%@", fileURL);
+            /*NSData *mydata = [[NSData alloc] initWithContentsOfURL:fileURL];
+            UIImage *myimage = [[UIImage alloc] initWithData:mydata];
+            
+            _sproutImg.animationImages=@[myimage];;
             _sproutImg.animationDuration=animationArray.count * 0.2;
             _sproutImg.animationRepeatCount=0;
             //[SVProgressHUD show];
             //[self performSelector:@selector(checkAnimate)];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
                 [_sproutImg startAnimating];
-            });
+            });*/
         }
     }
+}
+-(UIImage*)makeRoundCornersWithRadius:(const CGFloat)RADIUS withImage:(UIImage *)image {
+    
+    // Begin a new image that will be the new image with the rounded corners
+    // (here with the size of an UIImageView)
+    UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+    
+    const CGRect RECT = CGRectMake(0, 0, image.size.width, image.size.height);
+    // Add a clip before drawing anything, in the shape of an rounded rect
+    [[UIBezierPath bezierPathWithRoundedRect:RECT cornerRadius:RADIUS] addClip];
+    // Draw your image
+    [image drawInRect:RECT];
+    
+    // Get the image, here setting the UIImageView image
+    //imageView.image
+    UIImage* imageNew = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // Lets forget about that we were drawing
+    UIGraphicsEndImageContext();
+    
+    return imageNew;
 }
 /*- (IBAction)checkAnimate {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
@@ -300,9 +468,15 @@
 - (IBAction)saveSprout {
     if (((NSArray *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy]).count > 0) {
         [self dismissViewControllerAnimated:YES completion:^{
-            NSMutableArray *savedPathList = (NSMutableArray *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"] mutableCopy];
-            [savedPathList addObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"]];
-            [[NSUserDefaults standardUserDefaults] setObject:savedPathList forKey:@"savedSprout"];
+            NSMutableArray *savedSprouts = (NSMutableArray *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"] mutableCopy];
+            if(!(_circleView.hidden)){
+                [savedSprouts addObject:@{@"sprout":[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"],
+                                          @"withCircle":@YES}];
+            }else{
+                [savedSprouts addObject:@{@"sprout":[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"],
+                                          @"withCircle":@NO}];
+            }
+            [[NSUserDefaults standardUserDefaults] setObject:savedSprouts forKey:@"savedSprout"];
             [_savedSproutView reloadData];
         }];
     }

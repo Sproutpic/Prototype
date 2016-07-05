@@ -17,6 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [self setMainWithControllers];
     return YES;
 }
 
@@ -41,5 +42,59 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+- (void)setMainWithControllers{
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    MyProjectsViewController *mpc = [[MyProjectsViewController alloc] init];
+    NewProjectViewController *npc = [[NewProjectViewController alloc] init];
+    CommunityViewController *cvc = [[CommunityViewController alloc] init];
+    
+    [self referenceControllersToDelegate:mpc newProjController:npc commController:cvc];
+    
+    [self setControllersBackGround:[UIColor whiteColor]];
+    
+    [self setTabControllerWithControllers];
+    
+    [self.window makeKeyAndVisible];
+}
+-(void)setControllersBackGround:(UIColor *)color{
+    
+    _myProjsController.view.backgroundColor = color;
+    _projController.view.backgroundColor = [UIColor blueColor];
+    _commController.view.backgroundColor = [UIColor redColor];
+    
+}
+- (void)referenceControllersToDelegate:(MyProjectsViewController *)mpc newProjController:(NewProjectViewController *)npc commController:(CommunityViewController *)cvc{
+    
+    _myProjsController = mpc;
+    _projController = npc;
+    _commController = cvc;
+    
+}
+- (void)setTabControllerWithControllers{
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_myProjsController];
+    UINavigationController *nav1 = [[UINavigationController alloc] initWithRootViewController:_projController];
+    UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:_commController];
+    
+    UITabBarController *tabController = [[UITabBarController alloc]init];
+    tabController.viewControllers = @[nav,nav1,nav2];
+    
+    [self setPanelWithTab:tabController];
+}
+- (void)setPanelWithTab:(UITabBarController *)tab{
 
+    JASidePanelController *sidePanel = [[JASidePanelController alloc] init];
+    _settingsController = [[SettingsViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_settingsController];
+    sidePanel.rightPanel = nav;
+    sidePanel.centerPanel = tab;
+    
+    [self setWindowRootController:sidePanel];
+    
+}
+- (void)setWindowRootController:(JASidePanelController *)sidePanel{
+    self.window.rootViewController = sidePanel;
+}
 @end

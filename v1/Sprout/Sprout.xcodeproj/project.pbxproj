@@ -9,11 +9,17 @@
 /* Begin PBXBuildFile section */
 		5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2C71D2BB65F00B4CD02 /* main.m */; };
 		5A85A2CB1D2BB65F00B4CD02 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2CA1D2BB65F00B4CD02 /* AppDelegate.m */; };
-		5A85A2CD1D2BB65F00B4CD02 /* Sprout-Prefix.pch in Resources */ = {isa = PBXBuildFile; fileRef = 5A85A2CC1D2BB65F00B4CD02 /* Sprout-Prefix.pch */; };
 		5A85A2CF1D2BB65F00B4CD02 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A85A2CE1D2BB65F00B4CD02 /* Assets.xcassets */; };
 		5A85A2D21D2BB65F00B4CD02 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A85A2D01D2BB65F00B4CD02 /* LaunchScreen.storyboard */; };
 		5A85A2DD1D2BB66000B4CD02 /* SproutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2DC1D2BB66000B4CD02 /* SproutTests.m */; };
 		5A85A2E81D2BB66000B4CD02 /* SproutUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2E71D2BB66000B4CD02 /* SproutUITests.m */; };
+		5A85A2FB1D2BB85300B4CD02 /* CommunityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2FA1D2BB85300B4CD02 /* CommunityViewController.m */; };
+		5A85A2FE1D2BB87200B4CD02 /* NewProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2FD1D2BB87200B4CD02 /* NewProjectViewController.m */; };
+		5A85A3011D2BB88900B4CD02 /* MyProjectsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A3001D2BB88900B4CD02 /* MyProjectsViewController.m */; };
+		5A85A3041D2BB8D600B4CD02 /* UIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A3031D2BB8D600B4CD02 /* UIUtils.m */; };
+		5A85A30B1D2BBE9800B4CD02 /* JASidePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A3071D2BBE9800B4CD02 /* JASidePanelController.m */; };
+		5A85A30C1D2BBE9800B4CD02 /* UIViewController+JASidePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A3091D2BBE9800B4CD02 /* UIViewController+JASidePanel.m */; };
+		5A85A3101D2BBF0600B4CD02 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +44,6 @@
 		5A85A2C71D2BB65F00B4CD02 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5A85A2C91D2BB65F00B4CD02 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5A85A2CA1D2BB65F00B4CD02 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		5A85A2CC1D2BB65F00B4CD02 /* Sprout-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sprout-Prefix.pch"; sourceTree = "<group>"; };
 		5A85A2CE1D2BB65F00B4CD02 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5A85A2D11D2BB65F00B4CD02 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5A85A2D31D2BB65F00B4CD02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -48,6 +53,20 @@
 		5A85A2E31D2BB66000B4CD02 /* SproutUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SproutUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A85A2E71D2BB66000B4CD02 /* SproutUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SproutUITests.m; sourceTree = "<group>"; };
 		5A85A2E91D2BB66000B4CD02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5A85A2F91D2BB85300B4CD02 /* CommunityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommunityViewController.h; sourceTree = "<group>"; };
+		5A85A2FA1D2BB85300B4CD02 /* CommunityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommunityViewController.m; sourceTree = "<group>"; };
+		5A85A2FC1D2BB87200B4CD02 /* NewProjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewProjectViewController.h; sourceTree = "<group>"; };
+		5A85A2FD1D2BB87200B4CD02 /* NewProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewProjectViewController.m; sourceTree = "<group>"; };
+		5A85A2FF1D2BB88900B4CD02 /* MyProjectsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyProjectsViewController.h; sourceTree = "<group>"; };
+		5A85A3001D2BB88900B4CD02 /* MyProjectsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyProjectsViewController.m; sourceTree = "<group>"; };
+		5A85A3021D2BB8D600B4CD02 /* UIUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIUtils.h; sourceTree = "<group>"; };
+		5A85A3031D2BB8D600B4CD02 /* UIUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIUtils.m; sourceTree = "<group>"; };
+		5A85A3071D2BBE9800B4CD02 /* JASidePanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JASidePanelController.m; sourceTree = "<group>"; };
+		5A85A3081D2BBE9800B4CD02 /* JASidePanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JASidePanelController.h; sourceTree = "<group>"; };
+		5A85A3091D2BBE9800B4CD02 /* UIViewController+JASidePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+JASidePanel.m"; sourceTree = "<group>"; };
+		5A85A30A1D2BBE9800B4CD02 /* UIViewController+JASidePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+JASidePanel.h"; sourceTree = "<group>"; };
+		5A85A30E1D2BBF0600B4CD02 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,10 +119,10 @@
 			children = (
 				5A85A2C91D2BB65F00B4CD02 /* AppDelegate.h */,
 				5A85A2CA1D2BB65F00B4CD02 /* AppDelegate.m */,
-				5A85A2CC1D2BB65F00B4CD02 /* Sprout-Prefix.pch */,
 				5A85A2CE1D2BB65F00B4CD02 /* Assets.xcassets */,
 				5A85A2D01D2BB65F00B4CD02 /* LaunchScreen.storyboard */,
 				5A85A2D31D2BB65F00B4CD02 /* Info.plist */,
+				5A85A3051D2BB8FA00B4CD02 /* ViewControllers */,
 				5A85A2C61D2BB65F00B4CD02 /* Supporting Files */,
 			);
 			path = Sprout;
@@ -112,6 +131,8 @@
 		5A85A2C61D2BB65F00B4CD02 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5A85A3061D2BBE1400B4CD02 /* JASidePanel */,
+				5A85A2F81D2BB82000B4CD02 /* Utils */,
 				5A85A2C71D2BB65F00B4CD02 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -133,6 +154,73 @@
 				5A85A2E91D2BB66000B4CD02 /* Info.plist */,
 			);
 			path = SproutUITests;
+			sourceTree = "<group>";
+		};
+		5A85A2F51D2BB7CB00B4CD02 /* My Projects */ = {
+			isa = PBXGroup;
+			children = (
+				5A85A30D1D2BBEC800B4CD02 /* SettingsViewController */,
+				5A85A2FF1D2BB88900B4CD02 /* MyProjectsViewController.h */,
+				5A85A3001D2BB88900B4CD02 /* MyProjectsViewController.m */,
+			);
+			name = "My Projects";
+			sourceTree = "<group>";
+		};
+		5A85A2F61D2BB7FE00B4CD02 /* New Project */ = {
+			isa = PBXGroup;
+			children = (
+				5A85A2FC1D2BB87200B4CD02 /* NewProjectViewController.h */,
+				5A85A2FD1D2BB87200B4CD02 /* NewProjectViewController.m */,
+			);
+			name = "New Project";
+			sourceTree = "<group>";
+		};
+		5A85A2F71D2BB80B00B4CD02 /* Community */ = {
+			isa = PBXGroup;
+			children = (
+				5A85A2F91D2BB85300B4CD02 /* CommunityViewController.h */,
+				5A85A2FA1D2BB85300B4CD02 /* CommunityViewController.m */,
+			);
+			name = Community;
+			sourceTree = "<group>";
+		};
+		5A85A2F81D2BB82000B4CD02 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				5A85A3021D2BB8D600B4CD02 /* UIUtils.h */,
+				5A85A3031D2BB8D600B4CD02 /* UIUtils.m */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		5A85A3051D2BB8FA00B4CD02 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				5A85A2F71D2BB80B00B4CD02 /* Community */,
+				5A85A2F61D2BB7FE00B4CD02 /* New Project */,
+				5A85A2F51D2BB7CB00B4CD02 /* My Projects */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		5A85A3061D2BBE1400B4CD02 /* JASidePanel */ = {
+			isa = PBXGroup;
+			children = (
+				5A85A3071D2BBE9800B4CD02 /* JASidePanelController.m */,
+				5A85A3081D2BBE9800B4CD02 /* JASidePanelController.h */,
+				5A85A3091D2BBE9800B4CD02 /* UIViewController+JASidePanel.m */,
+				5A85A30A1D2BBE9800B4CD02 /* UIViewController+JASidePanel.h */,
+			);
+			name = JASidePanel;
+			sourceTree = "<group>";
+		};
+		5A85A30D1D2BBEC800B4CD02 /* SettingsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				5A85A30E1D2BBF0600B4CD02 /* SettingsViewController.h */,
+				5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */,
+			);
+			name = SettingsViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -240,7 +328,6 @@
 			files = (
 				5A85A2D21D2BB65F00B4CD02 /* LaunchScreen.storyboard in Resources */,
 				5A85A2CF1D2BB65F00B4CD02 /* Assets.xcassets in Resources */,
-				5A85A2CD1D2BB65F00B4CD02 /* Sprout-Prefix.pch in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,8 +352,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A85A2FB1D2BB85300B4CD02 /* CommunityViewController.m in Sources */,
+				5A85A30C1D2BBE9800B4CD02 /* UIViewController+JASidePanel.m in Sources */,
+				5A85A2FE1D2BB87200B4CD02 /* NewProjectViewController.m in Sources */,
+				5A85A3101D2BBF0600B4CD02 /* SettingsViewController.m in Sources */,
 				5A85A2CB1D2BB65F00B4CD02 /* AppDelegate.m in Sources */,
+				5A85A3011D2BB88900B4CD02 /* MyProjectsViewController.m in Sources */,
 				5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */,
+				5A85A30B1D2BBE9800B4CD02 /* JASidePanelController.m in Sources */,
+				5A85A3041D2BB8D600B4CD02 /* UIUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +494,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Sprout/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sprout.sprout.Sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -411,6 +506,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Sprout/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sprout.sprout.Sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";

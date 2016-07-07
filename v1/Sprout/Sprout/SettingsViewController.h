@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "UIUtils.h"
+#import "JASidePanelController.h"
+#import "UIViewController+JASidePanel.h"
+#import "FAQViewController.h"
 
-@interface SettingsViewController : UIViewController{
+@interface SettingsViewController : JASidePanelController{
     UIUtils *utils;
 }
 

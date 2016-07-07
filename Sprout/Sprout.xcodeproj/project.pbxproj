@@ -273,6 +273,7 @@
 				TargetAttributes = {
 					5A1519E01D0E7CE800A253C3 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = KWJVLFTTPZ;
 					};
 					5A1519F51D0E7CE800A253C3 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -484,7 +485,7 @@
 				INFOPLIST_FILE = Sprout/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.launchlabs.sprout.Sprout;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sproutpic.sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -498,7 +499,7 @@
 				INFOPLIST_FILE = Sprout/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.launchlabs.sprout.Sprout;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sproutpic.sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

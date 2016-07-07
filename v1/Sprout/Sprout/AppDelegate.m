@@ -45,6 +45,7 @@
 - (void)setMainWithControllers{
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     MyProjectsViewController *mpc = [[MyProjectsViewController alloc] init];
     NewProjectViewController *npc = [[NewProjectViewController alloc] init];

@@ -20,6 +20,7 @@
 		5A85A30B1D2BBE9800B4CD02 /* JASidePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A3071D2BBE9800B4CD02 /* JASidePanelController.m */; };
 		5A85A30C1D2BBE9800B4CD02 /* UIViewController+JASidePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A3091D2BBE9800B4CD02 /* UIViewController+JASidePanel.m */; };
 		5A85A3101D2BBF0600B4CD02 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */; };
+		5AA3753C1D2CFBEF001993E0 /* FAQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA3753B1D2CFBEF001993E0 /* FAQViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,8 @@
 		5A85A30A1D2BBE9800B4CD02 /* UIViewController+JASidePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+JASidePanel.h"; sourceTree = "<group>"; };
 		5A85A30E1D2BBF0600B4CD02 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		5AA3753A1D2CFBEF001993E0 /* FAQViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQViewController.h; sourceTree = "<group>"; };
+		5AA3753B1D2CFBEF001993E0 /* FAQViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,9 +162,9 @@
 		5A85A2F51D2BB7CB00B4CD02 /* My Projects */ = {
 			isa = PBXGroup;
 			children = (
-				5A85A30D1D2BBEC800B4CD02 /* SettingsViewController */,
 				5A85A2FF1D2BB88900B4CD02 /* MyProjectsViewController.h */,
 				5A85A3001D2BB88900B4CD02 /* MyProjectsViewController.m */,
+				5A85A30D1D2BBEC800B4CD02 /* SettingsViewController */,
 			);
 			name = "My Projects";
 			sourceTree = "<group>";
@@ -219,8 +222,18 @@
 			children = (
 				5A85A30E1D2BBF0600B4CD02 /* SettingsViewController.h */,
 				5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */,
+				5AA375391D2CFBC4001993E0 /* FAQ */,
 			);
 			name = SettingsViewController;
+			sourceTree = "<group>";
+		};
+		5AA375391D2CFBC4001993E0 /* FAQ */ = {
+			isa = PBXGroup;
+			children = (
+				5AA3753A1D2CFBEF001993E0 /* FAQViewController.h */,
+				5AA3753B1D2CFBEF001993E0 /* FAQViewController.m */,
+			);
+			name = FAQ;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -290,6 +303,7 @@
 				TargetAttributes = {
 					5A85A2C21D2BB65F00B4CD02 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = KWJVLFTTPZ;
 					};
 					5A85A2D71D2BB66000B4CD02 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -357,6 +371,7 @@
 				5A85A2FE1D2BB87200B4CD02 /* NewProjectViewController.m in Sources */,
 				5A85A3101D2BBF0600B4CD02 /* SettingsViewController.m in Sources */,
 				5A85A2CB1D2BB65F00B4CD02 /* AppDelegate.m in Sources */,
+				5AA3753C1D2CFBEF001993E0 /* FAQViewController.m in Sources */,
 				5A85A3011D2BB88900B4CD02 /* MyProjectsViewController.m in Sources */,
 				5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */,
 				5A85A30B1D2BBE9800B4CD02 /* JASidePanelController.m in Sources */,
@@ -447,6 +462,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "cab70337-31ba-47c0-ba5c-db9fe10c6c13";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -484,6 +500,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "09139a4d-be37-42a1-9d93-cca03f94ed4a";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -493,11 +510,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				INFOPLIST_FILE = Sprout/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.sprout.sprout.Sprout;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sproutpic.sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "cab70337-31ba-47c0-ba5c-db9fe10c6c13";
 			};
 			name = Debug;
 		};
@@ -505,11 +525,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				INFOPLIST_FILE = Sprout/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.sprout.sprout.Sprout;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sproutpic.sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "09139a4d-be37-42a1-9d93-cca03f94ed4a";
 			};
 			name = Release;
 		};
@@ -578,6 +601,7 @@
 				5A85A2EE1D2BB66000B4CD02 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5A85A2EF1D2BB66000B4CD02 /* Build configuration list for PBXNativeTarget "SproutTests" */ = {
 			isa = XCConfigurationList;
@@ -586,6 +610,7 @@
 				5A85A2F11D2BB66000B4CD02 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5A85A2F21D2BB66000B4CD02 /* Build configuration list for PBXNativeTarget "SproutUITests" */ = {
 			isa = XCConfigurationList;
@@ -594,6 +619,7 @@
 				5A85A2F41D2BB66000B4CD02 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

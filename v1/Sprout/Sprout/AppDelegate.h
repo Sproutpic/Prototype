@@ -12,8 +12,11 @@
 #import "MyProjectsViewController.h"
 #import "SettingsViewController.h"
 #import "JASidePanelController.h"
+#import "UIUtils.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>{
+    UIUtils *utils;
+}
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) MyProjectsViewController *myProjsController;

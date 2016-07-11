@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "JASidePanelController.h"
+#import "UIViewController+JASidePanel.h"
+#import "UIUtils.h"
+#import "SDWebImage/UIImageView+WebCache.h"
 
-@interface MyProjectsViewController : UIViewController
+@interface MyProjectsViewController : JASidePanelController{
+    UIUtils *utils;
+    UIScrollView *projectScroller;
+    NSMutableArray *projects;
+    NSDictionary *currentDictionary;
+}
 
 @end

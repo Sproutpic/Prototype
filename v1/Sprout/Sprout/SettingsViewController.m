@@ -26,7 +26,6 @@
     self.navigationController.navigationBar.barTintColor = [utils colorNavigationBar];
     self.navigationController.navigationBar.backgroundColor = [utils colorNavigationBar];
     self.navigationController.navigationBar.translucent = NO;
-    
     [self setTitleViewForNavBar];
     [self addLeftBarButton];
 }

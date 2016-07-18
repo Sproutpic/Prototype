@@ -24,7 +24,7 @@
     [self setControllerWithQuestions];
 }
 - (void)setControllerWithQuestions{
-    CGFloat y = 20;
+    CGFloat y = 5;
     int tag = 0;
     for (NSDictionary *questionDictionary in questions) {
         [self setButtonForQuestion:questionDictionary withOriginY:y];
@@ -36,7 +36,7 @@
 }
 - (void)setButtonForQuestion:(NSDictionary *)dictionary withOriginY:(CGFloat)y{
     UIButton *button = ((UIButton *)[dictionary objectForKey:@"questionView"]);
-    button.frame = CGRectMake(20, y, self.view.frame.size.width-20, 52);
+    button.frame = CGRectMake(15, y, self.view.frame.size.width-15, 52);
     [button addTarget:self action:@selector(tappedFAQButton:) forControlEvents:UIControlEventTouchUpInside];
     [self formatButtonForQuestion:dictionary];
 }
@@ -46,7 +46,6 @@
 }
 - (void)formatButtonViews:(NSDictionary *)dictionary{
     [self formatSeparator:((UIView *)[dictionary objectForKey:@"questionSeparator"])];
-    [self formatquestionMark:((UIImageView *)[dictionary objectForKey:@"questionMarkImageView"])];
     [self formatArrow:((UIImageView *)[dictionary objectForKey:@"questionArrowImageView"])];
     [self formatQuestionLabel:((UILabel *)[dictionary objectForKey:@"questionLabel"]) withQuestion:((NSString *)[dictionary objectForKey:@"question"])];
 }
@@ -54,31 +53,26 @@
     UIButton *button = ((UIButton *)[dictionary objectForKey:@"questionView"]);
     
     [button addSubview:((UIView *)[dictionary objectForKey:@"questionSeparator"])];
-    [button addSubview:((UIImageView *)[dictionary objectForKey:@"questionMarkImageView"])];
     [button addSubview:((UIImageView *)[dictionary objectForKey:@"questionArrowImageView"])];
     [button addSubview:((UILabel *)[dictionary objectForKey:@"questionLabel"])];
 }
 -(void)formatSeparator:(UIView *)separator{
-    separator.frame = CGRectMake(10, 50, self.view.frame.size.width-30, 2);
+    separator.frame = CGRectMake(0, 50, self.view.frame.size.width-15, 2);
     separator.backgroundColor = [utils colorMenuButtonsSeparator];
-}
--(void)formatquestionMark:(UIImageView *)questionMarkImageView{
-    questionMarkImageView.frame = CGRectMake(0, 15, 20, 20);
-    questionMarkImageView.image = [UIImage imageNamed:@"hallowQuestionMark"];
 }
 -(void)formatArrow:(UIImageView *)arrow{
     arrow.frame = CGRectMake(self.view.frame.size.width-50, 20, 20, 10);
     arrow.image = [UIImage imageNamed:@"downArrow"];
 }
 -(void)formatQuestionLabel:(UILabel *)questionLabel withQuestion:(NSString *)question{
-    questionLabel.text = question;
-    questionLabel.font = [utils fontForNavBarTitle];
-    questionLabel.textColor = [utils colorNavigationBar];
+    questionLabel.text = [NSString stringWithFormat:@"Q. %@",question];
+    questionLabel.font = [utils fontRegularForSize:14];
+    questionLabel.textColor = [UIColor blackColor];
     [questionLabel sizeToFit];
-    questionLabel.frame = CGRectMake(30, (50 - questionLabel.frame.size.height) / 2, questionLabel.frame.size.width, questionLabel.frame.size.height);
+    questionLabel.frame = CGRectMake(0, (50 - questionLabel.frame.size.height) / 2, questionLabel.frame.size.width, questionLabel.frame.size.height);
 }
 - (IBAction)tappedFAQButton:(UIButton *)sender{
-    if(!((((UILabel *)([((NSDictionary *)questions[(int)sender.tag]) objectForKey:@"questionLabel"]))).font == [utils fontForFAQQuestionActive])){
+    if((((UILabel *)([((NSDictionary *)questions[(int)sender.tag]) objectForKey:@"questionView"]))).frame.size.height == 52){
         [self resetQuestionViews];
         [self openQuestionAtIndex:(int)sender.tag];
         [self updateScrollerContentHeight];
@@ -90,7 +84,6 @@
 - (void)resetQuestionViews{
     [self closeAllQuestions];
     for (NSDictionary *questionDictionary in questions) {
-        
         [self formatButtonViews:questionDictionary];
     }
 }
@@ -130,12 +123,12 @@
     return height;
 }
 - (CGFloat)addAnswerToQuestionView:(UIButton *)button withAnswerView:(UILabel *)answerLabel andAnswer:(NSString *)answer{
-    CGRect size = [answer boundingRectWithSize:CGSizeMake(self.view.frame.size.width * 0.7, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [utils fontForFAQAnswerActive]} context:nil];
+    CGRect size = [[NSString stringWithFormat:@"A. %@",answer] boundingRectWithSize:CGSizeMake(self.view.frame.size.width * 0.88, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [utils fontForFAQAnswerActive]} context:nil];
     answerLabel = [[UILabel alloc]init];
     answerLabel.numberOfLines = 0;
     answerLabel.font = [utils fontForFAQAnswerActive];
-    answerLabel.text = answer;
-    answerLabel.frame = CGRectMake(30, 40, size.size.width,size.size.height);
+    answerLabel.text = [NSString stringWithFormat:@"A. %@",answer];
+    answerLabel.frame = CGRectMake(0, 40, size.size.width,size.size.height);
     answerLabel.alpha = 0;
     [button addSubview:answerLabel];
     [UIView animateWithDuration:0.2 animations:^{
@@ -144,11 +137,11 @@
     return size.size.height;
 }
 - (void) closeAllQuestions{
-    CGFloat y = 20.f;
+    CGFloat y = 5.f;
     for (NSDictionary *questionDictionary in questions) {
         for (id sub in ((UIButton *) [questionDictionary objectForKey:@"questionView"]).subviews) {
             if ([sub isKindOfClass:[UILabel class]]) {
-                if (((UILabel *)sub).font == [utils fontForFAQAnswerActive]) {
+                if ([[NSString stringWithFormat:@"%hu",[((UILabel *)sub).text characterAtIndex:0]] isEqualToString:@"65"]) {
                     [UIView animateWithDuration:0.2 animations:^{
                         ((UILabel *)sub).alpha = 0;
                     } completion:^(BOOL finished){
@@ -167,63 +160,56 @@
     }
 }
 - (void)setQuestionViewActive:(NSMutableDictionary *)dictionary{
-    ((UIImageView *) [dictionary objectForKey:@"questionMarkImageView"]).image = [UIImage imageNamed:@"fullQuestionMark"];
-    ((UILabel *) [dictionary objectForKey:@"questionLabel"]).font = [utils fontForFAQQuestionActive];
+    ((UILabel *) [dictionary objectForKey:@"questionLabel"]).font = [utils fontRegularForSize:14];
+    ((UILabel *) [dictionary objectForKey:@"questionLabel"]).textColor = [utils colorNavigationBar];
     [((UILabel *) [dictionary objectForKey:@"questionLabel"]) sizeToFit];
-    ((UILabel *) [dictionary objectForKey:@"questionLabel"]).frame = CGRectMake(30, (50 - ((UILabel *) [dictionary objectForKey:@"questionLabel"]).frame.size.height) / 2, ((UILabel *) [dictionary objectForKey:@"questionLabel"]).frame.size.width, ((UILabel *) [dictionary objectForKey:@"questionLabel"]).frame.size.height);
+    ((UILabel *) [dictionary objectForKey:@"questionLabel"]).frame = CGRectMake(0, (50 - ((UILabel *) [dictionary objectForKey:@"questionLabel"]).frame.size.height) / 2, ((UILabel *) [dictionary objectForKey:@"questionLabel"]).frame.size.width, ((UILabel *) [dictionary objectForKey:@"questionLabel"]).frame.size.height);
     ((UIImageView *) [dictionary objectForKey:@"questionArrowImageView"]).image = [UIImage imageNamed:@"upArrow"];
 }
 - (void)populateQuestions{
-    questions = [[NSMutableArray alloc]initWithObjects:[[NSMutableDictionary alloc] initWithDictionary:@{@"questionMarkImageView":[[UIImageView alloc] init],
-                                                                                                         @"questionArrowImageView":[[UIImageView alloc] init],
+    questions = [[NSMutableArray alloc]initWithObjects:[[NSMutableDictionary alloc] initWithDictionary:@{@"questionArrowImageView":[[UIImageView alloc] init],
                                                                                                          @"questionLabel":[[UILabel alloc] init],
                                                                                                          @"answerLabel":[[UILabel alloc] init],
                                                                                                          @"questionView":[[UIButton alloc]init],
                                                                                                          @"questionSeparator":[[UIView alloc]init],
                                                                                                          @"question":@"My Question number one?",
-                                                                                                         @"answer":@"Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus."}],
-                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionMarkImageView":[[UIImageView alloc] init],
-                                                                   @"questionArrowImageView":[[UIImageView alloc] init],
+                                                                                                         @"answer":@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."}],
+                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionArrowImageView":[[UIImageView alloc] init],
                                                                    @"questionLabel":[[UILabel alloc] init],
                                                                    @"questionView":[[UIButton alloc]init],
                                                                    @"questionSeparator":[[UIView alloc]init],
                                                                    @"question":@"My Question number two?",
-                                                                   @"answer":@"Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus."}],
-                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionMarkImageView":[[UIImageView alloc] init],
-                                                                   @"questionArrowImageView":[[UIImageView alloc] init],
+                                                                   @"answer":@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."}],
+                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionArrowImageView":[[UIImageView alloc] init],
                                                                    @"questionLabel":[[UILabel alloc] init],
                                                                    @"questionView":[[UIButton alloc]init],
                                                                    @"questionSeparator":[[UIView alloc]init],
                                                                    @"question":@"My Question number three?",
-                                                                   @"answer":@"Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus."}],
-                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionMarkImageView":[[UIImageView alloc] init],
-                                                                   @"questionArrowImageView":[[UIImageView alloc] init],
+                                                                   @"answer":@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."}],
+                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionArrowImageView":[[UIImageView alloc] init],
                                                                    @"questionLabel":[[UILabel alloc] init],
                                                                    @"questionView":[[UIButton alloc]init],
                                                                    @"questionSeparator":[[UIView alloc]init],
                                                                    @"question":@"My Question number four?",
-                                                                   @"answer":@"Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus."}],
-                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionMarkImageView":[[UIImageView alloc] init],
-                                                                   @"questionArrowImageView":[[UIImageView alloc] init],
+                                                                   @"answer":@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."}],
+                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionArrowImageView":[[UIImageView alloc] init],
                                                                    @"questionLabel":[[UILabel alloc] init],
                                                                    @"questionView":[[UIButton alloc]init],
                                                                    @"questionSeparator":[[UIView alloc]init],
                                                                    @"question":@"My Question number five?",
-                                                                   @"answer":@"Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus."}],
-                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionMarkImageView":[[UIImageView alloc] init],
-                                                                   @"questionArrowImageView":[[UIImageView alloc] init],
+                                                                   @"answer":@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."}],
+                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionArrowImageView":[[UIImageView alloc] init],
                                                                    @"questionLabel":[[UILabel alloc] init],
                                                                    @"questionView":[[UIButton alloc]init],
                                                                    @"questionSeparator":[[UIView alloc]init],
                                                                    @"question":@"My Question number six?",
-                                                                   @"answer":@"Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus."}],
-                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionMarkImageView":[[UIImageView alloc] init],
-                                                                   @"questionArrowImageView":[[UIImageView alloc] init],
+                                                                   @"answer":@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."}],
+                 [[NSMutableDictionary alloc] initWithDictionary:@{@"questionArrowImageView":[[UIImageView alloc] init],
                                                                    @"questionLabel":[[UILabel alloc] init],
                                                                    @"questionView":[[UIButton alloc]init],
                                                                    @"questionSeparator":[[UIView alloc]init],
                                                                    @"question":@"My Question number seven?",
-                                                                   @"answer":@"Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus."}], nil];
+                                                                   @"answer":@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."}], nil];
 }
 - (void)setNavigationBar{
     self.navigationController.navigationBar.barTintColor = [utils colorNavigationBar];

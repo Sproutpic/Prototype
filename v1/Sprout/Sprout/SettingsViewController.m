@@ -56,7 +56,7 @@
     
 }
 - (void)setButtons:(NSArray *) selection{
-    CGFloat y = 20;
+    CGFloat y = 10;
     for (NSString *str in selection) {
         [self.view addSubview:[self addButton:str withOriginY:y]];
         [self.view addSubview:[self addSeparator:[utils colorMenuButtonsSeparator] withOriginY:y + 50]];
@@ -64,7 +64,7 @@
     }
 }
 - (UIButton *)addButton:(NSString *)str withOriginY:(CGFloat)y{
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(20, y, self.view.frame.size.width-20, 50)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(10, y, self.view.frame.size.width-10, 50)];
     [self setTitleForButton:str forButton:button];
     [button addSubview:[self addArrowRight]];
     [button addTarget:self action:@selector(menuButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -90,9 +90,9 @@
 }
 - (void)setTitleForButton:(NSString *)str forButton:(UIButton *)button{
     UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [utils attrString:str withFont:[utils fontForNavBarTitle] color:[utils colorNavigationBar] andCharSpacing:[NSNumber numberWithInt:0]];
+    label.attributedText = [utils attrString:str withFont:[utils fontForNavBarTitle] color:[UIColor blackColor] andCharSpacing:[NSNumber numberWithInt:0]];
     [label sizeToFit];
-    label.frame = CGRectMake(0, (button.frame.size.height - label.frame.size.height)/2  , label.frame.size.width, label.frame.size.height);
+    label.frame = CGRectMake(10, (button.frame.size.height - label.frame.size.height)/2  , label.frame.size.width, label.frame.size.height);
     [button addSubview:label];
     
     [self setTagForButtons:button withStr:str];
@@ -109,12 +109,12 @@
     }
 }
 - (UIView *)addSeparator:(UIColor *)color withOriginY:(CGFloat)y{
-    UIView *separator = [[UIView alloc]initWithFrame:CGRectMake(20, y, self.view.frame.size.width-20, 2)];
+    UIView *separator = [[UIView alloc]initWithFrame:CGRectMake(10, y, self.view.frame.size.width-10, 2)];
     separator.backgroundColor = color;
     return separator;
 }
 - (UIImageView *)addArrowRight{
-    UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-45, 17.5, 15, 15)];
+    UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-45, 12.51, 22, 25)];
     arrow.image = [UIImage imageNamed:@"arrow_right"];
     return arrow;
 }

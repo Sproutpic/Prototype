@@ -10,10 +10,10 @@
 
 @implementation UIUtils
 - (UIColor *)colorNavigationBar{
-    return [UIColor colorWithRed:54.0f/255.0f green:55.0f/255.0f blue:54.0f/255.0f alpha:1.0f];
+    return [UIColor colorWithRed:101.0f/255.0f green:179.0f/255.0f blue:179.0f/255.0f alpha:1.0f];
 }
 - (UIColor *)colorMenuButtonsSeparator{
-    return [UIColor colorWithRed:245.0f/255.0f green:245.0f/255.0f blue:246.0f/255.0f alpha:1.0f];
+    return [UIColor colorWithRed:206.0f/255.0f green:205.0f/255.0f blue:205.0f/255.0f alpha:1.0f];
 }
 - (UIColor *)colorSproutGreen{
     return [UIColor colorWithRed:216.0f/255.0f green:215.0f/255.0f blue:206.0f/255.0f alpha:1.0f];
@@ -26,13 +26,13 @@
 }
 
 - (UIFont *)fontForNavBarTitle{
-    return [self fontRegularForSize:16];
+    return [self fontRegularForSize:17];
 }
 - (UIFont *)fontForFAQQuestionActive{
     return [self fontBoldForSize:16];
 }
 - (UIFont *)fontForFAQAnswerActive{
-    return [self fontItalicForSize:16];
+    return [self fontRegularForSize:14];
 }
 
 - (UIFont *)fontRegularForSize:(CGFloat) size{

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A2180951D3E015C0057F298 /* AccountInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A2180941D3E015C0057F298 /* AccountInformationViewController.m */; };
+		5A2180991D3E1BDB0057F298 /* SecureAccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A2180981D3E1BDB0057F298 /* SecureAccessViewController.m */; };
 		5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2C71D2BB65F00B4CD02 /* main.m */; };
 		5A85A2CB1D2BB65F00B4CD02 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2CA1D2BB65F00B4CD02 /* AppDelegate.m */; };
 		5A85A2CF1D2BB65F00B4CD02 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A85A2CE1D2BB65F00B4CD02 /* Assets.xcassets */; };
@@ -57,6 +59,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5A2180931D3E015C0057F298 /* AccountInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountInformationViewController.h; sourceTree = "<group>"; };
+		5A2180941D3E015C0057F298 /* AccountInformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountInformationViewController.m; sourceTree = "<group>"; };
+		5A2180971D3E1BDB0057F298 /* SecureAccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecureAccessViewController.h; sourceTree = "<group>"; };
+		5A2180981D3E1BDB0057F298 /* SecureAccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecureAccessViewController.m; sourceTree = "<group>"; };
 		5A85A2C31D2BB65F00B4CD02 /* Sprout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sprout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A85A2C71D2BB65F00B4CD02 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5A85A2C91D2BB65F00B4CD02 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -146,6 +152,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A2180921D3E01260057F298 /* Account Information */ = {
+			isa = PBXGroup;
+			children = (
+				5A2180931D3E015C0057F298 /* AccountInformationViewController.h */,
+				5A2180941D3E015C0057F298 /* AccountInformationViewController.m */,
+			);
+			name = "Account Information";
+			sourceTree = "<group>";
+		};
+		5A2180961D3E1BB70057F298 /* Secure Access */ = {
+			isa = PBXGroup;
+			children = (
+				5A2180971D3E1BDB0057F298 /* SecureAccessViewController.h */,
+				5A2180981D3E1BDB0057F298 /* SecureAccessViewController.m */,
+			);
+			name = "Secure Access";
+			sourceTree = "<group>";
+		};
 		5A85A2BA1D2BB65F00B4CD02 = {
 			isa = PBXGroup;
 			children = (
@@ -270,9 +294,11 @@
 		5A85A30D1D2BBEC800B4CD02 /* SettingsViewController */ = {
 			isa = PBXGroup;
 			children = (
+				5A2180961D3E1BB70057F298 /* Secure Access */,
+				5AA375391D2CFBC4001993E0 /* FAQ */,
+				5A2180921D3E01260057F298 /* Account Information */,
 				5A85A30E1D2BBF0600B4CD02 /* SettingsViewController.h */,
 				5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */,
-				5AA375391D2CFBC4001993E0 /* FAQ */,
 			);
 			name = SettingsViewController;
 			sourceTree = "<group>";
@@ -467,6 +493,7 @@
 				5AD4C37A1D33A96B005F8D98 /* SDWebImageCompat.m in Sources */,
 				5A85A2CB1D2BB65F00B4CD02 /* AppDelegate.m in Sources */,
 				5AD4C37B1D33A96B005F8D98 /* SDWebImageDecoder.m in Sources */,
+				5A2180991D3E1BDB0057F298 /* SecureAccessViewController.m in Sources */,
 				5AD4C3821D33A96B005F8D98 /* UIImage+MultiFormat.m in Sources */,
 				5AD4C3831D33A96B005F8D98 /* UIImage+WebP.m in Sources */,
 				5AD4C37D1D33A96B005F8D98 /* SDWebImageDownloaderOperation.m in Sources */,
@@ -478,6 +505,7 @@
 				5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */,
 				5AD4C3841D33A96B005F8D98 /* UIImageView+HighlightedWebCache.m in Sources */,
 				5A85A30B1D2BBE9800B4CD02 /* JASidePanelController.m in Sources */,
+				5A2180951D3E015C0057F298 /* AccountInformationViewController.m in Sources */,
 				5AD4C3791D33A96B005F8D98 /* SDImageCache.m in Sources */,
 				5AD4C3801D33A96B005F8D98 /* UIButton+WebCache.m in Sources */,
 				5AD4C3781D33A96B005F8D98 /* NSData+ImageContentType.m in Sources */,

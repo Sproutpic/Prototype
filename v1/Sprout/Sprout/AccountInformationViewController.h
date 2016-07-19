@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIUtils.h"
 
-@interface AccountInformationViewController : UIViewController
+@interface AccountInformationViewController : UIViewController{
+    UIUtils *utils;
+    BOOL signedIn;
+}
 
 @end

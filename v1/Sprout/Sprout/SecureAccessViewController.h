@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIUtils.h"
 
-@interface SecureAccessViewController : UIViewController
+@interface SecureAccessViewController : UIViewController{
+    UIUtils *utils;
+    UIView *switcherView;
+    UISwitch *enableSwitch;
+}
 
 @end

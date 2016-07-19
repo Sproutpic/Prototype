@@ -227,7 +227,7 @@
     self.navigationItem.leftBarButtonItem = barButton;
 }
 - (IBAction)backToMenu:(UIButton *)sender{
-    [self dismissViewControllerAnimated:YES completion:^{}];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)setTitleViewForNavBar{
     UILabel *label = [[UILabel alloc] init];

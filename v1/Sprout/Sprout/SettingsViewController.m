@@ -76,13 +76,13 @@
             
             break;
         case 2:
-            [self.sidePanelController presentViewController:[[UINavigationController alloc] initWithRootViewController:[[FAQViewController alloc] init]] animated:YES completion:^{}];
+            [self.navigationController pushViewController:[[FAQViewController alloc] init] animated:YES];
             break;
         case 3:
-            
+            [self.navigationController pushViewController:[[AccountInformationViewController alloc] init] animated:YES];
             break;
         case 4:
-            
+            [self.navigationController pushViewController:[[SecureAccessViewController alloc] init] animated:YES];
             break;
         default:
             break;

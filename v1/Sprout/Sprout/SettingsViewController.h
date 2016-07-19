@@ -11,6 +11,8 @@
 #import "JASidePanelController.h"
 #import "UIViewController+JASidePanel.h"
 #import "FAQViewController.h"
+#import "AccountInformationViewController.h"
+#import "SecureAccessViewController.h"
 
 @interface SettingsViewController : JASidePanelController{
     UIUtils *utils;

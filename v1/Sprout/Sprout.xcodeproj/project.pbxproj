@@ -23,6 +23,9 @@
 		5A85A30C1D2BBE9800B4CD02 /* UIViewController+JASidePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A3091D2BBE9800B4CD02 /* UIViewController+JASidePanel.m */; };
 		5A85A3101D2BBF0600B4CD02 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */; };
 		5AA3753C1D2CFBEF001993E0 /* FAQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA3753B1D2CFBEF001993E0 /* FAQViewController.m */; };
+		5AD249E11D406964000859C8 /* EnablePasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD249E01D406964000859C8 /* EnablePasscodeViewController.m */; };
+		5AD249E51D409F12000859C8 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD249E41D409F12000859C8 /* SignUpViewController.m */; };
+		5AD249E91D40C57D000859C8 /* SignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD249E81D40C57D000859C8 /* SignInViewController.m */; };
 		5AD4C3771D33A96B005F8D98 /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD4C3571D33A96B005F8D98 /* MKAnnotationView+WebCache.m */; };
 		5AD4C3781D33A96B005F8D98 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD4C3591D33A96B005F8D98 /* NSData+ImageContentType.m */; };
 		5AD4C3791D33A96B005F8D98 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD4C35B1D33A96B005F8D98 /* SDImageCache.m */; };
@@ -92,6 +95,12 @@
 		5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		5AA3753A1D2CFBEF001993E0 /* FAQViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQViewController.h; sourceTree = "<group>"; };
 		5AA3753B1D2CFBEF001993E0 /* FAQViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQViewController.m; sourceTree = "<group>"; };
+		5AD249DF1D406964000859C8 /* EnablePasscodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnablePasscodeViewController.h; sourceTree = "<group>"; };
+		5AD249E01D406964000859C8 /* EnablePasscodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnablePasscodeViewController.m; sourceTree = "<group>"; };
+		5AD249E31D409F12000859C8 /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
+		5AD249E41D409F12000859C8 /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
+		5AD249E71D40C57D000859C8 /* SignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignInViewController.h; sourceTree = "<group>"; };
+		5AD249E81D40C57D000859C8 /* SignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignInViewController.m; sourceTree = "<group>"; };
 		5AD4C3561D33A96B005F8D98 /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
 		5AD4C3571D33A96B005F8D98 /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		5AD4C3581D33A96B005F8D98 /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -155,6 +164,8 @@
 		5A2180921D3E01260057F298 /* Account Information */ = {
 			isa = PBXGroup;
 			children = (
+				5AD249E61D40C55C000859C8 /* Sign In */,
+				5AD249E21D409EF4000859C8 /* Sign Up */,
 				5A2180931D3E015C0057F298 /* AccountInformationViewController.h */,
 				5A2180941D3E015C0057F298 /* AccountInformationViewController.m */,
 			);
@@ -164,6 +175,7 @@
 		5A2180961D3E1BB70057F298 /* Secure Access */ = {
 			isa = PBXGroup;
 			children = (
+				5AD249DE1D40693E000859C8 /* Enable Passcode */,
 				5A2180971D3E1BDB0057F298 /* SecureAccessViewController.h */,
 				5A2180981D3E1BDB0057F298 /* SecureAccessViewController.m */,
 			);
@@ -310,6 +322,33 @@
 				5AA3753B1D2CFBEF001993E0 /* FAQViewController.m */,
 			);
 			name = FAQ;
+			sourceTree = "<group>";
+		};
+		5AD249DE1D40693E000859C8 /* Enable Passcode */ = {
+			isa = PBXGroup;
+			children = (
+				5AD249DF1D406964000859C8 /* EnablePasscodeViewController.h */,
+				5AD249E01D406964000859C8 /* EnablePasscodeViewController.m */,
+			);
+			name = "Enable Passcode";
+			sourceTree = "<group>";
+		};
+		5AD249E21D409EF4000859C8 /* Sign Up */ = {
+			isa = PBXGroup;
+			children = (
+				5AD249E31D409F12000859C8 /* SignUpViewController.h */,
+				5AD249E41D409F12000859C8 /* SignUpViewController.m */,
+			);
+			name = "Sign Up";
+			sourceTree = "<group>";
+		};
+		5AD249E61D40C55C000859C8 /* Sign In */ = {
+			isa = PBXGroup;
+			children = (
+				5AD249E71D40C57D000859C8 /* SignInViewController.h */,
+				5AD249E81D40C57D000859C8 /* SignInViewController.m */,
+			);
+			name = "Sign In";
 			sourceTree = "<group>";
 		};
 		5AD4C3551D33A96B005F8D98 /* SDWebImage */ = {
@@ -486,6 +525,7 @@
 				5AD4C3771D33A96B005F8D98 /* MKAnnotationView+WebCache.m in Sources */,
 				5A85A30C1D2BBE9800B4CD02 /* UIViewController+JASidePanel.m in Sources */,
 				5AD4C37F1D33A96B005F8D98 /* SDWebImagePrefetcher.m in Sources */,
+				5AD249E91D40C57D000859C8 /* SignInViewController.m in Sources */,
 				5AD4C37E1D33A96B005F8D98 /* SDWebImageManager.m in Sources */,
 				5A85A2FE1D2BB87200B4CD02 /* NewProjectViewController.m in Sources */,
 				5A85A3101D2BBF0600B4CD02 /* SettingsViewController.m in Sources */,
@@ -503,10 +543,12 @@
 				5AA3753C1D2CFBEF001993E0 /* FAQViewController.m in Sources */,
 				5A85A3011D2BB88900B4CD02 /* MyProjectsViewController.m in Sources */,
 				5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */,
+				5AD249E11D406964000859C8 /* EnablePasscodeViewController.m in Sources */,
 				5AD4C3841D33A96B005F8D98 /* UIImageView+HighlightedWebCache.m in Sources */,
 				5A85A30B1D2BBE9800B4CD02 /* JASidePanelController.m in Sources */,
 				5A2180951D3E015C0057F298 /* AccountInformationViewController.m in Sources */,
 				5AD4C3791D33A96B005F8D98 /* SDImageCache.m in Sources */,
+				5AD249E51D409F12000859C8 /* SignUpViewController.m in Sources */,
 				5AD4C3801D33A96B005F8D98 /* UIButton+WebCache.m in Sources */,
 				5AD4C3781D33A96B005F8D98 /* NSData+ImageContentType.m in Sources */,
 				5A85A3041D2BB8D600B4CD02 /* UIUtils.m in Sources */,

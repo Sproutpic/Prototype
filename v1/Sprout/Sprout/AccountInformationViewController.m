@@ -19,7 +19,7 @@
     
     [self setNavigationBar];
     
-    signedIn = YES;
+    signedIn = NO;
     
     if(signedIn){
         [self setLayoutForAlreadySignedIn];
@@ -96,6 +96,13 @@
     lblOr.frame = CGRectMake((self.view.frame.size.width - totalLabelsWidth) / 2 + lblSignIn.frame.size.width, originY, lblOr.frame.size.width, lblOr.frame.size.height);
     lblSignUp.frame = CGRectMake((self.view.frame.size.width - totalLabelsWidth) / 2 + lblSignIn.frame.size.width + lblOr.frame.size.width, originY, lblSignUp.frame.size.width, lblSignUp.frame.size.height);
     
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedSignUp:)];
+    [lblSignUp setUserInteractionEnabled:YES];
+    [lblSignUp addGestureRecognizer:tap];
+    tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedSignIn:)];
+    [lblSignIn setUserInteractionEnabled:YES];
+    [lblSignIn addGestureRecognizer:tap];
+    
     [self.view addSubview:lblSignIn];
     [self.view addSubview:lblOr];
     [self.view addSubview:lblSignUp];
@@ -110,10 +117,14 @@
     [self.view addSubview:lblNote];
 }
 - (void)tappedSignIn:(UITapGestureRecognizer *)sender{
-
+    SignInViewController *signController = [[SignInViewController alloc] init];
+    signController.accountInfoController = self;
+    [self.navigationController pushViewController:signController animated:YES];
 }
 - (void)tappedSignUp:(UITapGestureRecognizer *)sender{
-    
+    SignUpViewController *signController = [[SignUpViewController alloc] init];
+    signController.accountInfoController = self;
+    [self.navigationController pushViewController:signController animated:YES];
 }
 - (void)setNavigationBar{
     self.navigationController.navigationBar.barTintColor = [utils colorNavigationBar];

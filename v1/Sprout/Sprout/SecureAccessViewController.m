@@ -56,6 +56,8 @@
     }];
 }
 - (void)switcherViewOn{
+    [self.navigationController pushViewController:[[EnablePasscodeViewController alloc] init] animated:YES];
+    
     [self formatSeparatorWithOriginY:53 forView:switcherView];
     [self formatBlackNoteWithOrigin:17.5 andString:@"Change Passcode" forView:switcherView];
     [switcherView addSubview:[self addArrowRightWithOriginY:15.5]];

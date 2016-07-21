@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UIUtils.h"
+#import "EnablePasscodeViewController.h"
 
 @interface SecureAccessViewController : UIViewController{
     UIUtils *utils;

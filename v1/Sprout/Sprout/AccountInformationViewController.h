@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "UIUtils.h"
+#import "SignUpViewController.h"
+#import "SignInViewController.h"
 
 @interface AccountInformationViewController : UIViewController{
     UIUtils *utils;

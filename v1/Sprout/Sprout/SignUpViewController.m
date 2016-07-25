@@ -82,7 +82,6 @@
     [self.view addSubview:lblNote];
 }
 - (void)tappedSignIn:(UITapGestureRecognizer *)sender{
-    [self dismissViewControllerAnimated:NO completion:nil];
     SignInViewController *signInController = [[SignInViewController alloc] init];
     signInController.accountInfoController = _accountInfoController;
     [self.navigationController pushViewController:signInController animated:YES];

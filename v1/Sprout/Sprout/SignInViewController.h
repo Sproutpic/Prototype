@@ -10,9 +10,11 @@
 #import "UIUtils.h"
 #import "AccountInformationViewController.h"
 @class AccountInformationViewController;
+#import "CreateNewPasswordViewController.h"
 
-@interface SignInViewController : UIViewController{
+@interface SignInViewController : UIViewController<UITextFieldDelegate>{
     UIUtils *utils;
+    UITextField *fieldEmail, *fieldPassword;
 }
 @property (strong,nonatomic)AccountInformationViewController *accountInfoController;
 @end

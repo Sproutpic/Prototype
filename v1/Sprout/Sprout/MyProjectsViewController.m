@@ -16,6 +16,7 @@
 - (void)setController{
     self.view.backgroundColor = [UIColor whiteColor];
     utils = [[UIUtils alloc]init];
+    //nav = [[UIApplication sharedApplication] delegate].nav;
     
     [self setNavigationBar];
     [self populateProjects];

@@ -47,17 +47,37 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
-    MyProjectsViewController *mpc = [[MyProjectsViewController alloc] init];
-    NewProjectViewController *npc = [[NewProjectViewController alloc] init];
-    CommunityViewController *cvc = [[CommunityViewController alloc] init];
+    _myProjsController = [[MyProjectsViewController alloc] init];
+    _projController = [[NewProjectViewController alloc] init];
+    _commController = [[CommunityViewController alloc] init];
     
-    [self referenceControllersToDelegate:mpc newProjController:npc commController:cvc];
+    _myProjsController.view.backgroundColor = [UIColor whiteColor];
+    _projController.view.backgroundColor = [UIColor blueColor];
+    _commController.view.backgroundColor = [UIColor redColor];
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_myProjsController];
+    UINavigationController *nav1 = [[UINavigationController alloc] initWithRootViewController:_projController];
+    UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:_commController];
+    _nav = nav;
+    UITabBarController *tabController = [[UITabBarController alloc]init];
+    //tabController.viewControllers = @[_myProjsController,_projController,_commController];
+    tabController.viewControllers = @[_nav,nav1,nav2];
+    
+    JASidePanelController *sidePanel = [[JASidePanelController alloc] init];
+    _settingsController = [[SettingsViewController alloc] init];
+    UINavigationController *nav3 = [[UINavigationController alloc] initWithRootViewController:_settingsController];
+    sidePanel.rightPanel = nav3;
+    sidePanel.centerPanel = tabController;
+    
+    self.window.rootViewController = sidePanel;
+    [self.window makeKeyAndVisible];
+    /*[self referenceControllersToDelegate:mpc newProjController:npc commController:cvc];
     
     [self setControllersBackGround:[UIColor whiteColor]];
     
     [self setTabControllerWithControllers];
     
-    [self.window makeKeyAndVisible];
+    [self.window makeKeyAndVisible];*/
 }
 -(void)setControllersBackGround:(UIColor *)color{
     
@@ -80,6 +100,7 @@
     UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:_commController];
     
     UITabBarController *tabController = [[UITabBarController alloc]init];
+    //tabController.viewControllers = @[_myProjsController,_projController,_commController];
     tabController.viewControllers = @[nav,nav1,nav2];
     
     [self setPanelWithTab:tabController];

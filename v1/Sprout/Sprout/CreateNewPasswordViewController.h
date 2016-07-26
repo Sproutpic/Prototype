@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "UIUtils.h"
 
-@interface CreateNewPasswordViewController : UIViewController<UITextFieldDelegate>{
+@interface CreateNewPasswordViewController : UIViewController<UITextFieldDelegate, UIAlertViewDelegate>{
     UIUtils *utils;
     UITextField *fieldNewPass, *fieldRepeatPass;
 }

@@ -22,6 +22,16 @@
 }
 - (void)setupLayout{
     [self setupFields];
+    [self showRecoveryAlert];
+}
+- (void)showRecoveryAlert{
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Recovery Verification" message:@"Verification code was sent to your email. Please check your email and insert the code into the field to proceed to setup a new password." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert textFieldAtIndex:0].placeholder = @"Code";
+    [alert show];
+}
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    (buttonIndex == 0) ? [self.navigationController popViewControllerAnimated:YES] : NO;
 }
 - (void)setupFields{
     for (int i = 0; i<2; i++) {
@@ -30,7 +40,7 @@
         view.layer.borderColor = [utils colorNavigationBar].CGColor;
         view.layer.cornerRadius = 3;
         
-        UITextField *field = [[UITextField alloc] initWithFrame:CGRectMake(view.frame.origin.x + 15, view.frame.origin.y, view.frame.size.width - 15, view.frame.size.height)];
+        UITextField *field = [[UITextField alloc] initWithFrame:CGRectMake(view.frame.origin.x + 15, view.frame.origin.y, view.frame.size.width - 15 - view.frame.size.height, view.frame.size.height)];
         NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
         paraStyle.alignment = NSTextAlignmentCenter;
         field.delegate = self;
@@ -43,25 +53,46 @@
         [self.view addSubview:view];
         
         switch (i) {
-            case 0:
+            case 0:{
+                field.secureTextEntry = YES;
                 field.keyboardType = UIKeyboardTypeEmailAddress;
                 field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"New Password" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
                                                                                                                              NSFontAttributeName: [utils fontRegularForSize:15]}];
                 fieldNewPass = field;
                 [self.view addSubview:fieldNewPass];
+                
+                UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(view.frame.size.width - field.frame.size.height * 0.1, field.frame.origin.y + field.frame.size.height * 0.3, field.frame.size.height * 0.4, field.frame.size.height * 0.4)];
+                image.image = [UIImage imageNamed:@"eyeFilled"];
+                image.userInteractionEnabled = YES;
+                image.tag = 0;
+                [image addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedEye:)]];
+                
+                [self.view addSubview:image];
+            }
                 break;
             case 1:{
-                field.secureTextEntry = YES;
                 field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Repeat Password" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
                                                                                                                                 NSFontAttributeName: [utils fontRegularForSize:15]}];
                 fieldRepeatPass = field;
                 [self.view addSubview:fieldRepeatPass];
+                
+                UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(view.frame.size.width - field.frame.size.height * 0.1, field.frame.origin.y + field.frame.size.height * 0.3, field.frame.size.height * 0.4, field.frame.size.height * 0.4)];
+                image.image = [UIImage imageNamed:@"eye"];
+                image.userInteractionEnabled = YES;
+                image.tag = 1;
+                [image addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedEye:)]];
+                
+                [self.view addSubview:image];
             }
                 break;
             default:
                 break;
         }
     }
+}
+- (void)tappedEye:(UITapGestureRecognizer *)sender{
+    ((UIImageView *)sender.view).image = [((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"eyeFilled"]] ? [UIImage imageNamed:@"eye"] : [UIImage imageNamed:@"eyeFilled"];
+    ((UITextField *)((sender.view.tag == 0) ? fieldNewPass : fieldRepeatPass)).secureTextEntry = ((UITextField *)((sender.view.tag == 0) ? fieldNewPass : fieldRepeatPass)).secureTextEntry ? NO : YES;
 }
 - (void)setNavigationBar{
     self.navigationController.navigationBar.barTintColor = [utils colorNavigationBar];
@@ -70,6 +101,7 @@
     
     [self setTitleViewForNavBar];
     [self addLeftBarButton];
+    [self addRightBarButton];
 }
 - (void)addLeftBarButton{
     UIButton *back = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
@@ -77,6 +109,13 @@
     [back addTarget:self action:@selector(backToMenu:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:back];
     self.navigationItem.leftBarButtonItem = barButton;
+}
+- (void)addRightBarButton{
+    UIButton *back = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [back setBackgroundImage:[UIImage imageNamed:@"circleCheck"] forState:UIControlStateNormal];
+    [back addTarget:self action:@selector(backToMenu:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:back];
+    self.navigationItem.rightBarButtonItem = barButton;
 }
 - (IBAction)backToMenu:(UIButton *)sender{
     [self.navigationController popViewControllerAnimated:YES];

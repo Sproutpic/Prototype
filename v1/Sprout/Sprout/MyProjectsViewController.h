@@ -17,6 +17,7 @@
     UIScrollView *projectScroller;
     NSMutableArray *projects;
     NSDictionary *currentDictionary;
+    UINavigationController *nav;
 }
 
 @end

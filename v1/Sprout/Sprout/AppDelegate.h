@@ -23,6 +23,7 @@
 @property (strong, nonatomic) NewProjectViewController *projController;
 @property (strong, nonatomic) CommunityViewController *commController;
 @property (strong, nonatomic) SettingsViewController *settingsController;
+@property (strong, nonatomic) UINavigationController *nav;
 
 @end
 

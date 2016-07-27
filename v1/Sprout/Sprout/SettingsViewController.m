@@ -73,7 +73,7 @@
 - (IBAction)menuButtonTapped:(UIButton *)sender{
     switch (sender.tag) {
         case 1:
-            
+            [self.navigationController pushViewController:[[AboutViewController alloc] init] animated:YES];
             break;
         case 2:
             [self.navigationController pushViewController:[[FAQViewController alloc] init] animated:YES];
@@ -114,7 +114,7 @@
     return separator;
 }
 - (UIImageView *)addArrowRight{
-    UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-45, 12.51, 22, 25)];
+    UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-38, 16, 10, 18)];
     arrow.image = [UIImage imageNamed:@"arrow_right"];
     return arrow;
 }

@@ -76,7 +76,7 @@
                 fieldRepeatPass = field;
                 [self.view addSubview:fieldRepeatPass];
                 
-                UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(view.frame.size.width - field.frame.size.height * 0.1, field.frame.origin.y + field.frame.size.height * 0.3, field.frame.size.height * 0.4, field.frame.size.height * 0.4)];
+                UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(view.frame.size.width - field.frame.size.height * 0.1, field.frame.origin.y + field.frame.size.height * 0.4, field.frame.size.height * 0.4, field.frame.size.height * 0.25)];
                 image.image = [UIImage imageNamed:@"eye"];
                 image.userInteractionEnabled = YES;
                 image.tag = 1;
@@ -91,8 +91,19 @@
     }
 }
 - (void)tappedEye:(UITapGestureRecognizer *)sender{
-    ((UIImageView *)sender.view).image = [((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"eyeFilled"]] ? [UIImage imageNamed:@"eye"] : [UIImage imageNamed:@"eyeFilled"];
     ((UITextField *)((sender.view.tag == 0) ? fieldNewPass : fieldRepeatPass)).secureTextEntry = ((UITextField *)((sender.view.tag == 0) ? fieldNewPass : fieldRepeatPass)).secureTextEntry ? NO : YES;
+    [UIView animateWithDuration:0.1 animations:^{
+        ((UIImageView *)sender.view).alpha = 0;
+    } completion:^(BOOL finished){
+        [UIView animateWithDuration:0.0 animations:^{
+            ((UIImageView *)sender.view).frame = ((UIImageView *)sender.view).frame.size.height == 17.6 ?CGRectMake(self.view.frame.size.width * 0.82 - 44 * 0.1, (((UIImageView *)sender.view).frame.origin.y - (13.2)) + 44 * 0.4, 44 * 0.4, 44 * 0.25):CGRectMake(self.view.frame.size.width * 0.82 - 44 * 0.1, (((UIImageView *)sender.view).frame.origin.y - (17.6)) + 44 * 0.3, 44 * 0.4, 44 * 0.4);
+            ((UIImageView *)sender.view).image = [((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"eyeFilled"]] ? [UIImage imageNamed:@"eye"] : [UIImage imageNamed:@"eyeFilled"];
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:0.1 animations:^{
+                ((UIImageView *)sender.view).alpha = 1;
+            }];
+        }];
+    }];
 }
 - (void)setNavigationBar{
     self.navigationController.navigationBar.barTintColor = [utils colorNavigationBar];

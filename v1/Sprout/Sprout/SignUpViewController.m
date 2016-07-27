@@ -43,25 +43,18 @@
                                                                                                                    NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle)}]];
     lblNote.attributedText = attrStr;
     CGRect size = [attrStr boundingRectWithSize:CGSizeMake(self.view.frame.size.width - (self.view.frame.size.width * 0.2 + 32), MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
-    //lblNote.layer.borderWidth = 1;
-    //[lblNote sizeToFit];
     lblNote.frame = CGRectMake(self.view.frame.size.width * 0.11 + 32, 198, self.view.frame.size.width - (self.view.frame.size.width * 0.2 + 32), size.size.height);
     [self.view addSubview:lblNote];
 }
 - (void)addCheckBox{
-    UILabel *lblNote = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.11, 194, 22, 22)];
-    lblNote.layer.borderWidth = 1.2;
-    lblNote.textColor = [utils colorNavigationBar];
-    lblNote.textAlignment = NSTextAlignmentCenter;
-    lblNote.font = [utils fontRegularForSize:20];
-    lblNote.layer.borderColor = [utils colorNavigationBar].CGColor;
-    lblNote.layer.cornerRadius = 3;
-    lblNote.userInteractionEnabled = YES;
-    [lblNote addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedCheck:)]];
-    [self.view addSubview:lblNote];
+    UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.11, 194, 22, 22)];
+    image.image = [UIImage imageNamed:@"Checkbox"];
+    image.userInteractionEnabled = YES;
+    [image addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedCheck:)]];
+    [self.view addSubview:image];
 }
 - (void)tappedCheck:(UITapGestureRecognizer *)sender{
-    ((UILabel *)sender.view).text = [((UILabel *)sender.view).text length] == 0 ? @"✓": @"";
+    ((UIImageView *)sender.view).image = [((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"Checkbox"]] ? [UIImage imageNamed:@"check-on"]: [UIImage imageNamed:@"Checkbox"];
 }
 - (void)setupFooter{
     UILabel *lblNote = [[UILabel alloc] init];
@@ -136,7 +129,7 @@
                 fieldPassword = field;
                 [self.view addSubview:fieldPassword];
                 
-                UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(view.frame.size.width - field.frame.size.height * 0.1, field.frame.origin.y + field.frame.size.height * 0.3, field.frame.size.height * 0.4, field.frame.size.height * 0.4)];
+                UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(view.frame.size.width - field.frame.size.height * 0.1, field.frame.origin.y + field.frame.size.height * 0.40, field.frame.size.height * 0.4, field.frame.size.height * 0.25)];
                 image.image = [UIImage imageNamed:@"eye"];
                 image.userInteractionEnabled = YES;
                 [image addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedShowPass:)]];

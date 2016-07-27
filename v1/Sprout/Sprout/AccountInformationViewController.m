@@ -66,7 +66,7 @@
     }
 }
 - (void)addRightBarButton{
-    UIButton *download = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
+    UIButton *download = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 15, 20)];
     [download setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:download];
     self.navigationItem.rightBarButtonItem = barButton;

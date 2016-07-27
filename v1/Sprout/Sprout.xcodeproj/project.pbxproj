@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5A2180951D3E015C0057F298 /* AccountInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A2180941D3E015C0057F298 /* AccountInformationViewController.m */; };
 		5A2180991D3E1BDB0057F298 /* SecureAccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A2180981D3E1BDB0057F298 /* SecureAccessViewController.m */; };
+		5A245E1C1D488E7F006A6F52 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A245E1B1D488E7F006A6F52 /* AboutViewController.m */; };
 		5A6719C21D45F60000E94FC5 /* CreateNewPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A6719C11D45F60000E94FC5 /* CreateNewPasswordViewController.m */; };
 		5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2C71D2BB65F00B4CD02 /* main.m */; };
 		5A85A2CB1D2BB65F00B4CD02 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2CA1D2BB65F00B4CD02 /* AppDelegate.m */; };
@@ -67,6 +68,8 @@
 		5A2180941D3E015C0057F298 /* AccountInformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountInformationViewController.m; sourceTree = "<group>"; };
 		5A2180971D3E1BDB0057F298 /* SecureAccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecureAccessViewController.h; sourceTree = "<group>"; };
 		5A2180981D3E1BDB0057F298 /* SecureAccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecureAccessViewController.m; sourceTree = "<group>"; };
+		5A245E1A1D488E7F006A6F52 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		5A245E1B1D488E7F006A6F52 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		5A6719C01D45F60000E94FC5 /* CreateNewPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateNewPasswordViewController.h; sourceTree = "<group>"; };
 		5A6719C11D45F60000E94FC5 /* CreateNewPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateNewPasswordViewController.m; sourceTree = "<group>"; };
 		5A85A2C31D2BB65F00B4CD02 /* Sprout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sprout.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -183,6 +186,15 @@
 				5A2180981D3E1BDB0057F298 /* SecureAccessViewController.m */,
 			);
 			name = "Secure Access";
+			sourceTree = "<group>";
+		};
+		5A245E191D488E2E006A6F52 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				5A245E1A1D488E7F006A6F52 /* AboutViewController.h */,
+				5A245E1B1D488E7F006A6F52 /* AboutViewController.m */,
+			);
+			name = About;
 			sourceTree = "<group>";
 		};
 		5A6719BF1D45F5C500E94FC5 /* Create New Password */ = {
@@ -318,6 +330,7 @@
 		5A85A30D1D2BBEC800B4CD02 /* SettingsViewController */ = {
 			isa = PBXGroup;
 			children = (
+				5A245E191D488E2E006A6F52 /* About */,
 				5A2180961D3E1BB70057F298 /* Secure Access */,
 				5AA375391D2CFBC4001993E0 /* FAQ */,
 				5A2180921D3E01260057F298 /* Account Information */,
@@ -564,6 +577,7 @@
 				5AD4C3791D33A96B005F8D98 /* SDImageCache.m in Sources */,
 				5AD249E51D409F12000859C8 /* SignUpViewController.m in Sources */,
 				5AD4C3801D33A96B005F8D98 /* UIButton+WebCache.m in Sources */,
+				5A245E1C1D488E7F006A6F52 /* AboutViewController.m in Sources */,
 				5AD4C3781D33A96B005F8D98 /* NSData+ImageContentType.m in Sources */,
 				5A85A3041D2BB8D600B4CD02 /* UIUtils.m in Sources */,
 			);

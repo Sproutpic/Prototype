@@ -38,6 +38,9 @@
     enableSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 65, 16.5, 0, 0)];
     [self.view addSubview:enableSwitch];
     enableSwitch.onTintColor = [utils colorNavigationBar];
+    enableSwitch.backgroundColor = [UIColor colorWithRed:173.f/255.f green:175.f/255.f blue:177.f/255.f alpha:1];
+    enableSwitch.tintColor = [UIColor colorWithRed:173.f/255.f green:175.f/255.f blue:177.f/255.f alpha:1];
+    enableSwitch.layer.cornerRadius = 16.0;
     [enableSwitch addTarget:self action:@selector(switched:)
     forControlEvents:UIControlEventValueChanged];
 }
@@ -60,10 +63,10 @@
     
     [self formatSeparatorWithOriginY:53 forView:switcherView];
     [self formatBlackNoteWithOrigin:17.5 andString:@"Change Passcode" forView:switcherView];
-    [switcherView addSubview:[self addArrowRightWithOriginY:15.5]];
+    [switcherView addSubview:[self addArrowRightWithOriginY:17.5]];
     [self formatSeparatorWithOriginY:135 forView:switcherView];
     [self formatBlackNoteWithOrigin:154.5 andString:@"Auto-lock in" forView:switcherView];
-    [switcherView addSubview:[self addArrowRightWithOriginY:152.5]];
+    [switcherView addSubview:[self addArrowRightWithOriginY:156.5]];
     [self addMinutes];
     [self formatGreenNoteWithOrigin:61 andString:@"Don't worry about your projects and progress\nsecurity by setting up a passcode." forView:switcherView];
     [self formatSeparatorWithOriginY:193 forView:switcherView];
@@ -83,7 +86,7 @@
     [switcherView addSubview:lblNote];
 }
 - (UIImageView *)addArrowRightWithOriginY:(CGFloat)y{
-    UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-32, y, 22, 25)];
+    UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-27, y, 10, 18)];
     arrow.image = [UIImage imageNamed:@"arrow_right"];
     return arrow;
 }

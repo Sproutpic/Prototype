@@ -10,6 +10,7 @@
 #import "CommunityViewController.h"
 #import "NewProjectViewController.h"
 #import "MyProjectsViewController.h"
+@class MyProjectsViewController;
 #import "SettingsViewController.h"
 #import "JASidePanelController.h"
 #import "UIUtils.h"
@@ -24,6 +25,9 @@
 @property (strong, nonatomic) CommunityViewController *commController;
 @property (strong, nonatomic) SettingsViewController *settingsController;
 @property (strong, nonatomic) UINavigationController *nav;
+@property (strong, nonatomic) UITabBarController *tabController;
+@property (strong, nonatomic) UILabel *label,*label1,*label2;
+@property (strong, nonatomic) UIImageView *imageView,*imageView1,*imageView2;
 
 @end
 

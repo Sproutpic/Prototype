@@ -46,77 +46,134 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    utils = [[UIUtils alloc] init];
+    
+    [[UINavigationBar appearance] setBarTintColor:[utils colorNavigationBar]];
+    [[UINavigationBar appearance] setTintColor:[utils colorNavigationBar]];
+    [[UINavigationBar appearance] setBackgroundColor:[utils colorNavigationBar]];
+    [[UINavigationBar appearance] setTranslucent:NO];
     
     _myProjsController = [[MyProjectsViewController alloc] init];
     _projController = [[NewProjectViewController alloc] init];
     _commController = [[CommunityViewController alloc] init];
     
+    
     _myProjsController.view.backgroundColor = [UIColor whiteColor];
     _projController.view.backgroundColor = [UIColor blueColor];
     _commController.view.backgroundColor = [UIColor redColor];
     
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_myProjsController];
+    _nav = [[UINavigationController alloc] initWithRootViewController:_myProjsController];
     UINavigationController *nav1 = [[UINavigationController alloc] initWithRootViewController:_projController];
     UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:_commController];
-    _nav = nav;
-    UITabBarController *tabController = [[UITabBarController alloc]init];
-    //tabController.viewControllers = @[_myProjsController,_projController,_commController];
-    tabController.viewControllers = @[_nav,nav1,nav2];
-    
+    _tabController = [[UITabBarController alloc]init];
+    _tabController.viewControllers = @[_nav,nav1,nav2];
+    [self setupTabBAr:_tabController];
     JASidePanelController *sidePanel = [[JASidePanelController alloc] init];
     _settingsController = [[SettingsViewController alloc] init];
     UINavigationController *nav3 = [[UINavigationController alloc] initWithRootViewController:_settingsController];
     sidePanel.rightPanel = nav3;
-    sidePanel.centerPanel = tabController;
-    
+    sidePanel.centerPanel = _tabController;
     self.window.rootViewController = sidePanel;
     [self.window makeKeyAndVisible];
-    /*[self referenceControllersToDelegate:mpc newProjController:npc commController:cvc];
-    
-    [self setControllersBackGround:[UIColor whiteColor]];
-    
-    [self setTabControllerWithControllers];
-    
-    [self.window makeKeyAndVisible];*/
 }
--(void)setControllersBackGround:(UIColor *)color{
+-(void)setupTabBAr:(UITabBarController *)tabController{
+    [tabController.tabBar removeFromSuperview];
+    UIView *tabBarView = [[UIView alloc] initWithFrame:CGRectMake(0, tabController.view.frame.size.height - 50, tabController.view.frame.size.width, 50)];
+    tabBarView.backgroundColor = [UIColor colorWithRed:239.f/255.f green:240.f/255.f blue:240.f/255.f alpha:1];
     
-    _myProjsController.view.backgroundColor = color;
-    _projController.view.backgroundColor = [UIColor blueColor];
-    _commController.view.backgroundColor = [UIColor redColor];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, tabBarView.frame.size.width / 3, tabBarView.frame.size.height)];
+    button.tag = 1;
     
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, button.frame.size.height - 13, button.frame.size.width, 10)];
+    label.text = @"My Projects";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [utils colorNavigationBar];
+    label.font = [utils fontRegularForSize:10];
+    _label = label;
+    [button addSubview:_label];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 11, button.frame.size.width, 21)];
+    imageView.image = [UIImage imageNamed:@"projector-green"];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    _imageView = imageView;
+    [button addSubview:_imageView];
+    
+    [button addTarget:self action:@selector(selectTab:) forControlEvents:UIControlEventTouchUpInside];
+    [tabBarView addSubview:button];
+    
+    button = [[UIButton alloc] initWithFrame:CGRectMake(tabBarView.frame.size.width / 3, 0, tabBarView.frame.size.width / 3, tabBarView.frame.size.height)];
+    button.tag = 2;
+    
+    label = [[UILabel alloc] initWithFrame:CGRectMake(0, button.frame.size.height - 13, button.frame.size.width, 10)];
+    label.text = @"New Project";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor colorWithRed:184.f/255.f green:184.f/255.f blue:184.f/255.f alpha:1];
+    label.font = [utils fontRegularForSize:10];
+    _label1 = label;
+    [button addSubview:_label1];
+    
+    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 8, button.frame.size.width, 25)];
+    imageView.image = [UIImage imageNamed:@"Plus-grey"];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    _imageView1 = imageView;
+    [button addSubview:_imageView1];
+    
+    [button addTarget:self action:@selector(selectTab:) forControlEvents:UIControlEventTouchUpInside];
+    [tabBarView addSubview:button];
+    
+    button = [[UIButton alloc] initWithFrame:CGRectMake(tabBarView.frame.size.width / 3 * 2, 0, tabBarView.frame.size.width / 3, tabBarView.frame.size.height)];
+    button.tag = 3;
+    
+    label = [[UILabel alloc] initWithFrame:CGRectMake(0, button.frame.size.height - 13, button.frame.size.width, 10)];
+    label.text = @"Community";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor colorWithRed:184.f/255.f green:184.f/255.f blue:184.f/255.f alpha:1];
+    label.font = [utils fontRegularForSize:10];
+    _label2 = label;
+    [button addSubview:_label2];
+    
+    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 11, button.frame.size.width, 19)];
+    imageView.image = [UIImage imageNamed:@"Team-grey"];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    _imageView2 = imageView;
+    [button addSubview:_imageView2];
+    
+    [button addTarget:self action:@selector(selectTab:) forControlEvents:UIControlEventTouchUpInside];
+    [tabBarView addSubview:button];
+    
+    [tabController.view addSubview:tabBarView];
 }
-- (void)referenceControllersToDelegate:(MyProjectsViewController *)mpc newProjController:(NewProjectViewController *)npc commController:(CommunityViewController *)cvc{
-    
-    _myProjsController = mpc;
-    _projController = npc;
-    _commController = cvc;
-    
+- (IBAction)selectTab:(UIButton *)sender{
+    [self resetTab];
+    for (id sub in sender.subviews) {
+        if([sub isKindOfClass:[UILabel class]]){
+            ((UILabel *)sub).textColor = ([((UILabel *)sub).textColor isEqual:[utils colorNavigationBar]]) ? [UIColor colorWithRed:184.f/255.f green:184.f/255.f blue:184.f/255.f alpha:1] : [utils colorNavigationBar];
+        }
+    }
+    switch (sender.tag) {
+        case 1:
+            _tabController.selectedIndex = 0;
+            _imageView.image = [UIImage imageNamed:@"projector-green"];
+            break;
+        case 2:
+            _tabController.selectedIndex = 1;
+            _imageView1.image = [UIImage imageNamed:@"Plus-green"];
+            break;
+        case 3:
+            _tabController.selectedIndex = 2;
+            _imageView2.image = [UIImage imageNamed:@"Team-green"];
+            break;
+        default:
+            break;
+    }
 }
-- (void)setTabControllerWithControllers{
+- (void)resetTab{
+    _label.textColor = [UIColor colorWithRed:184.f/255.f green:184.f/255.f blue:184.f/255.f alpha:1];
+    _label1.textColor = [UIColor colorWithRed:184.f/255.f green:184.f/255.f blue:184.f/255.f alpha:1];
+    _label2.textColor = [UIColor colorWithRed:184.f/255.f green:184.f/255.f blue:184.f/255.f alpha:1];
     
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_myProjsController];
-    UINavigationController *nav1 = [[UINavigationController alloc] initWithRootViewController:_projController];
-    UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:_commController];
-    
-    UITabBarController *tabController = [[UITabBarController alloc]init];
-    //tabController.viewControllers = @[_myProjsController,_projController,_commController];
-    tabController.viewControllers = @[nav,nav1,nav2];
-    
-    [self setPanelWithTab:tabController];
-}
-- (void)setPanelWithTab:(UITabBarController *)tab{
-
-    JASidePanelController *sidePanel = [[JASidePanelController alloc] init];
-    _settingsController = [[SettingsViewController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_settingsController];
-    sidePanel.rightPanel = nav;
-    sidePanel.centerPanel = tab;
-    
-    [self setWindowRootController:sidePanel];
-    
-}
-- (void)setWindowRootController:(JASidePanelController *)sidePanel{
-    self.window.rootViewController = sidePanel;
+    _imageView.image = [UIImage imageNamed:@"projector-grey"];
+    _imageView1.image = [UIImage imageNamed:@"Plus-grey"];
+    _imageView2.image = [UIImage imageNamed:@"Team-grey"];
 }
 @end

@@ -51,6 +51,7 @@
     [self setButtons:@[@"About Sproutpic",
                        @"FAQ",
                        @"Account Information",
+                       @"Change Password",
                        @"Secure Access"]];
     
     
@@ -84,6 +85,9 @@
         case 4:
             [self.navigationController pushViewController:[[SecureAccessViewController alloc] init] animated:YES];
             break;
+        case 5:
+            [self.navigationController pushViewController:[[ChangePasswordViewController alloc] init] animated:YES];
+            break;
         default:
             break;
     }
@@ -104,6 +108,8 @@
         button.tag = 2;
     }else if ([str isEqualToString:@"Account Information"]){
         button.tag = 3;
+    }else if ([str isEqualToString:@"Change Password"]){
+        button.tag = 5;
     }else if ([str isEqualToString:@"Secure Access"]){
         button.tag = 4;
     }

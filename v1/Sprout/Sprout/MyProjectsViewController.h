@@ -11,13 +11,13 @@
 #import "UIViewController+JASidePanel.h"
 #import "UIUtils.h"
 #import "SDWebImage/UIImageView+WebCache.h"
+#import "AppDelegate.h"
 
-@interface MyProjectsViewController : JASidePanelController{
+@interface MyProjectsViewController : UIViewController{
     UIUtils *utils;
     UIScrollView *projectScroller;
     NSMutableArray *projects;
     NSDictionary *currentDictionary;
-    UINavigationController *nav;
 }
 
 @end

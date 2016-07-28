@@ -14,6 +14,7 @@
 #import "AccountInformationViewController.h"
 #import "SecureAccessViewController.h"
 #import "AboutViewController.h"
+#import "ChangePasswordViewController.h"
 
 @interface SettingsViewController : JASidePanelController{
     UIUtils *utils;

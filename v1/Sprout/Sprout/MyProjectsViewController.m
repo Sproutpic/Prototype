@@ -43,21 +43,24 @@
     self.navigationItem.titleView = label;
 }
 - (void)setProjectScroller{
-    projectScroller = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40)];
+    projectScroller = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 114)];
     [self setEachProjectPreview];
     [self.view addSubview:projectScroller];
 }
 - (void)setEachProjectPreview{
     CGFloat y = 20.0f;
+    int tag = 0;
     for (NSDictionary *dictionary in projects) {
         currentDictionary = dictionary;
-        [self setPerProjectContainerWithY:y];
-        y += projectScroller.frame.size.height * 0.36 + 20;
+        [self setPerProjectContainerWithY:y withTag:tag];
+        y += projectScroller.frame.size.height * 0.405 + 27;
+        tag ++;
     }
     [self updateScrollerContentHeight];
 }
-- (void)setPerProjectContainerWithY:(int)y{
-    UIView *projectView = [[UIView alloc]initWithFrame:CGRectMake(0, y, self.view.frame.size.width, projectScroller.frame.size.height * 0.35)];
+- (void)setPerProjectContainerWithY:(int)y withTag:(int)tag{
+    UIView *projectView = [[UIView alloc]initWithFrame:CGRectMake(0, y, self.view.frame.size.width, projectScroller.frame.size.height * 0.405)];
+    projectView.tag = tag;
     [self setupProjectView:projectView];
     [projectScroller addSubview:projectView];
 }
@@ -72,6 +75,16 @@
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(projectView.frame.size.width - 28, 5, 11, 18)];
     imageView.image = [UIImage imageNamed:@"arrow_right"];
     [projectView addSubview:imageView];
+    
+    UIButton *btnProjDetail = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, projectView.frame.size.width, 23)];
+    [btnProjDetail addTarget:self action:@selector(showProjDetail:) forControlEvents:UIControlEventTouchUpInside];
+    btnProjDetail.tag = projectView.tag;
+    [projectView addSubview:btnProjDetail];
+}
+- (IBAction)showProjDetail:(UIButton *)sender{
+    ProjectDetailViewController *projDetailController =[[ProjectDetailViewController alloc] init];
+    projDetailController.project = [projects[sender.tag] mutableCopy];
+    [self.tabBarController presentViewController:[[UINavigationController alloc] initWithRootViewController:projDetailController] animated:YES completion:nil];
 }
 - (void)setupSeparator:(UIView *)projectView{
     UIView *separator = [[UIView alloc]initWithFrame:CGRectMake(10, projectView.frame.size.height + 11, projectView.frame.size.width, 1)];
@@ -122,11 +135,7 @@
     }
 }
 - (void)updateScrollerContentHeight{
-    CGFloat height = 20.0f;
-    for (UIView *view in projectScroller.subviews) {
-        height += view.frame.size.height;
-    }
-    projectScroller.contentSize = CGSizeMake(self.view.frame.size.width, height);
+    projectScroller.contentSize = CGSizeMake(self.view.frame.size.width, projectScroller.subviews.lastObject.frame.origin.y + projectScroller.subviews.lastObject.frame.size.height);
 }
 - (void)populateProjects{
     projects = [[NSMutableArray alloc]initWithArray:@[@{@"projectTitle":@"Project Title",
@@ -140,6 +149,12 @@
                                                         @"projectThumbnails":@[@"http://ghk.h-cdn.co/assets/15/33/980x490/landscape-1439490128-plants.jpg",
                                                                                @"http://cdn3.fast-serve.net/cdn/plugplants/_0_0_6PNES.jpg",
                                                                                @"http://cdn1.fast-serve.net/cdn/plugplants/Pack-x6-Mimulus-39-Glutinosus-39-Monkey-Plant-Hanging-Basket-Garden-Plug-Plants_700_600_7GH4I.jpg",
-                                                                               @"https://s-media-cache-ak0.pinimg.com/236x/44/97/88/449788a41a9d826eace28f363fb80b69.jpg"]}]];
+                                                                               @"https://s-media-cache-ak0.pinimg.com/236x/44/97/88/449788a41a9d826eace28f363fb80b69.jpg"]},
+                                                      @{@"projectTitle":@"Project Title",
+                                                        @"projectDetail":@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it.",
+                                                        @"projectThumbnails":@[@"http://cdn4.fast-serve.net/cdn/plugplants/Pack-X6-Blue-Agapanthus-Perennial-Summer-Flowering-Plug-Plants_700_600_78HAG.jpg",
+                                                                               @"https://s-media-cache-ak0.pinimg.com/564x/36/d4/08/36d408bdaf1b71825edde18ed7bc3690.jpg",
+                                                                               @"https://s-media-cache-ak0.pinimg.com/236x/6b/14/7a/6b147af37bf15c7f10c3583c247fc5b2.jpg",
+                                                                               @"https://s-media-cache-ak0.pinimg.com/236x/c2/a4/df/c2a4df1e8aad6b6f5404bdf8ac0c1cc7.jpg"]}]];
 }
 @end

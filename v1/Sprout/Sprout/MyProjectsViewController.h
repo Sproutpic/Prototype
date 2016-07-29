@@ -12,6 +12,7 @@
 #import "UIUtils.h"
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "AppDelegate.h"
+#import "ProjectDetailViewController.h"
 
 @interface MyProjectsViewController : UIViewController{
     UIUtils *utils;

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CommunityViewController.h"
 #import "NewProjectViewController.h"
+@class NewProjectViewController;
 #import "MyProjectsViewController.h"
 @class MyProjectsViewController;
 #import "SettingsViewController.h"
@@ -28,6 +29,7 @@
 @property (strong, nonatomic) UITabBarController *tabController;
 @property (strong, nonatomic) UILabel *label,*label1,*label2;
 @property (strong, nonatomic) UIImageView *imageView,*imageView1,*imageView2;
-
+@property (strong, nonatomic) UIView *tabBarView;
+- (void)resetTab;
 @end
 

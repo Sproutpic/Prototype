@@ -59,8 +59,8 @@
     
     
     _myProjsController.view.backgroundColor = [UIColor whiteColor];
-    _projController.view.backgroundColor = [UIColor blueColor];
-    _commController.view.backgroundColor = [UIColor redColor];
+    _projController.view.backgroundColor = [UIColor whiteColor];
+    _commController.view.backgroundColor = [UIColor whiteColor];
     
     _nav = [[UINavigationController alloc] initWithRootViewController:_myProjsController];
     UINavigationController *nav1 = [[UINavigationController alloc] initWithRootViewController:_projController];
@@ -78,10 +78,10 @@
 }
 -(void)setupTabBAr:(UITabBarController *)tabController{
     [tabController.tabBar removeFromSuperview];
-    UIView *tabBarView = [[UIView alloc] initWithFrame:CGRectMake(0, tabController.view.frame.size.height - 50, tabController.view.frame.size.width, 50)];
-    tabBarView.backgroundColor = [UIColor colorWithRed:239.f/255.f green:240.f/255.f blue:240.f/255.f alpha:1];
+    _tabBarView = [[UIView alloc] initWithFrame:CGRectMake(0, tabController.view.frame.size.height - 50, tabController.view.frame.size.width, 50)];
+    _tabBarView.backgroundColor = [UIColor colorWithRed:239.f/255.f green:240.f/255.f blue:240.f/255.f alpha:1];
     
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, tabBarView.frame.size.width / 3, tabBarView.frame.size.height)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, _tabBarView.frame.size.width / 3, _tabBarView.frame.size.height)];
     button.tag = 1;
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, button.frame.size.height - 13, button.frame.size.width, 10)];
@@ -99,9 +99,9 @@
     [button addSubview:_imageView];
     
     [button addTarget:self action:@selector(selectTab:) forControlEvents:UIControlEventTouchUpInside];
-    [tabBarView addSubview:button];
+    [_tabBarView addSubview:button];
     
-    button = [[UIButton alloc] initWithFrame:CGRectMake(tabBarView.frame.size.width / 3, 0, tabBarView.frame.size.width / 3, tabBarView.frame.size.height)];
+    button = [[UIButton alloc] initWithFrame:CGRectMake(_tabBarView.frame.size.width / 3, 0, _tabBarView.frame.size.width / 3, _tabBarView.frame.size.height)];
     button.tag = 2;
     
     label = [[UILabel alloc] initWithFrame:CGRectMake(0, button.frame.size.height - 13, button.frame.size.width, 10)];
@@ -119,9 +119,9 @@
     [button addSubview:_imageView1];
     
     [button addTarget:self action:@selector(selectTab:) forControlEvents:UIControlEventTouchUpInside];
-    [tabBarView addSubview:button];
+    [_tabBarView addSubview:button];
     
-    button = [[UIButton alloc] initWithFrame:CGRectMake(tabBarView.frame.size.width / 3 * 2, 0, tabBarView.frame.size.width / 3, tabBarView.frame.size.height)];
+    button = [[UIButton alloc] initWithFrame:CGRectMake(_tabBarView.frame.size.width / 3 * 2, 0, _tabBarView.frame.size.width / 3, _tabBarView.frame.size.height)];
     button.tag = 3;
     
     label = [[UILabel alloc] initWithFrame:CGRectMake(0, button.frame.size.height - 13, button.frame.size.width, 10)];
@@ -139,9 +139,9 @@
     [button addSubview:_imageView2];
     
     [button addTarget:self action:@selector(selectTab:) forControlEvents:UIControlEventTouchUpInside];
-    [tabBarView addSubview:button];
+    [_tabBarView addSubview:button];
     
-    [tabController.view addSubview:tabBarView];
+    [tabController.view addSubview:_tabBarView];
 }
 - (IBAction)selectTab:(UIButton *)sender{
     [self resetTab];

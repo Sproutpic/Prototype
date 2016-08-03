@@ -20,5 +20,5 @@
     NSMutableArray *projects;
     NSDictionary *currentDictionary;
 }
-
+- (NSMutableArray *)getProjects;
 @end

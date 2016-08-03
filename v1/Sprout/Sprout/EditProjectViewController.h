@@ -9,9 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "UIUtils.h"
 
-@interface EditProjectViewController : UIViewController{
+@interface EditProjectViewController : UIViewController<UITextFieldDelegate, UITextViewDelegate>{
     UIUtils *utils;
     UIScrollView *scroller;
+    UITextField *fieldTitle, *fieldTag;
+    UITextView *fieldDesc;
+    UIView *textViewsept, *sliderView,*restView;
+    UILabel *sliderCounter;
+    UIImageView *sprout, * play;
 }
 @property (strong,nonatomic)UIImage *image;
 @end

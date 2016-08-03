@@ -56,7 +56,7 @@
     _myProjsController = [[MyProjectsViewController alloc] init];
     _projController = [[NewProjectViewController alloc] init];
     _commController = [[CommunityViewController alloc] init];
-    
+    _commController.projects = [_myProjsController getProjects];
     
     _myProjsController.view.backgroundColor = [UIColor whiteColor];
     _projController.view.backgroundColor = [UIColor whiteColor];

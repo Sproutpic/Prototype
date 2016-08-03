@@ -315,10 +315,10 @@
 		5A85A2F51D2BB7CB00B4CD02 /* My Projects */ = {
 			isa = PBXGroup;
 			children = (
+				5A85A30D1D2BBEC800B4CD02 /* SettingsViewController */,
 				5A17F60B1D4AFD7A00662C1A /* Project Detail */,
 				5A85A2FF1D2BB88900B4CD02 /* MyProjectsViewController.h */,
 				5A85A3001D2BB88900B4CD02 /* MyProjectsViewController.m */,
-				5A85A30D1D2BBEC800B4CD02 /* SettingsViewController */,
 			);
 			name = "My Projects";
 			sourceTree = "<group>";
@@ -793,7 +793,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sproutpic.sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "04dc273b-2d90-4d41-9cfa-795b94dbf97f";
 			};
 			name = Debug;
 		};

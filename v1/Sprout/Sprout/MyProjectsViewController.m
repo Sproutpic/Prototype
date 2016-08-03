@@ -105,7 +105,10 @@
     descLabel.frame = CGRectMake(10, projectView.frame.size.height - descLabel.frame.size.height + 1, descLabel.frame.size.width, descLabel.frame.size.height);
     [projectView addSubview:descLabel];
 }
-
+- (NSMutableArray *)getProjects{
+    [self populateProjects];
+    return projects;
+}
 - (void)setupProjectTitleLabel:(UIView *)projectView{
     UILabel *titleLabel = [[UILabel alloc]init];
     titleLabel.text = [currentDictionary objectForKey:@"projectTitle"];

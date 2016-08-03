@@ -7,7 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "JASidePanelController.h"
+#import "UIViewController+JASidePanel.h"
+#import "UIUtils.h"
+#import "SDWebImage/UIImageView+WebCache.h"
 
-@interface CommunityViewController : UIViewController
 
+@interface CommunityViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>{
+    UIUtils *utils;
+    UIScrollView *projectScroller;
+    NSDictionary *currentDictionary;
+    UILabel *fSprout, *fFeatured, *fTopViewed, *fLongest;
+    UIView *underlineView;
+    UIView *searchView;
+}
+@property (strong,nonatomic)UITableView *table;
+@property (strong,nonatomic)NSMutableArray* projects;
 @end

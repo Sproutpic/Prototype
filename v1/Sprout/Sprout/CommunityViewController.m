@@ -236,16 +236,67 @@
     [close addTarget:self action:@selector(closeSearchView:) forControlEvents:UIControlEventTouchUpInside];
     [searchView addSubview:close];
     searchView.clipsToBounds = YES;
+    sillhou = [[UIView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height)];
+    sillhou.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    sillhou.alpha = 0;
+    UIView *textContainer = [[UIView alloc] initWithFrame:CGRectMake(10, 8, self.view.frame.size.width - 55, 28)];
+    textContainer.layer.cornerRadius = 4;
+    textContainer.backgroundColor = [UIColor whiteColor];
+    [searchView addSubview:textContainer];
+    UIButton *searchButton = [[UIButton alloc] initWithFrame:CGRectMake(8, -1, 30, 30)];
+    [searchButton addTarget:self action:@selector(searchEmpty:) forControlEvents:UIControlEventTouchUpInside];
+    [searchButton setImage:[UIImage imageNamed:@"search-small"] forState:UIControlStateNormal];
+    [textContainer addSubview:searchButton];
+    UITextField *searchField = [[UITextField alloc] initWithFrame:CGRectMake(38, 0, textContainer.frame.size.width - 43, 28)];
+    searchField.textColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+    searchField.font = [utils fontRegularForSize:12];
+    searchField.tintColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+    searchField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Search request" attributes:@{NSForegroundColorAttributeName: [[UIColor blackColor] colorWithAlphaComponent:0.3],
+                                                                                                                  NSFontAttributeName:[utils fontRegularForSize:12]}];
+    [textContainer addSubview:searchField];
+    [self.navigationController.view addSubview:sillhou];
     [self.navigationController.view addSubview:searchView];
     [UIView animateWithDuration:0.2 animations:^{
         searchView.frame = CGRectMake(0, 20, self.view.frame.size.width, 44);
+        sillhou.alpha = 1;
+        [searchField becomeFirstResponder];
+    }];
+}
+-(IBAction)searchEmpty:(UIButton *)sender{
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+    if ([[NSString stringWithFormat:@"%@",noResultView] isEqualToString:@"(null)"]) {
+        noResultView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 50)];
+        noResultView.backgroundColor = [UIColor whiteColor];
+        noResultView.alpha = 0;
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake((noResultView.frame.size.width * .4), noResultView.frame.size.width * .425, noResultView.frame.size.width * .2, noResultView.frame.size.height * .2)];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.image = [UIImage imageNamed:@"zoom"];
+        [noResultView addSubview:imageView];
+        UILabel *label = [[UILabel alloc] init];
+        label.attributedText = [[NSAttributedString alloc] initWithString:@"No results found\n\nTry again" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar], NSFontAttributeName: [utils fontRegularForSize:16]}];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.numberOfLines = 0;
+        [label sizeToFit];
+        label.frame = CGRectMake((self.view.frame.size.width - label.frame.size.width)/2, noResultView.frame.size.width * .75, label.frame.size.width, label.frame.size.height);
+        [noResultView addSubview:label];
+        [self.view addSubview:noResultView];
+    }
+    [UIView animateWithDuration:0.2 animations:^{
+        sillhou.alpha = 0;
+        noResultView.alpha = 1;
+    } completion:^(BOOL finished){
+        [sillhou removeFromSuperview];
     }];
 }
 -(IBAction)closeSearchView:(UIButton *)sender{
     [UIView animateWithDuration:0.2 animations:^{
         searchView.frame = CGRectMake(0, 20, self.view.frame.size.width, 0);
+        sillhou.alpha = 0;
+        noResultView.alpha = 0;
     } completion:^(BOOL finished){
         [searchView removeFromSuperview];
+        [noResultView removeFromSuperview];
+        [sillhou removeFromSuperview];
     }];
 }
 - (void)setTitleViewForNavBar{

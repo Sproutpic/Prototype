@@ -13,13 +13,13 @@
 #import "SDWebImage/UIImageView+WebCache.h"
 
 
-@interface CommunityViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>{
+@interface CommunityViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>{
     UIUtils *utils;
     UIScrollView *projectScroller;
     NSDictionary *currentDictionary;
     UILabel *fSprout, *fFeatured, *fTopViewed, *fLongest;
     UIView *underlineView;
-    UIView *searchView;
+    UIView *searchView, *sillhou, *noResultView;
 }
 @property (strong,nonatomic)UITableView *table;
 @property (strong,nonatomic)NSMutableArray* projects;

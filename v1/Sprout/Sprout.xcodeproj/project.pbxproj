@@ -793,7 +793,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sproutpic.sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "04dc273b-2d90-4d41-9cfa-795b94dbf97f";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};

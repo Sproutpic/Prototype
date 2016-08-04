@@ -59,7 +59,7 @@
     textViewsept = separator;
     [fieldDesc addSubview:textViewsept];
     
-    fieldTag = [[UITextField alloc] initWithFrame:CGRectMake(15, fieldDesc.frame.origin.y + fieldDesc.frame.size.height + 15, scroller.frame.size.width - 15, 50)];
+    /*fieldTag = [[UITextField alloc] initWithFrame:CGRectMake(15, fieldDesc.frame.origin.y + fieldDesc.frame.size.height + 15, scroller.frame.size.width - 15, 50)];
     fieldTag.font = [utils fontRegularForSize:18];
     fieldTag.textColor = [utils colorNavigationBar];
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc]initWithAttributedString:[[NSAttributedString alloc]initWithString:@"Tag Words " attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar], NSFontAttributeName: [utils fontRegularForSize:18]}]];
@@ -70,9 +70,9 @@
     separator = [[UIView alloc]initWithFrame:CGRectMake(0, 49, fieldTitle.frame.size.width, 1)];
     separator.backgroundColor = [[utils colorNavigationBar]colorWithAlphaComponent:0.5];
     [fieldTag addSubview:separator];
-    [scroller addSubview:fieldTag];
+    [scroller addSubview:fieldTag];*/
     
-    sliderView = [[UIView alloc] initWithFrame:CGRectMake(15, fieldTag.frame.origin.y + fieldTag.frame.size.height + 15, scroller.frame.size.width - 15, 75)];
+    sliderView = [[UIView alloc] initWithFrame:CGRectMake(15, fieldDesc.frame.origin.y + fieldDesc.frame.size.height + 15, scroller.frame.size.width - 15, 75)];
     lblDesc = [[UILabel alloc] init];
     lblDesc.font = [utils fontRegularForSize:16];
     lblDesc.textColor = [utils colorNavigationBar];
@@ -207,8 +207,8 @@
     [UIView animateWithDuration:0.2 animations:^{
         textView.frame = CGRectMake(textView.frame.origin.x, textView.frame.origin.y, textView.frame.size.width, rect.size.height + 15);
         textViewsept.frame = CGRectMake(5, textView.frame.size.height - 1, textView.frame.size.width, 1);
-        fieldTag.frame = CGRectMake(15, fieldDesc.frame.origin.y + fieldDesc.frame.size.height + 15, scroller.frame.size.width - 15, 50);
-        sliderView.frame = CGRectMake(15, fieldTag.frame.origin.y + fieldTag.frame.size.height + 15, scroller.frame.size.width - 15, 75);
+        //fieldTag.frame = CGRectMake(15, fieldDesc.frame.origin.y + fieldDesc.frame.size.height + 15, scroller.frame.size.width - 15, 50);
+        sliderView.frame = CGRectMake(15, fieldDesc.frame.origin.y + fieldDesc.frame.size.height + 15, scroller.frame.size.width - 15, 75);
         restView.frame = CGRectMake(0, sliderView.frame.origin.y + sliderView.frame.size.height + 15, scroller.frame.size.width, restView.frame.size.height);
     } completion:^(BOOL finished){
         [UIView animateWithDuration:0.2 animations:^{

@@ -19,6 +19,35 @@
     
     [self setNavigationBar];
     [self setPassCodeView];
+    pickerData = [[NSMutableArray alloc]initWithObjects:@"1 min",@"5 mins",@"10 mins",@"15 mins", @"45 mins",@"60 mins", nil];
+    autolockSelect = [[UIPickerView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 216)];
+    autolockSelect.showsSelectionIndicator = YES;
+    autolockSelect.hidden = NO;
+    autolockSelect.delegate = self;
+    autolockSelect.dataSource = self;
+    [self.view addSubview:autolockSelect];
+    pickerTool = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 40)];
+    pickerTool.backgroundColor = [UIColor whiteColor];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.8, 0, self.view.frame.size.width * 0.2, 40)];
+    [button setAttributedTitle:[[NSAttributedString alloc]initWithString:@"Done" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar], NSFontAttributeName:[utils fontBoldForSize:16]}] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
+    [pickerTool addSubview:button];
+    [self.view addSubview:pickerTool];
+}
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView; {
+    return 1;
+}
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component; {
+    return pickerData.count;
+}
+-(NSString*) pickerView:(UIPickerView*)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [pickerData objectAtIndex:row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
+{
+    
 }
 - (void)setPassCodeView{
     [self formatBlackNoteWithOrigin:24.5 andString:@"Enable Passcode" forView:self.view];
@@ -61,10 +90,16 @@
 - (void)switcherViewOn{
     [self.navigationController pushViewController:[[EnablePasscodeViewController alloc] init] animated:YES];
     
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 53)];
+    [button addTarget:self action:@selector(changePass:) forControlEvents:UIControlEventTouchUpInside];
+    [switcherView addSubview:button];
     [self formatSeparatorWithOriginY:53 forView:switcherView];
     [self formatBlackNoteWithOrigin:17.5 andString:@"Change Passcode" forView:switcherView];
     [switcherView addSubview:[self addArrowRightWithOriginY:17.5]];
     [self formatSeparatorWithOriginY:135 forView:switcherView];
+    button = [[UIButton alloc]initWithFrame:CGRectMake(0, 135, self.view.frame.size.width, 53)];
+    [button addTarget:self action:@selector(autoLockTap:) forControlEvents:UIControlEventTouchUpInside];
+    [switcherView addSubview:button];
     [self formatBlackNoteWithOrigin:154.5 andString:@"Auto-lock in" forView:switcherView];
     [switcherView addSubview:[self addArrowRightWithOriginY:156.5]];
     [self addMinutes];
@@ -76,6 +111,23 @@
     [UIView animateWithDuration:0.2 animations:^{
         switcherView.alpha = 1;
     } ];
+}
+-(IBAction)changePass:(id)sender{
+    [self.navigationController pushViewController:[[EnablePasscodeViewController alloc] init] animated:YES];
+}
+-(IBAction)autoLockTap:(id)sender{
+    [UIView animateWithDuration:0.2 animations:^{
+        autolockSelect.backgroundColor = [UIColor whiteColor];
+        autolockSelect.frame = CGRectMake(0, self.view.frame.size.height - 216, self.view.frame.size.width, 216);
+        pickerTool.frame = CGRectMake(0, autolockSelect.frame.origin.y - 40, self.view.frame.size.width, 40);
+    }];
+}
+-(IBAction)doneAction:(id)sender{
+    [UIView animateWithDuration:0.2 animations:^{
+        autolockSelect.backgroundColor = [UIColor whiteColor];
+        autolockSelect.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 216);
+        pickerTool.frame = CGRectMake(0, autolockSelect.frame.origin.y, self.view.frame.size.width, 40);
+    }];
 }
 - (void)addMinutes{
     UILabel *lblNote = [[UILabel alloc] init];

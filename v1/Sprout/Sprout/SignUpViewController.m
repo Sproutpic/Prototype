@@ -47,11 +47,11 @@
     [self.view addSubview:lblNote];
 }
 - (void)addCheckBox{
-    UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.11, 194, 22, 22)];
-    image.image = [UIImage imageNamed:@"Checkbox"];
-    image.userInteractionEnabled = YES;
-    [image addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedCheck:)]];
-    [self.view addSubview:image];
+    checkImage = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.11, 194, 22, 22)];
+    checkImage.image = [UIImage imageNamed:@"Checkbox"];
+    checkImage.userInteractionEnabled = YES;
+    [checkImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedCheck:)]];
+    [self.view addSubview:checkImage];
 }
 - (void)tappedCheck:(UITapGestureRecognizer *)sender{
     ((UIImageView *)sender.view).image = [((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"Checkbox"]] ? [UIImage imageNamed:@"check-on"]: [UIImage imageNamed:@"Checkbox"];
@@ -85,7 +85,19 @@
     button.layer.cornerRadius = 3;
     [button setAttributedTitle:[[NSAttributedString alloc]initWithString:@"Sign Up" attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor],
                                                                                               NSFontAttributeName: [utils fontRegularForSize:15]}] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(tappedSignUp:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
+}
+-(IBAction)tappedSignUp:(id)sender{
+    if ([self isFilled]) {
+        NSLog(@"name:%@\nemail:%@\npassword:%@\nagree:%@",fieldName.text,fieldEmail.text,[[fieldPassword.text dataUsingEncoding:NSUTF8StringEncoding] base64EncodedDataWithOptions:0],[checkImage.image isEqual:[UIImage imageNamed:@"Checkbox"]] ? @"0": @"1");
+    }else{
+        NSLog(@"Please fill in all fields!");
+    }
+    
+}
+-(BOOL)isFilled{
+    return [[NSString stringWithFormat:@"%d%d%d%d",[[fieldName.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""],[[fieldEmail.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""],[[fieldPassword.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""],[checkImage.image isEqual:[UIImage imageNamed:@"Checkbox"]] ? YES: NO] isEqualToString:@"0000"] ? YES:NO;
 }
 - (void)setupFields{
     for (int i = 0; i<3; i++) {

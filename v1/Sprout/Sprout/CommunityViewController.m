@@ -19,7 +19,14 @@
     utils = [[UIUtils alloc]init];
     [self setNavigationBar];
     [self populateProjects];
-    [self setupLayout];
+    [self setupWeb];
+    //[self setupLayout];
+}
+-(void)setupWeb{
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 64)];
+    webView.backgroundColor = [UIColor whiteColor];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://softclover.com/Community"]]];
+    [self.view addSubview:webView];
 }
 - (void)populateProjects{
     _projects = [[NSMutableArray alloc]initWithArray:@[@{@"projectTitle":@"Project Title",

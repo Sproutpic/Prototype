@@ -11,11 +11,14 @@
 #import "AccountInformationViewController.h"
 @class AccountInformationViewController;
 #import "SignInViewController.h"
+#import "WebService.h"
+@class WebService;
 
 @interface SignUpViewController : UIViewController<UITextFieldDelegate>{
     UIUtils *utils;
     UITextField *fieldName, *fieldEmail, *fieldPassword;
-    
+    WebService *webService;
+    UIImageView *checkImage;
 }
 @property (strong,nonatomic)AccountInformationViewController *accountInfoController;
 

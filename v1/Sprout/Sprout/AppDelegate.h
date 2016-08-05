@@ -13,6 +13,7 @@
 #import "MyProjectsViewController.h"
 @class MyProjectsViewController;
 #import "SettingsViewController.h"
+@class  SettingsViewController;
 #import "JASidePanelController.h"
 #import "UIUtils.h"
 

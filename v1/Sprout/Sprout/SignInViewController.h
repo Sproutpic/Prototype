@@ -11,10 +11,15 @@
 #import "AccountInformationViewController.h"
 @class AccountInformationViewController;
 #import "CreateNewPasswordViewController.h"
+#import "WebService.h"
+@class WebService;
 
-@interface SignInViewController : UIViewController<UITextFieldDelegate>{
+@interface SignInViewController : UIViewController<UITextFieldDelegate,UIAlertViewDelegate>{
     UIUtils *utils;
     UITextField *fieldEmail, *fieldPassword;
+    WebService *webService;
 }
 @property (strong,nonatomic)AccountInformationViewController *accountInfoController;
+- (void)showAlertWithMessage:(NSString *)str;
+- (void)signInSuccess;
 @end

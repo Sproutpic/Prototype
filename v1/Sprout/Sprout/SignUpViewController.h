@@ -14,12 +14,13 @@
 #import "WebService.h"
 @class WebService;
 
-@interface SignUpViewController : UIViewController<UITextFieldDelegate>{
+@interface SignUpViewController : UIViewController<UITextFieldDelegate,UIAlertViewDelegate>{
     UIUtils *utils;
     UITextField *fieldName, *fieldEmail, *fieldPassword;
     WebService *webService;
     UIImageView *checkImage;
 }
 @property (strong,nonatomic)AccountInformationViewController *accountInfoController;
-
+- (void)showAlertWithMessage:(NSString *)str;
+- (void)signUpSuccess;
 @end

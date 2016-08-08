@@ -48,13 +48,24 @@
     self.navigationItem.titleView = label;
 }
 - (void)setMenu{
-    [self setButtons:@[@"About Sproutpic",
-                       @"FAQ",
-                       @"Account Information",
-                       @"Change Password",
-                       @"Secure Access"]];
-    
-    
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) {
+        [self setButtons:@[@"About Sproutpic",
+                           @"FAQ",
+                           @"Account Information",
+                           @"Change Password",
+                           @"Secure Access"]];
+    } else {
+        [self setButtons:@[@"About Sproutpic",
+                           @"FAQ",
+                           @"Account Information",
+                           @"Secure Access"]];
+    }  
+}
+- (void)viewWillAppear:(BOOL)animated{
+    for (UIView *view in self.view.subviews) {
+        [view removeFromSuperview];
+    }
+    [self setMenu];
 }
 - (void)setButtons:(NSArray *) selection{
     CGFloat y = 10;

@@ -19,9 +19,7 @@
     
     [self setNavigationBar];
     
-    signedIn = NO;
-    
-    if(signedIn){
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"user"]){
         [self setLayoutForAlreadySignedIn];
     }else{
         [self setLayoutForDefault];
@@ -55,7 +53,15 @@
 }
 - (void)addInfoLabelsForFields{
     CGFloat y = 33;
-    for (NSString *str in @[@"Iryna Aharkova",@"irina@appsitude.com",@"Female"]) {
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    if([((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"name"] && [((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"email"]){
+        array = [[NSMutableArray alloc] initWithArray:@[[((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"name"],[((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"email"]]];
+    }else{
+        if ([((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"email"]) {
+            array = [[NSMutableArray alloc] initWithArray:@[@"",[((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"email"]]];
+        }
+    }
+    for (NSString *str in array) {
         UILabel *lblNote = [[UILabel alloc] init];
         lblNote.attributedText = [[NSAttributedString alloc]initWithString:str attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:128.f/255.f green:126.f/255.f blue:125.f/255.f alpha:1.f],
                                                                                             NSFontAttributeName: [utils fontRegularForSize:18]}];

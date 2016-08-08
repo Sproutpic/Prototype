@@ -13,7 +13,5 @@
 
 @interface AccountInformationViewController : UIViewController{
     UIUtils *utils;
-    BOOL signedIn;
 }
-
 @end

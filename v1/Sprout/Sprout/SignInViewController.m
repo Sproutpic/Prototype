@@ -75,7 +75,21 @@
     button.layer.cornerRadius = 3;
     [button setAttributedTitle:[[NSAttributedString alloc]initWithString:@"Sign In" attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor],
                                                                                                  NSFontAttributeName: [utils fontRegularForSize:15]}] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(tappedSignIn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
+}
+- (IBAction)tappedSignIn:(id)sender{
+    if ([self isFilled]) {
+        NSLog(@"email:%@\npassword:%@",fieldEmail.text,[[fieldPassword.text dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0]);
+        webService = [[WebService alloc] init];
+        [webService requestSignInUser:@{@"email":fieldEmail.text,
+                                        @"encodedPassword":[[fieldPassword.text dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0]} withTarget:self];
+    }else{
+        [self showAlertWithMessage:@"Please fill in all fields."];
+    }
+}
+-(BOOL)isFilled{
+    return [[NSString stringWithFormat:@"%d%d",[[fieldEmail.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""],[[fieldPassword.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""]] isEqualToString:@"00"] ? YES:NO;
 }
 - (void)setupFooter{
     UILabel *lblNote = [[UILabel alloc] init];
@@ -120,5 +134,13 @@
     label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
     
     self.navigationItem.titleView = label;
+}
+- (void)showAlertWithMessage:(NSString *)str{
+    [[[UIAlertView alloc]initWithTitle:@"" message:str delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+}
+- (void)signInSuccess{
+    [[NSUserDefaults standardUserDefaults] setObject:@{@"email":fieldEmail.text} forKey:@"user"];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
 }
 @end

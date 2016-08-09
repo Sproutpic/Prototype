@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface AppDelegate ()
 
@@ -18,6 +19,15 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [self setMainWithControllers];
+    NSString *albumName=@"Sprout";
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    [library addAssetsGroupAlbumWithName:albumName
+                             resultBlock:^(ALAssetsGroup *group) {
+                                 NSLog(@"added album:%@", albumName);
+                             }
+                            failureBlock:^(NSError *error) {
+                                NSLog(@"error adding album");
+                            }];
     return YES;
 }
 

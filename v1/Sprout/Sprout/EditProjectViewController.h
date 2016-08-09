@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "UIUtils.h"
+#import <QuartzCore/QuartzCore.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#import <ImageIO/ImageIO.h>
+#import "UIImage+animatedGIF.h"
+#import "SVProgressHUD.h"
 
 @interface EditProjectViewController : UIViewController<UITextFieldDelegate, UITextViewDelegate>{
     UIUtils *utils;
@@ -17,6 +22,9 @@
     UIView *textViewsept, *sliderView,*restView;
     UILabel *sliderCounter;
     UIImageView *sprout, * play;
+    BOOL isPlaying;
+    UISlider *slider;
 }
 @property (strong,nonatomic)UIImage *image;
+@property (strong,nonatomic)NSMutableArray * startSprout,*imagesArray;
 @end

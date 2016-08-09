@@ -10,6 +10,7 @@
 
 @implementation CameraViewController
 - (void)viewDidLoad{
+    [[NSUserDefaults standardUserDefaults]setObject:@[] forKey:@"savedSprout"];
     [super viewDidLoad];
     [self setController];
 }
@@ -45,7 +46,10 @@
     _picker.view.frame = CGRectMake(0, -(_picker.view.frame.size.height * .03) - 2, _picker.view.frame.size.width, _picker.view.frame.size.height);
     UIView * overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _picker.view.frame.size.width, _picker.view.frame.size.height)];
     overlayView.opaque=YES;
-    overlayView.backgroundColor=[UIColor clearColor];
+    _prevImg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 141)];
+    _prevImg.alpha = 0.3;
+    [overlayView addSubview:_prevImg];
+    [_picker setCameraOverlayView:overlayView];
     _picker.showsCameraControls=NO;
     _shutterView = [[UIView alloc]initWithFrame:CGRectMake((self.view.frame.size.width - self.view.frame.size.height * 0.12) / 2, self.view.frame.size.height * 0.87, self.view.frame.size.height * 0.12, self.view.frame.size.height * 0.12)];
     _shutterView.layer.cornerRadius = _shutterView.frame.size.height * 0.5;
@@ -66,9 +70,49 @@
     [_picker takePicture];
 }
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
-    EditProjectViewController *editController = [[EditProjectViewController alloc] init];
-    editController.image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    [self.navigationController pushViewController:editController animated:YES];
+    _currentInfo = info;
+    [[[UIAlertView alloc] initWithTitle:@"" message:@"Continue capture?" delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:@"Save", nil] show];
+}
+-(void)continueCapture{
+    _prevImg.image = [self fixOrientation:[_currentInfo objectForKey:UIImagePickerControllerOriginalImage]];
+}
+-(void)saveImage{
+    [self showProgress];
+    self.picker.view.userInteractionEnabled = NO;
+    NSLog(@"sprout%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"]);
+    _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
+    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    NSData *imageData = UIImagePNGRepresentation([self fixOrientation:[_currentInfo objectForKey:UIImagePickerControllerOriginalImage]]);
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    NSString *imagePath =[documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"cached-%lu-%lu.png",(unsigned long)_startSprout.count,(unsigned long)((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]).count]];
+    
+    NSLog((@"pre writing to file"));
+    if (![imageData writeToFile:imagePath atomically:NO]){
+        NSLog((@"Failed to cache image data to disk"));
+    }
+    else{
+        NSLog(@"the cachedImagedPath is %@",imagePath);
+        [_startSprout addObject:imagePath];
+        [[NSUserDefaults standardUserDefaults]setObject:_startSprout forKey:@"tempSprout"];
+        [SVProgressHUD dismiss];
+        self.picker.view.userInteractionEnabled = YES;
+    }
+    //});
+}
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    if ([[NSString stringWithFormat:@"%ld",(long)buttonIndex] isEqualToString:@"0"]) {
+        [self continueCapture];
+        [self saveImage];
+    } else {
+        EditProjectViewController *editController = [[EditProjectViewController alloc] init];
+        editController.image = [_currentInfo objectForKey:UIImagePickerControllerOriginalImage];
+        [self.navigationController pushViewController:editController animated:YES];
+        _prevImg.image = [self fixOrientation:[_currentInfo objectForKey:UIImagePickerControllerOriginalImage]];
+        [self saveImage];
+    }
 }
 - (void)setNavigationBar{
     [self setTitleViewForNavBar];
@@ -126,12 +170,14 @@
 -(IBAction)onAction:(UIButton *)sender{
     [self resetFlash];
     [on setAttributedTitle:[[NSAttributedString alloc] initWithString:@"on" attributes:@{NSFontAttributeName: [utils fontBoldForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
-    _picker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
+    //_picker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
+    _prevImg.alpha = 0.3;
 }
 -(IBAction)offAction:(UIButton *)sender{
     [self resetFlash];
     [off setAttributedTitle:[[NSAttributedString alloc] initWithString:@"off" attributes:@{NSFontAttributeName: [utils fontBoldForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
-    _picker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
+    //_picker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
+    _prevImg.alpha = 0;
 }
 -(IBAction)autoAction:(UIButton *)sender{
     [self resetFlash];
@@ -142,5 +188,92 @@
     [on setAttributedTitle:[[NSAttributedString alloc] initWithString:@"on" attributes:@{NSFontAttributeName: [utils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
     [off setAttributedTitle:[[NSAttributedString alloc] initWithString:@"off" attributes:@{NSFontAttributeName: [utils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
     [autoFlash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"auto" attributes:@{NSFontAttributeName: [utils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
+}
+- (UIImage *)fixOrientation:(UIImage *)image {
+    
+    // No-op if the orientation is already correct
+    //if (image.imageOrientation == UIImageOrientationUp) return image;
+    
+    // We need to calculate the proper transformation to make the image upright.
+    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    
+    switch (image.imageOrientation) {
+        case UIImageOrientationDown:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.width, image.size.height);
+            transform = CGAffineTransformRotate(transform, M_PI);
+            break;
+            
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.width, 0);
+            transform = CGAffineTransformRotate(transform, M_PI_2);
+            break;
+            
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, 0, image.size.height);
+            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            break;
+        case UIImageOrientationUp:
+        case UIImageOrientationUpMirrored:
+            break;
+    }
+    
+    switch (image.imageOrientation) {
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.width, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+            
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.height, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+        case UIImageOrientationUp:
+        case UIImageOrientationDown:
+        case UIImageOrientationLeft:
+        case UIImageOrientationRight:
+            break;
+    }
+    
+    // Now we draw the underlying CGImage into a new context, applying the transform
+    // calculated above.
+    CGContextRef ctx = CGBitmapContextCreate(NULL, image.size.width, image.size.height,
+                                             CGImageGetBitsPerComponent(image.CGImage), 0,
+                                             CGImageGetColorSpace(image.CGImage),
+                                             CGImageGetBitmapInfo(image.CGImage));
+    CGContextConcatCTM(ctx, transform);
+    switch (image.imageOrientation) {
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            CGContextDrawImage(ctx, CGRectMake(0,0,image.size.height,image.size.width), image.CGImage);
+            break;
+            
+        default:
+            CGContextDrawImage(ctx, CGRectMake(0,0,image.size.width,image.size.height), image.CGImage);
+            break;
+    }
+    
+    // And now we just create a new UIImage from the drawing context
+    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
+    UIImage *img = [UIImage imageWithCGImage:cgimg];
+    CGContextRelease(ctx);
+    CGImageRelease(cgimg);
+    if(_picker.cameraDevice == UIImagePickerControllerCameraDeviceFront){
+        img = [UIImage imageWithCGImage:cgimg scale:img.scale orientation:UIImageOrientationUpMirrored];
+    }
+    return img;
+}
+- (void)showProgress{
+    [[SVProgressHUD appearance] setDefaultStyle:SVProgressHUDStyleCustom];
+    [[SVProgressHUD appearance] setForegroundColor:[UIColor colorWithRed:101.0f/255.0f green:179.0f/255.0f blue:179.0f/255.0f alpha:1.0f]];
+    [[SVProgressHUD appearance] setBackgroundColor:[UIColor whiteColor]];
+    [SVProgressHUD show];
 }
 @end

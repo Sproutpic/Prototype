@@ -25,7 +25,7 @@
 -(void)setupWeb{
     UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 64)];
     webView.backgroundColor = [UIColor whiteColor];
-    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://softclover.com/Community"]]];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.sproutpic.com/Community"]]];
     [self.view addSubview:webView];
 }
 - (void)populateProjects{

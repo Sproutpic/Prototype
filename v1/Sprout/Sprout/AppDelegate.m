@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface AppDelegate ()
 
@@ -19,15 +18,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [self setMainWithControllers];
-    NSString *albumName=@"Sprout";
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    [library addAssetsGroupAlbumWithName:albumName
-                             resultBlock:^(ALAssetsGroup *group) {
-                                 NSLog(@"added album:%@", albumName);
-                             }
-                            failureBlock:^(NSError *error) {
-                                NSLog(@"error adding album");
-                            }];
     return YES;
 }
 
@@ -109,7 +99,8 @@
     [button addSubview:_imageView];
     
     [button addTarget:self action:@selector(selectTab:) forControlEvents:UIControlEventTouchUpInside];
-    [_tabBarView addSubview:button];
+    _firstTab = button;
+    [_tabBarView addSubview:_firstTab];
     
     button = [[UIButton alloc] initWithFrame:CGRectMake(_tabBarView.frame.size.width / 3, 0, _tabBarView.frame.size.width / 3, _tabBarView.frame.size.height)];
     button.tag = 2;

@@ -1,4 +1,3 @@
-//image saver:http://stackoverflow.com/questions/10954380/save-photos-to-custom-album-in-iphones-photo-library
 //  EditProjectViewController.m
 //  Sprout
 //
@@ -7,6 +6,7 @@
 //
 
 #import "EditProjectViewController.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @implementation EditProjectViewController
 - (void)viewDidLoad{
@@ -232,7 +232,7 @@
     ((UIImageView *)sender.view).image = sender.view.tag == 0 ? ([((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"Facebook"]] ? [UIImage imageNamed:@"Facebook-on"] : [UIImage imageNamed:@"Facebook"]) : (((UIImageView *)sender.view).image = sender.view.tag == 1 ? ([((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"Inst-on"]] ? [UIImage imageNamed:@"inst"] : [UIImage imageNamed:@"Inst-on"]) : ((((UIImageView *)sender.view).image = sender.view.tag == 2 ? ([((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"Youtube-on"]] ? [UIImage imageNamed:@"youtube"] : [UIImage imageNamed:@"Youtube-on"]) : ((((UIImageView *)sender.view).image = sender.view.tag == 3 ? ([((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"Twit-on"]] ? [UIImage imageNamed:@"Twit"] : [UIImage imageNamed:@"Twit-on"]) : ([((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"logo"]] ? [UIImage imageNamed:@"logo-on"] : [UIImage imageNamed:@"logo"]))))));
 }
 -(void)updateScroller{
-    scroller.contentSize = CGSizeMake(scroller.frame.size.width,restView.frame.origin.y + restView.frame.size.height);
+    scroller.contentSize = CGSizeMake(scroller.frame.size.width,restView.frame.origin.y + restView.frame.size.height + 10);
 }
 - (IBAction)sliderAction:(UISlider *)sender{
     int rounded = sender.value;  //Casting to an int will truncate, round down
@@ -331,9 +331,94 @@
 }
 - (void)addRightBarButton{
     UIButton *download = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
+    [download addTarget:self action:@selector(saveProject:) forControlEvents:UIControlEventTouchUpInside];
     [download setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:download];
     self.navigationItem.rightBarButtonItem = barButton;
+}
+- (IBAction)saveProject:(id)sender{
+    if (((NSArray *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy]).count > 0) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            NSMutableArray *savedSprouts = (NSMutableArray *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"] mutableCopy];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:savedSprouts forKey:@"savedSprout"];
+        }];
+    }
+    if ([self isOkayToSave]) {
+        //NSDate *today = [[NSDate alloc] init];
+        //NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+        //dateFormatter.dateFormat = @"MMDDyy";
+         [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+        [self showProgress];
+        ((AppDelegate *)[[UIApplication sharedApplication] delegate]).window.userInteractionEnabled = NO;
+        [self createAlbum];
+        NSLog(@"projecttosave: title:%@\ndesc:%@\nvalue:%@\nsprout:%f",fieldTitle.text,fieldDesc.text,[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"],slider.value);
+    } else {
+        NSLog(@"nah");
+    }
+}
+-(void)createAlbum{
+    NSString *albumName = [NSString stringWithFormat:@"Sprout Project %@",fieldTitle.text];
+    // Find the album
+    PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
+    fetchOptions.predicate = [NSPredicate predicateWithFormat:@"title = %@", albumName];
+    _collection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum
+                                                          subtype:PHAssetCollectionSubtypeAny
+                                                          options:fetchOptions].firstObject;
+    // Create the album
+    if (!_collection)
+    {
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+            PHAssetCollectionChangeRequest *createAlbum = [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:albumName];
+            _placeholder = [createAlbum placeholderForCreatedAssetCollection];
+        } completionHandler:^(BOOL success, NSError *error) {
+            if (success)
+            {
+                PHFetchResult *collectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithLocalIdentifiers:@[_placeholder.localIdentifier]
+                                                                                                            options:nil];
+                _collection = collectionFetchResult.firstObject;
+            }
+        }];
+    }
+    // Save to the album
+    _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
+    _imagesArray = [[NSMutableArray alloc]init];
+    for (NSString *str in _startSprout) {
+        [_imagesArray addObject:[UIImage imageWithContentsOfFile:str]];
+    }
+    for (UIImage *image in _imagesArray) {
+        NSLog(@"adding image");
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+            PHAssetChangeRequest *assetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+            _placeholder = [assetRequest placeholderForCreatedAsset];
+            _photosAsset = [PHAsset fetchAssetsInAssetCollection:_collection options:nil];
+            PHAssetCollectionChangeRequest *albumChangeRequest = [PHAssetCollectionChangeRequest changeRequestForAssetCollection:_collection
+                                                                                                                          assets:_photosAsset];
+            [albumChangeRequest addAssets:@[_placeholder]];
+        } completionHandler:^(BOOL success, NSError *error) {
+            if (success)
+            {
+                [SVProgressHUD dismiss];
+                ((AppDelegate *)[[UIApplication sharedApplication] delegate]).window.userInteractionEnabled = YES;
+                [self.navigationController popToRootViewControllerAnimated:YES];
+                [((AppDelegate *)[[UIApplication sharedApplication] delegate]) selectTab:((AppDelegate *)[[UIApplication sharedApplication] delegate]).firstTab];
+            }
+            else
+            {
+                NSLog(@"%@", error);
+            }
+        }];
+    }
+}
+-(void)findAlbumAndSaveImages{
+
+}
+-(void)saveImages:(ALAssetsGroup *)groupToAddTo {
+
+
+}
+-(BOOL)isOkayToSave{
+    return (!([fieldTitle.text isEqualToString:@""])) &&  (!([fieldDesc.text isEqualToString:@""])) && (!([fieldDesc.text isEqualToString:@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it."]));
 }
 - (IBAction)backToMenu:(UIButton *)sender{
     [self.navigationController popViewControllerAnimated:YES];

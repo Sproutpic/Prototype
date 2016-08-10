@@ -31,6 +31,8 @@
 @property (strong, nonatomic) UILabel *label,*label1,*label2;
 @property (strong, nonatomic) UIImageView *imageView,*imageView1,*imageView2;
 @property (strong, nonatomic) UIView *tabBarView;
+@property (strong, nonatomic) UIButton *firstTab;
+- (IBAction)selectTab:(UIButton *)sender;
 - (void)resetTab;
 @end
 

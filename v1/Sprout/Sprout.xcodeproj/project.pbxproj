@@ -12,6 +12,7 @@
 		5A1BC34A1D4A09F800692EB8 /* ChangePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BC3491D4A09F800692EB8 /* ChangePasswordViewController.m */; };
 		5A2180951D3E015C0057F298 /* AccountInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A2180941D3E015C0057F298 /* AccountInformationViewController.m */; };
 		5A2180991D3E1BDB0057F298 /* SecureAccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A2180981D3E1BDB0057F298 /* SecureAccessViewController.m */; };
+		5A22D7C51D5B028000ECBC47 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A22D7C41D5B028000ECBC47 /* Photos.framework */; };
 		5A245E1C1D488E7F006A6F52 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A245E1B1D488E7F006A6F52 /* AboutViewController.m */; };
 		5A5498731D54929900432FE5 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5498611D54929900432FE5 /* AFHTTPRequestOperation.m */; };
 		5A5498741D54929900432FE5 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5498631D54929900432FE5 /* AFHTTPRequestOperationManager.m */; };
@@ -29,7 +30,6 @@
 		5A5498901D54947300432FE5 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A5498891D54947300432FE5 /* SVProgressHUD.bundle */; };
 		5A5498911D54947300432FE5 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A54988B1D54947300432FE5 /* SVProgressHUD.m */; };
 		5A5498921D54947300432FE5 /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A54988D1D54947300432FE5 /* SVRadialGradientLayer.m */; };
-		5A5F3D5E1D5986F700AC6767 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5F3D5D1D5986F700AC6767 /* AssetsLibrary.framework */; };
 		5A5F3D621D599FD300AC6767 /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5F3D611D599FD300AC6767 /* UIImage+animatedGIF.m */; };
 		5A6719C21D45F60000E94FC5 /* CreateNewPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A6719C11D45F60000E94FC5 /* CreateNewPasswordViewController.m */; };
 		5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A2C71D2BB65F00B4CD02 /* main.m */; };
@@ -97,6 +97,7 @@
 		5A2180941D3E015C0057F298 /* AccountInformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountInformationViewController.m; sourceTree = "<group>"; };
 		5A2180971D3E1BDB0057F298 /* SecureAccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecureAccessViewController.h; sourceTree = "<group>"; };
 		5A2180981D3E1BDB0057F298 /* SecureAccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecureAccessViewController.m; sourceTree = "<group>"; };
+		5A22D7C41D5B028000ECBC47 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		5A245E1A1D488E7F006A6F52 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		5A245E1B1D488E7F006A6F52 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		5A5498601D54929900432FE5 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -132,7 +133,6 @@
 		5A54988B1D54947300432FE5 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		5A54988C1D54947300432FE5 /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVRadialGradientLayer.h; sourceTree = "<group>"; };
 		5A54988D1D54947300432FE5 /* SVRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVRadialGradientLayer.m; sourceTree = "<group>"; };
-		5A5F3D5D1D5986F700AC6767 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		5A5F3D601D599FD300AC6767 /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		5A5F3D611D599FD300AC6767 /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
 		5A6719C01D45F60000E94FC5 /* CreateNewPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateNewPasswordViewController.h; sourceTree = "<group>"; };
@@ -216,7 +216,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A5F3D5E1D5986F700AC6767 /* AssetsLibrary.framework in Frameworks */,
+				5A22D7C51D5B028000ECBC47 /* Photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,7 +368,7 @@
 		5A85A2BA1D2BB65F00B4CD02 = {
 			isa = PBXGroup;
 			children = (
-				5A5F3D5D1D5986F700AC6767 /* AssetsLibrary.framework */,
+				5A22D7C41D5B028000ECBC47 /* Photos.framework */,
 				5A85A2C51D2BB65F00B4CD02 /* Sprout */,
 				5A85A2DB1D2BB66000B4CD02 /* SproutTests */,
 				5A85A2E61D2BB66000B4CD02 /* SproutUITests */,

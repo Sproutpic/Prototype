@@ -10,7 +10,6 @@
 #import "UIUtils.h"
 #import "AppDelegate.h"
 #import "EditProjectViewController.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "SVProgressHUD.h"
 
 @interface CameraViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIAlertViewDelegate>{

@@ -15,13 +15,21 @@
 #import "SignInViewController.h"
 @class SignInViewController;
 #import "URLUtils.h"
+#import "CreateNewPasswordViewController.h"
+@class CreateNewPasswordViewController;
+#import "ChangePasswordViewController.h"
+@class ChangePasswordViewController;
 
 @interface WebService : NSObject{
     NSString *fromRequest;
 }
 @property (strong,nonatomic)SignUpViewController *signUpController;
 @property (strong,nonatomic)SignInViewController *signInController;
+@property (strong,nonatomic)CreateNewPasswordViewController *createPassController;
+@property (strong,nonatomic)ChangePasswordViewController *changePassController;
 
 - (void)requestSignUpUser:(NSDictionary *)params withTarget:(SignUpViewController *)controller;
 - (void)requestSignInUser:(NSDictionary *)params withTarget:(SignInViewController *)controller;
+- (void)requestRestorePassword:(NSDictionary *)params withTarget:(SignInViewController *)controller;
+- (void)requestChangePassword:(NSDictionary *)params withTarget:(ChangePasswordViewController *)controller;
 @end

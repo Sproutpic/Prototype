@@ -18,4 +18,10 @@
 -(NSString *)urlLoginUser{
     return [NSString stringWithFormat:@"%@/Login",[self urlBase]];
 }
+-(NSString *)urlForgotPassword{
+    return [NSString stringWithFormat:@"%@/ForgotPassword",[self urlBase]];
+}
+-(NSString *)urlChangePassword{
+    return [NSString stringWithFormat:@"%@/ChangePassword",[self urlBase]];
+}
 @end

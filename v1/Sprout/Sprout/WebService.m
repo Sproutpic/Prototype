@@ -19,7 +19,16 @@
     [self getRequestFromUrl:[[[URLUtils alloc]init] urlLoginUser] withParams:params];
     _signInController = controller;
 }
-
+- (void)requestRestorePassword:(NSDictionary *)params withTarget:(SignInViewController *)controller{
+    fromRequest = @"requestRestorePassword";
+    [self getRequestFromUrl:[[[URLUtils alloc]init] urlForgotPassword] withParams:params];
+    _signInController = controller;
+}
+- (void)requestChangePassword:(NSDictionary *)params withTarget:(ChangePasswordViewController *)controller{
+    fromRequest = @"requestChangePassword";
+    [self getRequestFromUrl:[[[URLUtils alloc]init] urlChangePassword] withParams:params];
+    _changePassController = controller;
+}
 //requests
 - (void)getRequestFromUrl:(NSString *)url withParams:(NSDictionary *) params{
     AppDelegate *appDel = [[UIApplication sharedApplication]delegate];
@@ -67,12 +76,29 @@
             [_signUpController signUpSuccess];
         }else if ([fromRequest isEqualToString:@"requestSignInUser"]) {
             [_signInController signInSuccess];
+        }else if ([fromRequest isEqualToString:@"requestRestorePassword"]) {
+            [_signInController restoreSuccess];
+        }else if([fromRequest isEqualToString:@"requestChangePassword"]){
+            [_changePassController showAlertWithMessage:((NSArray *)[responseObject objectForKey:@"Notifications"])[0]];
+            [_changePassController.navigationController popToRootViewControllerAnimated:YES];
         }
     }else{
         if ([fromRequest isEqualToString:@"requestSignUpUser"]) {
             [_signUpController showAlertWithMessage:((NSArray *)[responseObject objectForKey:@"Errors"])[0]];
         }else if ([fromRequest isEqualToString:@"requestSignInUser"]) {
+            if([responseObject objectForKey:@"Errors"]){
+                if (((NSArray *)[responseObject objectForKey:@"Errors"]).count>0) {
+                    [_signInController showAlertWithMessage:((NSArray *)[responseObject objectForKey:@"Errors"])[0]];
+                }else{
+                    [_signInController showAlertWithMessage:@"Username does not exist"];
+                }
+            }else{
+                [_signInController showAlertWithMessage:@"Password Incorrect."];
+            }
+        }else if ([fromRequest isEqualToString:@"requestRestorePassword"]){
             [_signInController showAlertWithMessage:((NSArray *)[responseObject objectForKey:@"Errors"])[0]];
+        }else if([fromRequest isEqualToString:@"requestChangePassword"]){
+            [_changePassController showAlertWithMessage:((NSArray *)[responseObject objectForKey:@"Errors"])[0]];
         }
     }
 }

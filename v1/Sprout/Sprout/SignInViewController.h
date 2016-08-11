@@ -22,4 +22,5 @@
 @property (strong,nonatomic)AccountInformationViewController *accountInfoController;
 - (void)showAlertWithMessage:(NSString *)str;
 - (void)signInSuccess;
+- (void)restoreSuccess;
 @end

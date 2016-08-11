@@ -27,9 +27,24 @@
 - (void)addRightBarButton{
     UIButton *back = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [back setBackgroundImage:[UIImage imageNamed:@"circleCheck"] forState:UIControlStateNormal];
-    [back addTarget:self action:@selector(backToMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [back addTarget:self action:@selector(confirmChangePassword:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:back];
     self.navigationItem.rightBarButtonItem = barButton;
+}
+-(IBAction)confirmChangePassword:(id)sender{
+    if ([self isNotFilledAll]) {
+        [self showAlertWithMessage:@"Please complete all fields."];
+    }else if(!([fieldNewPass.text isEqualToString:fieldRepeatPass.text])){
+        [self showAlertWithMessage:@"New password mismatch."];
+    }else{
+        webService = [[WebService alloc] init];
+        [webService requestChangePassword:@{@"email":[NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"email"]],
+                                            @"oldPasswordEncoded":[[fieldCurrentPass.text dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0],
+                                            @"newPasswordEncoded":[[fieldNewPass.text dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0]} withTarget:self];
+    }
+}
+-(BOOL)isNotFilledAll{
+    return ( [[fieldCurrentPass.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""] || [[fieldNewPass.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""] || [[fieldRepeatPass.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""]);
 }
 - (void)setupFields{
     for (int i = 0; i<3; i++) {
@@ -154,5 +169,8 @@
     label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
     
     self.navigationItem.titleView = label;
+}
+- (void)showAlertWithMessage:(NSString *)str{
+    [[[UIAlertView alloc]initWithTitle:@"" message:str delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
 }
 @end

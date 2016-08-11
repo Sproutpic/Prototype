@@ -125,9 +125,21 @@
 - (void)addRightBarButton{
     UIButton *back = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [back setBackgroundImage:[UIImage imageNamed:@"circleCheck"] forState:UIControlStateNormal];
-    [back addTarget:self action:@selector(backToMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [back addTarget:self action:@selector(tappedConfirmNewPassword:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:back];
     self.navigationItem.rightBarButtonItem = barButton;
+}
+- (IBAction)tappedConfirmNewPassword:(id)sender{
+    if ([[fieldNewPass.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""] || [[fieldRepeatPass.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""]) {
+        [self showAlertWithMessage:@"Please enter new password."];
+    }else if([fieldNewPass.text isEqualToString:fieldRepeatPass.text]){
+        [self showAlertWithMessage:@"Password not equal."];
+    }else{
+
+    }
+}
+- (void)showAlertWithMessage:(NSString *)str{
+    [[[UIAlertView alloc]initWithTitle:@"" message:str delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
 }
 - (IBAction)backToMenu:(UIButton *)sender{
     [self.navigationController popViewControllerAnimated:YES];

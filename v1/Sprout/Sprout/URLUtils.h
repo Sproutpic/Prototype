@@ -11,4 +11,6 @@
 @interface URLUtils : NSObject
 -(NSString *)urlCreateUser;
 -(NSString *)urlLoginUser;
+-(NSString *)urlForgotPassword;
+-(NSString *)urlChangePassword;
 @end

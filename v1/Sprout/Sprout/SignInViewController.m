@@ -103,7 +103,17 @@
     [self.view addSubview:lblNote];
 }
 - (void)tappedRestorePass:(UITapGestureRecognizer *)sender{
-    [self.navigationController pushViewController:[[CreateNewPasswordViewController alloc] init] animated:YES];
+    if ([[fieldEmail.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""]) {
+        [self showAlertWithMessage:@"Please enter email address."];
+    }else{
+        webService = [[WebService alloc] init];
+        [webService requestRestorePassword:@{@"email":fieldEmail.text} withTarget:self];
+    }
+}
+- (void)restoreSuccess{
+    CreateNewPasswordViewController *newPassController = [[CreateNewPasswordViewController alloc] init];
+    //newPassController.email = fieldEmail.text;
+    [self.navigationController pushViewController:newPassController animated:YES];
 }
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];

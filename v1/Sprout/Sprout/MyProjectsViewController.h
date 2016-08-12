@@ -17,8 +17,9 @@
 @interface MyProjectsViewController : UIViewController{
     UIUtils *utils;
     UIScrollView *projectScroller;
-    NSMutableArray *projects;
     NSDictionary *currentDictionary;
 }
+@property (strong,nonatomic)NSMutableArray *projects;
+@property (strong,nonatomic)NSNumber *useFile;
 - (NSMutableArray *)getProjects;
 @end

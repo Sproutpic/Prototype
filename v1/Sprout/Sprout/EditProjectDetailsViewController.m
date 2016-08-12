@@ -196,7 +196,11 @@
         [view removeFromSuperview];
     }
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(2, 2, cell.contentView.frame.size.width - 4,  cell.contentView.frame.size.width - 4)];
-    [imageView sd_setImageWithURL:[NSURL URLWithString:((NSString *)[_project objectForKey:@"projectThumbnails"][indexPath.row])]];
+    if ([_useFile boolValue]) {
+        imageView.image = [UIImage imageWithContentsOfFile:((NSString *)[_project objectForKey:@"projectThumbnails"][indexPath.row])];
+    } else {
+        [imageView sd_setImageWithURL:[NSURL URLWithString:((NSString *)[_project objectForKey:@"projectThumbnails"][indexPath.row])]];
+    }
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.clipsToBounds = YES;
     [cell.contentView addSubview:imageView];
@@ -283,8 +287,28 @@
 - (void)addRightBarButton{
     UIButton *download = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
     [download setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+    [download addTarget:self action:@selector(updateProjectDetail) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:download];
     self.navigationItem.rightBarButtonItem = barButton;
+}
+- (void)updateProjectDetail{
+    if (!([fieldTitle.text isEqualToString:[_project objectForKey:@"projectTitle"]]) || !([fieldDesc.text isEqualToString:[_project objectForKey:@"projectDetail"]])) {
+        webService = [[WebService alloc] init];
+        [webService requestUpdateSprout:@{@"sproutId":[_project objectForKey:@"sproutId"],
+                                          @"title":fieldTitle.text,
+                                          @"description":fieldDesc.text,
+                                          @"userName":[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],
+                                          @"pathToImagesFolder":[_project objectForKey:@"pathToImagesFolder"],
+                                          @"sproutFileName":[[NSString stringWithFormat:@"%@",[_project objectForKey:@"pathToImagesFolder"]] componentsSeparatedByString:@"/"].lastObject,
+                                          @"framesPerMinute":[NSNumber numberWithInt:30],
+                                          @"startDt":@"01/01/2016",
+                                          @"endDt":@"01/31/206"} withTarget:self];
+    }else{
+        [self showAlertWithMessage:@"Already Updated"];
+    }
+}
+- (void)showAlertWithMessage:(NSString *)str{
+    [[[UIAlertView alloc]initWithTitle:@"" message:str delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
 }
 - (IBAction)backToMenu:(UIButton *)sender{
     [self.navigationController popViewControllerAnimated:YES];

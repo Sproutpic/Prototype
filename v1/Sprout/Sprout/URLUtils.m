@@ -24,4 +24,10 @@
 -(NSString *)urlChangePassword{
     return [NSString stringWithFormat:@"%@/ChangePassword",[self urlBase]];
 }
+-(NSString *)urlUploadSprout{
+    return [NSString stringWithFormat:@"%@/UploadSprout",[self urlBase]];
+}
+-(NSString *)urlUpdateSprout{
+    return [NSString stringWithFormat:@"%@/UpdateSprout",[self urlBase]];
+}
 @end

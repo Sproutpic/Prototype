@@ -13,4 +13,6 @@
 -(NSString *)urlLoginUser;
 -(NSString *)urlForgotPassword;
 -(NSString *)urlChangePassword;
+-(NSString *)urlUploadSprout;
+-(NSString *)urlUpdateSprout;
 @end

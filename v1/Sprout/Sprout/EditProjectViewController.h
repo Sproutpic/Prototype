@@ -15,6 +15,8 @@
 #import "SVProgressHUD.h"
 #import <Photos/Photos.h>
 #import "AppDelegate.h"
+#import "WebService.h"
+@class WebService;
 
 @interface EditProjectViewController : UIViewController<UITextFieldDelegate, UITextViewDelegate>{
     UIUtils *utils;
@@ -27,6 +29,8 @@
     BOOL isPlaying;
     UISlider *slider;
     NSURL *sproutGifUrl;
+    WebService *webService;
+    NSMutableArray *forSavePaths;
 }
 @property (strong,nonatomic)UIImage *image;
 @property (strong,nonatomic)NSMutableArray * startSprout,*imagesArray;
@@ -34,4 +38,5 @@
 @property (strong,nonatomic)__block PHFetchResult *photosAsset;
 @property (strong,nonatomic)__block PHAssetCollection *collection;
 @property (strong,nonatomic)__block PHObjectPlaceholder *placeholder;
+-(void)uploadSuccessful:(NSDictionary *)result;
 @end

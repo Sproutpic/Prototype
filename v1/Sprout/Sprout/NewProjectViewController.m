@@ -249,4 +249,5 @@
     
     self.navigationItem.titleView = label;
 }
+
 @end

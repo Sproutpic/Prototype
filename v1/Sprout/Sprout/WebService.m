@@ -29,6 +29,16 @@
     [self getRequestFromUrl:[[[URLUtils alloc]init] urlChangePassword] withParams:params];
     _changePassController = controller;
 }
+- (void)requestUploadSprout:(NSDictionary *)params withTarget:(EditProjectViewController *)controller{
+    fromRequest = @"requestUploadSprout";
+    [self getRequestFromUrl:[[[URLUtils alloc]init] urlUploadSprout] withParams:params];
+    _editController = controller;
+}
+- (void)requestUpdateSprout:(NSDictionary *)params withTarget:(EditProjectDetailsViewController *)controller{
+    fromRequest = @"requestUpdateSprout";
+    [self getRequestFromUrl:[[[URLUtils alloc]init] urlUpdateSprout] withParams:params];
+    _editDetailController = controller;
+}
 //requests
 - (void)getRequestFromUrl:(NSString *)url withParams:(NSDictionary *) params{
     AppDelegate *appDel = [[UIApplication sharedApplication]delegate];
@@ -38,6 +48,7 @@
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.requestSerializer.cachePolicy = NSURLRequestReloadIgnoringCacheData;
     [manager GET:url parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject){
+        //NSLog(@"params:%@\n",params);
         [SVProgressHUD dismiss];
         appDel.window.userInteractionEnabled = YES;
         NSLog(@"RESPONSE: %@", responseObject);
@@ -81,6 +92,8 @@
         }else if([fromRequest isEqualToString:@"requestChangePassword"]){
             [_changePassController showAlertWithMessage:((NSArray *)[responseObject objectForKey:@"Notifications"])[0]];
             [_changePassController.navigationController popToRootViewControllerAnimated:YES];
+        }else if([fromRequest isEqualToString:@"requestUploadSprout"]){
+            [_editController uploadSuccessful:[responseObject objectForKey:@"Result"]];
         }
     }else{
         if ([fromRequest isEqualToString:@"requestSignUpUser"]) {
@@ -99,6 +112,8 @@
             [_signInController showAlertWithMessage:((NSArray *)[responseObject objectForKey:@"Errors"])[0]];
         }else if([fromRequest isEqualToString:@"requestChangePassword"]){
             [_changePassController showAlertWithMessage:((NSArray *)[responseObject objectForKey:@"Errors"])[0]];
+        }else if([fromRequest isEqualToString:@"requestUpdateSprout"]){
+            [_editDetailController showAlertWithMessage:((NSArray *)[responseObject objectForKey:@"Errors"])[0]];
         }
     }
 }

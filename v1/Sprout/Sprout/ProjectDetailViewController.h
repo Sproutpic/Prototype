@@ -19,4 +19,5 @@
 }
 @property (strong,nonatomic)NSDictionary *project;
 @property (strong,nonatomic)UICollectionView *timelineCollection;
+@property (strong,nonatomic)NSNumber *useFile;
 @end

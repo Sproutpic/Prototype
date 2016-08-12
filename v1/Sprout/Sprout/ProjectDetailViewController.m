@@ -144,7 +144,11 @@
     [scroller addSubview:lblTitle];
     
     sprout = [[UIImageView alloc] initWithFrame:CGRectMake(0, lblTitle.frame.origin.y + lblTitle.frame.size.height + 10, scroller.frame.size.width, self.view.frame.size.width * 0.6)];
-    [sprout sd_setImageWithURL:[NSURL URLWithString:((NSString *)[_project objectForKey:@"projectThumbnails"][0])]];
+    if ([_useFile boolValue]) {
+        sprout.image = [UIImage imageWithContentsOfFile:((NSString *)[_project objectForKey:@"projectThumbnails"][0])];
+    } else {
+        [sprout sd_setImageWithURL:[NSURL URLWithString:((NSString *)[_project objectForKey:@"projectThumbnails"][0])]];
+    }
     play = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.405, self.view.frame.size.width * 0.205, self.view.frame.size.width * 0.19, self.view.frame.size.width * 0.19)];
     play.image = [UIImage imageNamed:@"play-button"];
     [sprout addSubview:play];
@@ -243,7 +247,11 @@
         [cell.contentView addSubview:plus];
     }else{
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.contentView.frame];
-        [imageView sd_setImageWithURL:[NSURL URLWithString:((NSString *)[_project objectForKey:@"projectThumbnails"][indexPath.row])]];
+        if ([_useFile boolValue]) {
+            imageView.image = [UIImage imageWithContentsOfFile:((NSString *)[_project objectForKey:@"projectThumbnails"][indexPath.row])];
+        } else {
+            [imageView sd_setImageWithURL:[NSURL URLWithString:((NSString *)[_project objectForKey:@"projectThumbnails"][indexPath.row])]];
+        }
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.clipsToBounds = YES;
         [cell.contentView addSubview:imageView];
@@ -289,6 +297,7 @@
 - (IBAction)editProject:(UIButton *)sender{
     EditProjectDetailsViewController *editScreen = [[EditProjectDetailsViewController alloc] init];
     editScreen.project = _project;
+    editScreen.useFile = _useFile;
     [self.navigationController pushViewController:editScreen animated:YES];
 }
 - (IBAction)backToMenu:(UIButton *)sender{

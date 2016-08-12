@@ -43,14 +43,14 @@
     self.navigationItem.titleView = label;
 }
 - (void)setProjectScroller{
-    projectScroller = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 114)];
+    projectScroller = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 50)];
     [self setEachProjectPreview];
     [self.view addSubview:projectScroller];
 }
 - (void)setEachProjectPreview{
     CGFloat y = 20.0f;
     int tag = 0;
-    for (NSDictionary *dictionary in projects) {
+    for (NSDictionary *dictionary in _projects) {
         currentDictionary = dictionary;
         [self setPerProjectContainerWithY:y withTag:tag];
         y += projectScroller.frame.size.height * 0.405 + 27;
@@ -83,7 +83,8 @@
 }
 - (IBAction)showProjDetail:(UIButton *)sender{
     ProjectDetailViewController *projDetailController =[[ProjectDetailViewController alloc] init];
-    projDetailController.project = [projects[sender.tag] mutableCopy];
+    projDetailController.project = [_projects[sender.tag] mutableCopy];
+    projDetailController.useFile = _useFile;
     [self.tabBarController presentViewController:[[UINavigationController alloc] initWithRootViewController:projDetailController] animated:YES completion:nil];
 }
 - (void)setupSeparator:(UIView *)projectView{
@@ -107,7 +108,7 @@
 }
 - (NSMutableArray *)getProjects{
     [self populateProjects];
-    return projects;
+    return _projects;
 }
 - (void)setupProjectTitleLabel:(UIView *)projectView{
     UILabel *titleLabel = [[UILabel alloc]init];
@@ -126,38 +127,52 @@
     
     [projectView addSubview:scroller];
 }
+-(void)viewWillAppear:(BOOL)animated{
+    for (UIView *view in self.view.subviews) {
+        [view removeFromSuperview];
+    }
+    [self viewDidLoad];
+}
 - (void)setupImages:(UIScrollView *)scroller{
     CGFloat x = 10.0f;
     for (NSString *str in ((NSArray *)[currentDictionary objectForKey:@"projectThumbnails"])) {
         UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(x, 0, scroller.frame.size.width * 0.40, scroller.frame.size.height)];
         image.layer.borderWidth = 0.5;
-        [image sd_setImageWithURL:[NSURL URLWithString:str]];
+        if ([_useFile boolValue]) {
+            image.image = [UIImage imageWithContentsOfFile:str];
+        } else {
+            [image sd_setImageWithURL:[NSURL URLWithString:str]];
+        }
+        
         [scroller addSubview:image];
         x += scroller.frame.size.width * 0.40 + 10;
         scroller.contentSize = CGSizeMake(x, scroller.frame.size.height);
     }
 }
 - (void)updateScrollerContentHeight{
-    projectScroller.contentSize = CGSizeMake(self.view.frame.size.width, projectScroller.subviews.lastObject.frame.origin.y + projectScroller.subviews.lastObject.frame.size.height);
+    projectScroller.contentSize = CGSizeMake(self.view.frame.size.width, projectScroller.subviews.lastObject.frame.origin.y + projectScroller.subviews.lastObject.frame.size.height + 10);
 }
 - (void)populateProjects{
-    projects = [[NSMutableArray alloc]initWithArray:@[@{@"projectTitle":@"Project Title",
-                                                        @"projectDetail":@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it.",
-                                                        @"projectThumbnails":[[NSMutableArray alloc]initWithArray:@[@"http://cdn4.fast-serve.net/cdn/plugplants/Pack-X6-Blue-Agapanthus-Perennial-Summer-Flowering-Plug-Plants_700_600_78HAG.jpg",
-                                                                                                                    @"https://s-media-cache-ak0.pinimg.com/564x/36/d4/08/36d408bdaf1b71825edde18ed7bc3690.jpg",
-                                                                                                                    @"https://s-media-cache-ak0.pinimg.com/236x/6b/14/7a/6b147af37bf15c7f10c3583c247fc5b2.jpg",
-                                                                                                                    @"https://s-media-cache-ak0.pinimg.com/236x/c2/a4/df/c2a4df1e8aad6b6f5404bdf8ac0c1cc7.jpg"]]},
-                                                      @{@"projectTitle":@"Project Title",
-                                                        @"projectDetail":@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it.",
-                                                        @"projectThumbnails":[[NSMutableArray alloc] initWithArray:@[@"http://ghk.h-cdn.co/assets/15/33/980x490/landscape-1439490128-plants.jpg",
-                                                                                                                     @"http://cdn3.fast-serve.net/cdn/plugplants/_0_0_6PNES.jpg",
-                                                                                                                     @"http://cdn1.fast-serve.net/cdn/plugplants/Pack-x6-Mimulus-39-Glutinosus-39-Monkey-Plant-Hanging-Basket-Garden-Plug-Plants_700_600_7GH4I.jpg",
-                                                                                                                     @"https://s-media-cache-ak0.pinimg.com/236x/44/97/88/449788a41a9d826eace28f363fb80b69.jpg"]]},
-                                                      @{@"projectTitle":@"Project Title",
-                                                        @"projectDetail":@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it.",
-                                                        @"projectThumbnails":[[NSMutableArray alloc]initWithArray:@[@"http://cdn4.fast-serve.net/cdn/plugplants/Pack-X6-Blue-Agapanthus-Perennial-Summer-Flowering-Plug-Plants_700_600_78HAG.jpg",
-                                                                                                                    @"https://s-media-cache-ak0.pinimg.com/564x/36/d4/08/36d408bdaf1b71825edde18ed7bc3690.jpg",
-                                                                                                                    @"https://s-media-cache-ak0.pinimg.com/236x/6b/14/7a/6b147af37bf15c7f10c3583c247fc5b2.jpg",
-                                                                                                                    @"https://s-media-cache-ak0.pinimg.com/236x/c2/a4/df/c2a4df1e8aad6b6f5404bdf8ac0c1cc7.jpg"]]}]];
+    if (_projects.count < 1) {
+        _projects = [[NSMutableArray alloc]initWithArray:@[@{@"projectTitle":@"Project Title",
+                                                             @"projectDetail":@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it.",
+                                                             @"projectThumbnails":[[NSMutableArray alloc]initWithArray:@[@"http://cdn4.fast-serve.net/cdn/plugplants/Pack-X6-Blue-Agapanthus-Perennial-Summer-Flowering-Plug-Plants_700_600_78HAG.jpg",
+                                                                                                                         @"https://s-media-cache-ak0.pinimg.com/564x/36/d4/08/36d408bdaf1b71825edde18ed7bc3690.jpg",
+                                                                                                                         @"https://s-media-cache-ak0.pinimg.com/236x/6b/14/7a/6b147af37bf15c7f10c3583c247fc5b2.jpg",
+                                                                                                                         @"https://s-media-cache-ak0.pinimg.com/236x/c2/a4/df/c2a4df1e8aad6b6f5404bdf8ac0c1cc7.jpg"]]},
+                                                           @{@"projectTitle":@"Project Title",
+                                                             @"projectDetail":@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it.",
+                                                             @"projectThumbnails":[[NSMutableArray alloc] initWithArray:@[@"http://ghk.h-cdn.co/assets/15/33/980x490/landscape-1439490128-plants.jpg",
+                                                                                                                          @"http://cdn3.fast-serve.net/cdn/plugplants/_0_0_6PNES.jpg",
+                                                                                                                          @"http://cdn1.fast-serve.net/cdn/plugplants/Pack-x6-Mimulus-39-Glutinosus-39-Monkey-Plant-Hanging-Basket-Garden-Plug-Plants_700_600_7GH4I.jpg",
+                                                                                                                          @"https://s-media-cache-ak0.pinimg.com/236x/44/97/88/449788a41a9d826eace28f363fb80b69.jpg"]]},
+                                                           @{@"projectTitle":@"Project Title",
+                                                             @"projectDetail":@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it.",
+                                                             @"projectThumbnails":[[NSMutableArray alloc]initWithArray:@[@"http://cdn4.fast-serve.net/cdn/plugplants/Pack-X6-Blue-Agapanthus-Perennial-Summer-Flowering-Plug-Plants_700_600_78HAG.jpg",
+                                                                                                                         @"https://s-media-cache-ak0.pinimg.com/564x/36/d4/08/36d408bdaf1b71825edde18ed7bc3690.jpg",
+                                                                                                                         @"https://s-media-cache-ak0.pinimg.com/236x/6b/14/7a/6b147af37bf15c7f10c3583c247fc5b2.jpg",
+                                                                                                                         @"https://s-media-cache-ak0.pinimg.com/236x/c2/a4/df/c2a4df1e8aad6b6f5404bdf8ac0c1cc7.jpg"]]}]];
+    }
+    
 }
 @end

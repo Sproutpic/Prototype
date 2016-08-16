@@ -148,8 +148,9 @@
 - (void)showAlertWithMessage:(NSString *)str{
     [[[UIAlertView alloc]initWithTitle:@"" message:str delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
 }
-- (void)signInSuccess{
-    [[NSUserDefaults standardUserDefaults] setObject:@{@"email":fieldEmail.text} forKey:@"user"];
+- (void)signInSuccess:(id) result{
+    [[NSUserDefaults standardUserDefaults] setObject:@{@"email":fieldEmail.text,
+                                                       @"name":[result objectForKey:@"UserName"]} forKey:@"user"];
     [self.navigationController popToRootViewControllerAnimated:YES];
     
 }

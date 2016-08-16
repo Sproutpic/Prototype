@@ -268,6 +268,11 @@
     }
     return cell;
 }
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row == ((NSArray *)[_project objectForKey:@"projectThumbnails"]).count) {
+        [self.navigationController pushViewController:[[CameraViewController alloc]init] animated:YES];
+    }
+}
 - (void)addCreateButton{
     UIButton *btnCreate = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 108, self.view.frame.size.width, 44)];
     btnCreate.backgroundColor = [utils colorNavigationBar];

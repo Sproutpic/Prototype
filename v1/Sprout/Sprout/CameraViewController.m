@@ -71,7 +71,12 @@
 }
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
     _currentInfo = info;
-    [[[UIAlertView alloc] initWithTitle:@"" message:@"Continue capture?" delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:@"Save", nil] show];
+    EditProjectViewController *editController = [[EditProjectViewController alloc] init];
+    editController.image = [_currentInfo objectForKey:UIImagePickerControllerOriginalImage];
+    [self.navigationController pushViewController:editController animated:YES];
+    _prevImg.image = [self fixOrientation:[_currentInfo objectForKey:UIImagePickerControllerOriginalImage]];
+    [self saveImage];
+   // [[[UIAlertView alloc] initWithTitle:@"" message:@"Continue capture?" delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:@"Save", nil] show];
 }
 -(void)continueCapture{
     _prevImg.image = [self fixOrientation:[_currentInfo objectForKey:UIImagePickerControllerOriginalImage]];
@@ -103,16 +108,16 @@
     //});
 }
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    if ([[NSString stringWithFormat:@"%ld",(long)buttonIndex] isEqualToString:@"0"]) {
+    /*if ([[NSString stringWithFormat:@"%ld",(long)buttonIndex] isEqualToString:@"0"]) {
         [self continueCapture];
         [self saveImage];
-    } else {
+    } else {*/
         EditProjectViewController *editController = [[EditProjectViewController alloc] init];
         editController.image = [_currentInfo objectForKey:UIImagePickerControllerOriginalImage];
         [self.navigationController pushViewController:editController animated:YES];
         _prevImg.image = [self fixOrientation:[_currentInfo objectForKey:UIImagePickerControllerOriginalImage]];
         [self saveImage];
-    }
+    //}
 }
 - (void)setNavigationBar{
     [self setTitleViewForNavBar];

@@ -45,6 +45,9 @@
 		5A85A30B1D2BBE9800B4CD02 /* JASidePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A3071D2BBE9800B4CD02 /* JASidePanelController.m */; };
 		5A85A30C1D2BBE9800B4CD02 /* UIViewController+JASidePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A3091D2BBE9800B4CD02 /* UIViewController+JASidePanel.m */; };
 		5A85A3101D2BBF0600B4CD02 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */; };
+		5A85C6C71D62D8CF00BA2FA0 /* WhiteRaccoon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85C6C61D62D8CF00BA2FA0 /* WhiteRaccoon.m */; };
+		5A85C6CB1D62D91900BA2FA0 /* FTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85C6CA1D62D91900BA2FA0 /* FTPManager.m */; };
+		5A85C6CD1D62EB0700BA2FA0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A85C6CC1D62EB0600BA2FA0 /* CFNetwork.framework */; };
 		5AA3753C1D2CFBEF001993E0 /* FAQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA3753B1D2CFBEF001993E0 /* FAQViewController.m */; };
 		5AD140331D50673D004C301B /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD140321D50673D004C301B /* CameraViewController.m */; };
 		5AD140371D50AC5F004C301B /* EditProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD140361D50AC5F004C301B /* EditProjectViewController.m */; };
@@ -164,6 +167,11 @@
 		5A85A30A1D2BBE9800B4CD02 /* UIViewController+JASidePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+JASidePanel.h"; sourceTree = "<group>"; };
 		5A85A30E1D2BBF0600B4CD02 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		5A85C6C51D62D8CF00BA2FA0 /* WhiteRaccoon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhiteRaccoon.h; sourceTree = "<group>"; };
+		5A85C6C61D62D8CF00BA2FA0 /* WhiteRaccoon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhiteRaccoon.m; sourceTree = "<group>"; };
+		5A85C6C91D62D91900BA2FA0 /* FTPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPManager.h; sourceTree = "<group>"; };
+		5A85C6CA1D62D91900BA2FA0 /* FTPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPManager.m; sourceTree = "<group>"; };
+		5A85C6CC1D62EB0600BA2FA0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		5AA3753A1D2CFBEF001993E0 /* FAQViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQViewController.h; sourceTree = "<group>"; };
 		5AA3753B1D2CFBEF001993E0 /* FAQViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQViewController.m; sourceTree = "<group>"; };
 		5AD140311D50673D004C301B /* CameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraViewController.h; sourceTree = "<group>"; };
@@ -216,6 +224,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A85C6CD1D62EB0700BA2FA0 /* CFNetwork.framework in Frameworks */,
 				5A22D7C51D5B028000ECBC47 /* Photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,6 +249,7 @@
 		5A17F60B1D4AFD7A00662C1A /* Project Detail */ = {
 			isa = PBXGroup;
 			children = (
+				5AD140301D506719004C301B /* Camera */,
 				5A17F60F1D4B39C900662C1A /* Edit Project Details */,
 				5A17F60C1D4AFDAB00662C1A /* ProjectDetailViewController.h */,
 				5A17F60D1D4AFDAB00662C1A /* ProjectDetailViewController.m */,
@@ -368,6 +378,7 @@
 		5A85A2BA1D2BB65F00B4CD02 = {
 			isa = PBXGroup;
 			children = (
+				5A85C6CC1D62EB0600BA2FA0 /* CFNetwork.framework */,
 				5A22D7C41D5B028000ECBC47 /* Photos.framework */,
 				5A85A2C51D2BB65F00B4CD02 /* Sprout */,
 				5A85A2DB1D2BB66000B4CD02 /* SproutTests */,
@@ -403,6 +414,7 @@
 		5A85A2C61D2BB65F00B4CD02 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5A85C6C81D62D8EA00BA2FA0 /* FTP Manager */,
 				5A5F3D5F1D599FBC00AC6767 /* UIImage_animated */,
 				5A5498831D54947300432FE5 /* SVProgressHUD */,
 				5A54987F1D54930A00432FE5 /* Web Service */,
@@ -447,9 +459,9 @@
 		5A85A2F61D2BB7FE00B4CD02 /* New Project */ = {
 			isa = PBXGroup;
 			children = (
-				5AD140301D506719004C301B /* Camera */,
 				5A85A2FC1D2BB87200B4CD02 /* NewProjectViewController.h */,
 				5A85A2FD1D2BB87200B4CD02 /* NewProjectViewController.m */,
+				5AD140341D50AC0C004C301B /* Edit New Project */,
 			);
 			name = "New Project";
 			sourceTree = "<group>";
@@ -509,6 +521,25 @@
 			name = SettingsViewController;
 			sourceTree = "<group>";
 		};
+		5A85C6C41D62D8AC00BA2FA0 /* White Racoon */ = {
+			isa = PBXGroup;
+			children = (
+				5A85C6C51D62D8CF00BA2FA0 /* WhiteRaccoon.h */,
+				5A85C6C61D62D8CF00BA2FA0 /* WhiteRaccoon.m */,
+			);
+			name = "White Racoon";
+			sourceTree = "<group>";
+		};
+		5A85C6C81D62D8EA00BA2FA0 /* FTP Manager */ = {
+			isa = PBXGroup;
+			children = (
+				5A85C6C41D62D8AC00BA2FA0 /* White Racoon */,
+				5A85C6C91D62D91900BA2FA0 /* FTPManager.h */,
+				5A85C6CA1D62D91900BA2FA0 /* FTPManager.m */,
+			);
+			name = "FTP Manager";
+			sourceTree = "<group>";
+		};
 		5AA375391D2CFBC4001993E0 /* FAQ */ = {
 			isa = PBXGroup;
 			children = (
@@ -521,7 +552,6 @@
 		5AD140301D506719004C301B /* Camera */ = {
 			isa = PBXGroup;
 			children = (
-				5AD140341D50AC0C004C301B /* Edit New Project */,
 				5AD140311D50673D004C301B /* CameraViewController.h */,
 				5AD140321D50673D004C301B /* CameraViewController.m */,
 			);
@@ -759,6 +789,7 @@
 				5A2180991D3E1BDB0057F298 /* SecureAccessViewController.m in Sources */,
 				5AD4C3821D33A96B005F8D98 /* UIImage+MultiFormat.m in Sources */,
 				5AD4C3831D33A96B005F8D98 /* UIImage+WebP.m in Sources */,
+				5A85C6C71D62D8CF00BA2FA0 /* WhiteRaccoon.m in Sources */,
 				5AD4C37D1D33A96B005F8D98 /* SDWebImageDownloaderOperation.m in Sources */,
 				5A5498821D54932C00432FE5 /* WebService.m in Sources */,
 				5A54987A1D54929900432FE5 /* AFURLResponseSerialization.m in Sources */,
@@ -771,6 +802,7 @@
 				5AA3753C1D2CFBEF001993E0 /* FAQViewController.m in Sources */,
 				5A5498791D54929900432FE5 /* AFURLRequestSerialization.m in Sources */,
 				5A85A3011D2BB88900B4CD02 /* MyProjectsViewController.m in Sources */,
+				5A85C6CB1D62D91900BA2FA0 /* FTPManager.m in Sources */,
 				5AD140331D50673D004C301B /* CameraViewController.m in Sources */,
 				5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */,
 				5AD249E11D406964000859C8 /* EnablePasscodeViewController.m in Sources */,

@@ -86,7 +86,7 @@
         if ([fromRequest isEqualToString:@"requestSignUpUser"]) {
             [_signUpController signUpSuccess];
         }else if ([fromRequest isEqualToString:@"requestSignInUser"]) {
-            [_signInController signInSuccess];
+            [_signInController signInSuccess:[responseObject objectForKey:@"Result"]];
         }else if ([fromRequest isEqualToString:@"requestRestorePassword"]) {
             [_signInController restoreSuccess];
         }else if([fromRequest isEqualToString:@"requestChangePassword"]){

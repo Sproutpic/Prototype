@@ -21,6 +21,6 @@
 }
 @property (strong,nonatomic)AccountInformationViewController *accountInfoController;
 - (void)showAlertWithMessage:(NSString *)str;
-- (void)signInSuccess;
+- (void)signInSuccess:(id) result;
 - (void)restoreSuccess;
 @end

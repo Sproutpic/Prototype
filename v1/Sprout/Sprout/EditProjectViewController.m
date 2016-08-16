@@ -349,8 +349,8 @@
         //NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
         //dateFormatter.dateFormat = @"MMDDyy";
          [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
-        [self showProgress];
-        ((AppDelegate *)[[UIApplication sharedApplication] delegate]).window.userInteractionEnabled = NO;
+        //[self showProgress];
+        //((AppDelegate *)[[UIApplication sharedApplication] delegate]).window.userInteractionEnabled = NO;
         [self createAlbum];
         //NSLog(@"projecttosave: title:%@\ndesc:%@\nvalue:%@\nsprout:%f",fieldTitle.text,fieldDesc.text,[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"],slider.value);
         
@@ -384,10 +384,10 @@
                 for (NSString *str in _startSprout) {
                     [_imagesArray addObject:[UIImage imageWithContentsOfFile:str]];
                 }
-                for (UIImage *image in _imagesArray) {
+                //for (UIImage *image in _imagesArray) {
                     NSLog(@"adding image");
                     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-                        PHAssetChangeRequest *assetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+                        PHAssetChangeRequest *assetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:_imagesArray[0]];
                         _placeholder = [assetRequest placeholderForCreatedAsset];
                         _photosAsset = [PHAsset fetchAssetsInAssetCollection:_collection options:nil];
                         PHAssetCollectionChangeRequest *albumChangeRequest = [PHAssetCollectionChangeRequest changeRequestForAssetCollection:_collection
@@ -397,100 +397,36 @@
                     } completionHandler:^(BOOL success, NSError *error) {
                         if (success)
                         {
-                            if ([image isEqual:_imagesArray.firstObject]) {
-                                PHFetchResult *assets = [PHAsset fetchAssetsWithLocalIdentifiers:@[_placeholder.localIdentifier] options:nil];
+                            if ([_imagesArray[0] isEqual:_imagesArray.firstObject]) {
+                               PHFetchResult *assets = [PHAsset fetchAssetsWithLocalIdentifiers:@[_placeholder.localIdentifier] options:nil];
                                 PHAsset *asset = assets.firstObject;
                                 [[PHImageManager defaultManager] requestImageDataForAsset:asset options:0 resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation,NSDictionary *dictionary){
                                     
-                                    NSLog(@"\nuserName:%@\npathToImagesFolder:Sprouts/%@/%@\nsproutFileName:%@\ntitle:%@\ndescription:%@\nframesPerMinute:%f\nstartDt:%@\nendDt:%@\n",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,fieldTitle.text,fieldDesc.text,((slider.value/_imagesArray.count)/slider.value) * 60,@"01/01/2016",@"01/31/2016");
-                                    webService = [[WebService alloc] init];
+                                    NSLog(@"\nuserName:%@\npathToImagesFolder:Sprouts/%@/%@\nsproutFileName:%@\ntitle:%@\ndescription:%@\nframesPerMinute:%f\nstartDt:%@\nendDt:%@\n",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],fieldTitle.text,[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,fieldTitle.text,fieldDesc.text,((slider.value/_imagesArray.count)/slider.value) * 60,@"01/01/2016",@"01/31/2016");
+                                    
+                                    ftpManager = [[FTPManager alloc] init];
+                                   [ftpManager listDirectories];
+                                    //[ftpManager createDirectory:[NSString stringWithFormat:@"%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],fieldTitle.text]];
+                                    
+                                    /*[self uploadSuccessful:@{@"userName":[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],
+                                                             @"PathToImages":[NSString stringWithFormat:@"Sprouts/%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject],
+                                                             @"sproutFileName":[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,
+                                                             @"title":fieldTitle.text,
+                                                             @"description":fieldDesc.text,
+                                                             @"framesPerMinute":[NSNumber numberWithInt:((slider.value/_imagesArray.count)/slider.value) * 60],
+                                                             @"startDt":@"01/01/2016",
+                                                             @"endDt":@"01/31/2016"
+                                                             }];*/
+                                    /*webService = [[WebService alloc] init];
                                     [webService requestUploadSprout:@{@"userName":[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],
-                                                                      @"pathToImagesFolder":[NSString stringWithFormat:@"Sprouts/%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject],
+                                                                      @"pathToImagesFolder":[NSString stringWithFormat:@"Sprouts/%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],fieldTitle.text],
                                                                       @"sproutFileName":[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,
                                                                       @"title":fieldTitle.text,
                                                                       @"description":fieldDesc.text,
                                                                       @"framesPerMinute":[NSNumber numberWithInt:((slider.value/_imagesArray.count)/slider.value) * 60],
                                                                       @"startDt":@"01/01/2016",
                                                                       @"endDt":@"01/31/2016"
-                                                                      } withTarget:self];
-                                    /*
-                                     NSString *str=[[URLUtils alloc] init].urlUploadSprout;
-                                     NSString *urlString = [NSString stringWithFormat:@"%@",str];
-                                     
-                                     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-                                     [request setURL:[NSURL URLWithString:urlString]];
-                                     [request setHTTPMethod:@"POST"];
-                                     NSMutableData *body = [NSMutableData data];
-                                     NSString *boundary = @"---------------------------14737809831466499882746641449";
-                                     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
-                                     [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
-                                     
-                                     [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"sproutFileName\"; filename=\"%@\"\r\n",((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) ] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[NSData dataWithData:UIImagePNGRepresentation(image)]];
-                                     [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"userName\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"pathToImagesFolder\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[[NSString stringWithFormat:@"Sprouts/%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"title\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[fieldTitle.text dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"description\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[fieldDesc.text dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"framesPerMinute\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[[NSString stringWithFormat:@"%@",[NSNumber numberWithInt:((slider.value/_imagesArray.count)/slider.value) * 60]] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"startDt\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[@"01/01/2016" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"endDt\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     [body appendData:[@"01/31/2016" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     // close form
-                                     [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                                     
-                                     
-                                     // setting the body of the post to the reqeust
-                                     [request setHTTPBody:body];
-                                     
-                                     AFHTTPRequestOperation *manager = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-                                     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-                                     [manager setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                     NSDictionary *response = (NSDictionary *) responseObject;
-                                     NSLog(@"RESPONSE OBJECT -- %@", response);
-                                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                     NSLog(@"RESPONSE error -- %@", error);
-                                     
-                                     }];
-                                     [manager start];
-                                     */
+                                                                      } withTarget:self];*/
                                 }];
                             }
                         }
@@ -499,7 +435,7 @@
                             NSLog(@"%@", error);
                         }
                     }];
-                }
+                //}
             }
         }];
     }
@@ -613,12 +549,22 @@
     return img;
 }
 -(void)uploadSuccessful:(NSDictionary *)result{
-    ((AppDelegate *)[[UIApplication sharedApplication] delegate]) .myProjsController.projects = [[NSMutableArray alloc]initWithArray:@[@{@"projectTitle":fieldTitle.text,
-                                                                                                                                         @"projectDetail":fieldDesc.text,
-                                                                                                                                         @"projectThumbnails":[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"],
-                                                                                                                                         @"sproutId":[result objectForKey:@"SproutId"],
-                                                                                                                                         @"pathToImagesFolder":[result objectForKey:@"PathToImages"]}
-                                                                                                                                       ]];
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"projects"]) {
+        NSMutableArray *projects = [[[NSUserDefaults standardUserDefaults] objectForKey:@"projects"] mutableCopy];
+        [projects addObject:@{@"projectTitle":fieldTitle.text,
+                             @"projectDetail":fieldDesc.text,
+                             @"projectThumbnails":[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"],
+                             @"sproutId":[result objectForKey:@"SproutId"],
+                              @"pathToImagesFolder":[result objectForKey:@"PathToImages"]}];
+        [[NSUserDefaults standardUserDefaults] setObject:projects forKey:@"projects"];
+    }else{
+        [[NSUserDefaults standardUserDefaults] setObject:[[NSMutableArray alloc]initWithArray:@[@{@"projectTitle":fieldTitle.text,
+                                                                                                  @"projectDetail":fieldDesc.text,
+                                                                                                  @"projectThumbnails":[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"],
+                                                                                                  @"sproutId":[result objectForKey:@"SproutId"],
+                                                                                                  @"pathToImagesFolder":[result objectForKey:@"PathToImages"]}
+                                                                                                ]] forKey:@"projects"];
+    }
     ((AppDelegate *)[[UIApplication sharedApplication] delegate]) .myProjsController.useFile = [NSNumber numberWithBool:YES];
     [SVProgressHUD dismiss];
     ((AppDelegate *)[[UIApplication sharedApplication] delegate]).window.userInteractionEnabled = YES;

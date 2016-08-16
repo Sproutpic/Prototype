@@ -17,7 +17,8 @@
 #import "AppDelegate.h"
 #import "WebService.h"
 @class WebService;
-#import "FTPManager.h"
+//#import "FTPManager.h"
+#import "FTPCreateManager.h"
 
 @interface EditProjectViewController : UIViewController<UITextFieldDelegate, UITextViewDelegate>{
     UIUtils *utils;
@@ -31,8 +32,9 @@
     UISlider *slider;
     NSURL *sproutGifUrl;
     WebService *webService;
-    FTPManager *ftpManager;
+//    FTPManager *ftpManager;
     NSMutableArray *forSavePaths;
+    FTPCreateManager *ftpCreateManager;
 }
 @property (strong,nonatomic)UIImage *image;
 @property (strong,nonatomic)NSMutableArray * startSprout,*imagesArray;

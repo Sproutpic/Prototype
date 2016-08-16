@@ -72,15 +72,19 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
     _currentInfo = info;
     EditProjectViewController *editController = [[EditProjectViewController alloc] init];
-    editController.image = [_currentInfo objectForKey:UIImagePickerControllerOriginalImage];
-    [self.navigationController pushViewController:editController animated:YES];
+    
     _prevImg.image = [self fixOrientation:[_currentInfo objectForKey:UIImagePickerControllerOriginalImage]];
     [self saveImage];
+    
+    editController.image = [_currentInfo objectForKey:UIImagePickerControllerOriginalImage];
+    [self.navigationController pushViewController:editController animated:YES];
+    
    // [[[UIAlertView alloc] initWithTitle:@"" message:@"Continue capture?" delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:@"Save", nil] show];
 }
 -(void)continueCapture{
     _prevImg.image = [self fixOrientation:[_currentInfo objectForKey:UIImagePickerControllerOriginalImage]];
 }
+
 -(void)saveImage{
     [self showProgress];
     self.picker.view.userInteractionEnabled = NO;

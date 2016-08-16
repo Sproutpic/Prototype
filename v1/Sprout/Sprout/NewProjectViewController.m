@@ -20,14 +20,17 @@
     [self setNavigationBar];
     [self setupLayout];
 }
+
 -(void)viewDidAppear:(BOOL)animated{
     for (UIView *view in scroller.subviews) {
         [view removeFromSuperview];
     }
     [self viewDidLoad];
 }
+
 - (void)setupLayout{
     scroller = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 64)];
+    [scroller setShowsVerticalScrollIndicator:NO];
     [self.view addSubview:scroller];
     
     fieldTitle = [[UITextField alloc] initWithFrame:CGRectMake(15, 7, scroller.frame.size.width - 15, 50)];
@@ -61,13 +64,16 @@
     paraStyle.lineSpacing = 11.f;
     paraStyle.minimumLineHeight = 11.f;
     paraStyle.maximumLineHeight = 11.f;
-    fieldDesc = [[UITextView alloc]initWithFrame:CGRectMake(15, lblOpt.frame.origin.y + lblOpt.frame.size.height + 15, scroller.frame.size.width - 15, 0)];
+    
+    fieldDesc = [[UITextView alloc]initWithFrame:CGRectMake(15, lblOpt.frame.origin.y + lblOpt.frame.size.height + 12, scroller.frame.size.width - 30, 86)];
     fieldDesc.tintColor = [utils colorNavigationBar];
     fieldDesc.delegate = self;
+    
     fieldDesc.attributedText = [[NSAttributedString alloc] initWithString:@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it." attributes:@{NSFontAttributeName: [utils fontRegularForSize:16], NSForegroundColorAttributeName: [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f], NSParagraphStyleAttributeName: paraStyle}];
     CGRect rect = [fieldDesc.attributedText boundingRectWithSize:CGSizeMake(fieldDesc.frame.size.width - 15, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     fieldDesc.frame = CGRectMake(10, fieldDesc.frame.origin.y, fieldDesc.frame.size.width + 5, rect.size.height + 15);
     [scroller addSubview:fieldDesc];
+    
     separator = [[UIView alloc]initWithFrame:CGRectMake(5, fieldDesc.frame.size.height - 1, fieldDesc.frame.size.width, 1)];
     separator.backgroundColor = [[utils colorNavigationBar]colorWithAlphaComponent:0.5];
     textViewsept = separator;
@@ -165,16 +171,17 @@
     switchRemind.backgroundColor = [UIColor colorWithRed:173.f/255.f green:175.f/255.f blue:177.f/255.f alpha:1];
     switchRemind.tintColor = [UIColor colorWithRed:173.f/255.f green:175.f/255.f blue:177.f/255.f alpha:1];
     switchRemind.layer.cornerRadius = 16.0;
-    [switchRemind addTarget:self action:@selector(switched:)
-           forControlEvents:UIControlEventValueChanged];
+    [switchRemind addTarget:self action:@selector(switched:) forControlEvents:UIControlEventValueChanged];
     
     [scroller addSubview:remindView];
     
     [self updateScroller];
 }
+
 -(void)updateScroller{
     scroller.contentSize = CGSizeMake(scroller.frame.size.width, remindView.frame.origin.y +remindView.frame.size.height + 15);
 }
+
 - (IBAction)switched:(UISwitch *)sender{
     [UIView animateWithDuration:0.2 animations:^{
         if(sender.on){
@@ -188,6 +195,7 @@
         }];
     }];
 }
+
 -(void)textViewDidBeginEditing:(UITextView *)textView{
     if ([textView.text isEqualToString:@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it."]) {
         textView.text = @"";
@@ -196,6 +204,13 @@
         textViewsept.frame = CGRectMake(textView.frame.size.width, fieldDesc.frame.size.height - 1, 0, 1);
     }];
 }
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    
+    return YES;
+}
+
 -(void)textViewDidEndEditing:(UITextView *)textView{
     NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc]init];
     paraStyle.lineSpacing = 11.f;
@@ -213,14 +228,17 @@
         }];
     }];
 }
+
 - (void)makeSprout:(UITapGestureRecognizer *)sender{
     [self.navigationController pushViewController:[[CameraViewController alloc]init] animated:YES];
 }
+
 - (void)setNavigationBar{
     [self setTitleViewForNavBar];
     [self addLeftBarButton];
     [self addRightBarButton];
 }
+
 - (void)addLeftBarButton{
     UIButton *back = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
     [back setBackgroundImage:[UIImage imageNamed:@"arrow_left"] forState:UIControlStateNormal];
@@ -228,12 +246,14 @@
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:back];
     self.navigationItem.leftBarButtonItem = barButton;
 }
+
 - (void)addRightBarButton{
     UIButton *download = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
     [download setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:download];
     self.navigationItem.rightBarButtonItem = barButton;
 }
+
 - (IBAction)backToMenu:(UIButton *)sender{
     AppDelegate *appDel = [[UIApplication sharedApplication] delegate];
     [appDel resetTab];
@@ -241,6 +261,7 @@
     appDel.imageView.image = [UIImage imageNamed:@"projector-green"];
     self.tabBarController.selectedIndex = 0;
 }
+
 - (void)setTitleViewForNavBar{
     UILabel *label = [[UILabel alloc] init];
     label.attributedText = [utils attrString:@"SproutPic" withFont:[utils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];

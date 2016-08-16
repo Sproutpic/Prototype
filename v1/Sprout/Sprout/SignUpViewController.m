@@ -91,6 +91,7 @@
 -(IBAction)tappedSignUp:(id)sender{
     if ([self isFilled]) {
         NSLog(@"name:%@\nemail:%@\npassword:%@\nagree:%@",fieldName.text,fieldEmail.text,[[fieldPassword.text dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0],[checkImage.image isEqual:[UIImage imageNamed:@"Checkbox"]] ? @"0": @"1");
+        
         webService = [[WebService alloc] init];
         [webService requestSignUpUser:@{@"userName":fieldName.text,
                                        @"email":fieldEmail.text,
@@ -192,12 +193,16 @@
     
     self.navigationItem.titleView = label;
 }
+
 - (void)showAlertWithMessage:(NSString *)str{
     [[[UIAlertView alloc]initWithTitle:@"" message:str delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
 }
+
 - (void)signUpSuccess{
-    [[NSUserDefaults standardUserDefaults] setObject:@{@"name":fieldName.text,
-                                                       @"email":fieldEmail.text} forKey:@"user"];
+    ftpCreateManager = [[FTPCreateManager alloc] init];
+    [ftpCreateManager startCreate:[NSString stringWithFormat:@"104.197.93.149/Sprouts/"] andDirName:[NSString stringWithFormat:@"%@", fieldName.text]];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:@{@"name":fieldName.text, @"email":fieldEmail.text} forKey:@"user"];
     [self.navigationController popToRootViewControllerAnimated:YES];
     
 }

@@ -12,6 +12,8 @@
 @class AccountInformationViewController;
 #import "SignInViewController.h"
 #import "WebService.h"
+#import "FTPCreateManager.h"
+
 @class WebService;
 
 @interface SignUpViewController : UIViewController<UITextFieldDelegate,UIAlertViewDelegate>{
@@ -19,6 +21,7 @@
     UITextField *fieldName, *fieldEmail, *fieldPassword;
     WebService *webService;
     UIImageView *checkImage;
+    FTPCreateManager *ftpCreateManager;
 }
 @property (strong,nonatomic)AccountInformationViewController *accountInfoController;
 - (void)showAlertWithMessage:(NSString *)str;

@@ -19,8 +19,9 @@
 @class WebService;
 //#import "FTPManager.h"
 #import "FTPCreateManager.h"
+#import "FTPUploadManager.h"
 
-@interface EditProjectViewController : UIViewController<UITextFieldDelegate, UITextViewDelegate>{
+@interface EditProjectViewController : UIViewController<UITextFieldDelegate, UITextViewDelegate,CreateFTPDirectoryDelegate>{
     UIUtils *utils;
     UIScrollView *scroller;
     UITextField *fieldTitle, *fieldTag;
@@ -37,6 +38,7 @@
     FTPCreateManager *ftpCreateManager;
 }
 @property (strong,nonatomic)UIImage *image;
+@property (strong, nonatomic) NSString* imagePath;
 @property (strong,nonatomic)NSMutableArray * startSprout,*imagesArray;
 @property (strong,nonatomic)PHAssetCollection *assetCollection;
 @property (strong,nonatomic)__block PHFetchResult *photosAsset;

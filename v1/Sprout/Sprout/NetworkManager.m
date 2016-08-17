@@ -117,7 +117,7 @@
     return result;
 }
 
-- (NSString *)pathForTestImage:(NSUInteger)imageNumber
+- (NSString *)pathForTestImage:(NSString*)path
     // In order to fully test the send and receive code paths, we need some really big 
     // files.  Rather than carry theshe files around in our binary, we synthesise them. 
     // Specifically, for each test image, we expand the image by an order of magnitude, 
@@ -135,7 +135,7 @@
     unsigned long long  originalFileSize;
     unsigned long long  bigFileSize;
     
-    assert( (imageNumber >= 1) && (imageNumber <= 4) );
+//    assert( (imageNumber >= 1) && (imageNumber <= 4) );
 
     // Argh, C has no built-in power operator, so I have to do 10 ** (imageNumber - 1)
     // in floating point and then cast back to integer.  Fortunately the range 
@@ -144,7 +144,7 @@
     
     // On the simulator we expand by an extra order of magnitude; Macs are fast!
     
-    power = imageNumber - 1;
+//    power = imageNumber - 1;
     #if TARGET_IPHONE_SIMULATOR
         power += 1;
     #endif
@@ -155,10 +155,13 @@
     
     // Calculate paths to both the original file and the expanded file.
     
-    originalFilePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"TestImage%zu", (size_t) imageNumber] ofType:@"png"];
+//    originalFilePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"TestImage%zu", (size_t) imageNumber] ofType:@"png"];
+    originalFilePath = path;
     assert(originalFilePath != nil);
     
-    bigFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"TestImage%zu.png", (size_t) imageNumber]];
+    //    bigFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"TestImage%zu.png", (size_t) imageNumber]];
+    bigFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[path lastPathComponent]];
+    NSLog(@"BIG FILE PATH: %@", bigFilePath);
     assert(bigFilePath != nil);
     
     // Get the sizes of each.
@@ -189,6 +192,7 @@
 
         data = [NSData dataWithContentsOfMappedFile:originalFilePath];
         assert(data != nil);
+        NSLog(@"DATA NOT NIL %@",data!=nil?@"YES":@"NO");
         
         dataBuffer = [data bytes];
         dataLength = [data length];
@@ -198,17 +202,22 @@
         
         [bigFileStream open];
         
-        for (counter = 0; counter < expansionFactor; counter++) {
+//        for (counter = 0; counter < expansionFactor; counter++) {
             dataOffset = 0;
+//            NSLog(@"FOR LOOP");
+
             while (dataOffset != dataLength) {
                 NSInteger       bytesWritten;
                 
                 bytesWritten = [bigFileStream write:&dataBuffer[dataOffset] maxLength:dataLength - dataOffset];
-                assert(bytesWritten > 0);
+//                assert(bytesWritten > 0);
+                if(bytesWritten<0)
+                    break;
                 
                 dataOffset += (NSUInteger) bytesWritten;
+                NSLog(@"WHILE LOOP");
             }
-        }
+//        }
         
         [bigFileStream close];
     }

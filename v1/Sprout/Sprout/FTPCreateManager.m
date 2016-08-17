@@ -10,6 +10,8 @@
 
 @implementation FTPCreateManager
 
+@synthesize createDelegate;
+
 - (void)startCreate:(NSString *)urlString andDirName:(NSString *)dirName {
     NSLog(@"ENTER HERE");
     BOOL success;
@@ -71,7 +73,7 @@
 - (void)updateStatus:(NSString *)statusString
 {
     assert(statusString != nil);
-    NSLog(@"%@", statusString);
+    NSLog(@"CREATE FTP: %@", statusString);
 }
 
 - (void)createDidStopWithStatus:(NSString *)statusString
@@ -82,6 +84,8 @@
     
     NSLog(@"%@", statusString);
     [[NetworkManager sharedInstance] didStopNetworkOperation];
+    
+    [createDelegate didCreateSuccess];
 }
 
 - (void)stopCreateWithStatus:(NSString *)statusString
@@ -90,6 +94,7 @@
         [networkStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         networkStream.delegate = nil;
         [networkStream close];
+        NSLog(@"NETWORK STREAM CLOSED");
         networkStream = nil;
     }
     [self createDidStopWithStatus:statusString];

@@ -10,10 +10,19 @@
 #import "NetworkManager.h"
 #import <CFNetwork/CFNetwork.h>
 
+@protocol CreateFTPDirectoryDelegate;
 @interface FTPCreateManager : NSObject <NSStreamDelegate>{
     NSOutputStream *networkStream;
 }
 
 - (void)startCreate:(NSString *)urlString andDirName:(NSString *)dirName;
+@property (nonatomic, strong) id<CreateFTPDirectoryDelegate> createDelegate;
+
+@end
+
+@protocol CreateFTPDirectoryDelegate <NSObject>
+
+- (void)didCreateSuccess;
+- (void)didCreateFailed;
 
 @end

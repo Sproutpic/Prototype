@@ -369,99 +369,102 @@
     
     //create directory
     ftpCreateManager = [[FTPCreateManager alloc] init];
+    [ftpCreateManager setCreateDelegate:self];
     [ftpCreateManager startCreate:[NSString stringWithFormat:@"104.197.93.149/Sprouts/%@/", username] andDirName:[[projectTitle stringByReplacingOccurrencesOfString:@" " withString:@""] lowercaseString]];
     
     //uploading
+   
+    
     
 //    ftpManager = [[FTPManager alloc] init];
 //    [ftpManager startCreate:[NSString stringWithFormat:@"104.197.93.149/Sprouts/%@/", username] andDirName:[[projectTitle stringByReplacingOccurrencesOfString:@" " withString:@""] lowercaseString]];
-   
-    NSString *albumName = [NSString stringWithFormat:@"Sprout Project %@",fieldTitle.text];
-    // Find the album
-    PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
-    fetchOptions.predicate = [NSPredicate predicateWithFormat:@"title = %@", albumName];
-    _collection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:fetchOptions].firstObject;
-    // Create the album
-    if (!_collection)
-    {
-        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-            PHAssetCollectionChangeRequest *createAlbum = [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:albumName];
-            _placeholder = [createAlbum placeholderForCreatedAssetCollection];
-        } completionHandler:^(BOOL success, NSError *error) {
-            if (success)
-            {
-                PHFetchResult *collectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithLocalIdentifiers:@[_placeholder.localIdentifier]
-                                                                                                            options:nil];
-                _collection = collectionFetchResult.firstObject;
-                // Save to the album
-                _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
-                _imagesArray = [[NSMutableArray alloc]init];
-                for (NSString *str in _startSprout) {
-                    [_imagesArray addObject:[UIImage imageWithContentsOfFile:str]];
-                }
-                //for (UIImage *image in _imagesArray) {
-                    NSLog(@"adding image");
-                    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-                        PHAssetChangeRequest *assetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:_imagesArray[0]];
-                        _placeholder = [assetRequest placeholderForCreatedAsset];
-                        _photosAsset = [PHAsset fetchAssetsInAssetCollection:_collection options:nil];
-                        PHAssetCollectionChangeRequest *albumChangeRequest = [PHAssetCollectionChangeRequest changeRequestForAssetCollection:_collection
-                                                                                                                                      assets:_photosAsset];
-                        [albumChangeRequest addAssets:@[_placeholder]];
-                        
-                    } completionHandler:^(BOOL success, NSError *error) {
-                        if (success)
-                        {
-                            if ([_imagesArray[0] isEqual:_imagesArray.firstObject]) {
-                               PHFetchResult *assets = [PHAsset fetchAssetsWithLocalIdentifiers:@[_placeholder.localIdentifier] options:nil];
-                                PHAsset *asset = assets.firstObject;
-                                [[PHImageManager defaultManager] requestImageDataForAsset:asset options:0 resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation,NSDictionary *dictionary){
-                                    
-                                    NSLog(@"\nuserName:%@\npathToImagesFolder:Sprouts/%@/%@\nsproutFileName:%@\ntitle:%@\ndescription:%@\nframesPerMinute:%f\nstartDt:%@\nendDt:%@\n",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],fieldTitle.text,[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,fieldTitle.text,fieldDesc.text,((slider.value/_imagesArray.count)/slider.value) * 60,@"01/01/2016",@"01/31/2016");
-                                    
-                                    NSString *username = [[[NSUserDefaults standardUserDefaults] valueForKeyPath:@"user"] valueForKeyPath:@"name"];
-                                    NSString *projectTitle = [NSString stringWithFormat:@"%@", fieldTitle.text];
-                                    
-                                    NSLog(@"Username: %@", username);
-                                    NSLog(@"Project Title: %@", projectTitle);
-                                    
-//                                    ftpManager = [[FTPManager alloc] init];
-//                                    [ftpManager startCreate:@"104.197.93.149/Sprouts/" andDirName:@"brenda"];
-                                    
-//                                   [ftpManager listDirectories];
-                                    //[ftpManager createDirectory:[NSString stringWithFormat:@"%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],fieldTitle.text]];
-                                    
-                                    /*[self uploadSuccessful:@{@"userName":[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],
-                                                             @"PathToImages":[NSString stringWithFormat:@"Sprouts/%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject],
-                                                             @"sproutFileName":[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,
-                                                             @"title":fieldTitle.text,
-                                                             @"description":fieldDesc.text,
-                                                             @"framesPerMinute":[NSNumber numberWithInt:((slider.value/_imagesArray.count)/slider.value) * 60],
-                                                             @"startDt":@"01/01/2016",
-                                                             @"endDt":@"01/31/2016"
-                                                             }];*/
-                                    webService = [[WebService alloc] init];
-                                    [webService requestUploadSprout:@{@"userName":[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],
-                                                                      @"pathToImagesFolder":[NSString stringWithFormat:@"Sprouts/%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],fieldTitle.text],
-                                                                      @"sproutFileName":[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,
-                                                                      @"title":[[projectTitle stringByReplacingOccurrencesOfString:@" " withString:@""] lowercaseString],
-                                                                      @"description":fieldDesc.text,
-                                                                      @"framesPerMinute":[NSNumber numberWithInt:((slider.value/_imagesArray.count)/slider.value) * 60],
-                                                                      @"startDt":@"01/01/2016",
-                                                                      @"endDt":@"01/31/2016"
-                                                                      } withTarget:self];
-                                }];
-                            }
-                        }
-                        else
-                        {
-                            NSLog(@"%@", error);
-                        }
-                    }];
-                //}
-            }
-        }];
-    }
+//   
+//    NSString *albumName = [NSString stringWithFormat:@"Sprout Project %@",fieldTitle.text];
+//    // Find the album
+//    PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
+//    fetchOptions.predicate = [NSPredicate predicateWithFormat:@"title = %@", albumName];
+//    _collection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:fetchOptions].firstObject;
+//    // Create the album
+//    if (!_collection)
+//    {
+//        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+//            PHAssetCollectionChangeRequest *createAlbum = [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:albumName];
+//            _placeholder = [createAlbum placeholderForCreatedAssetCollection];
+//        } completionHandler:^(BOOL success, NSError *error) {
+//            if (success)
+//            {
+//                PHFetchResult *collectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithLocalIdentifiers:@[_placeholder.localIdentifier]
+//                                                                                                            options:nil];
+//                _collection = collectionFetchResult.firstObject;
+//                // Save to the album
+//                _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
+//                _imagesArray = [[NSMutableArray alloc]init];
+//                for (NSString *str in _startSprout) {
+//                    [_imagesArray addObject:[UIImage imageWithContentsOfFile:str]];
+//                }
+//                //for (UIImage *image in _imagesArray) {
+//                    NSLog(@"adding image");
+//                    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+//                        PHAssetChangeRequest *assetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:_imagesArray[0]];
+//                        _placeholder = [assetRequest placeholderForCreatedAsset];
+//                        _photosAsset = [PHAsset fetchAssetsInAssetCollection:_collection options:nil];
+//                        PHAssetCollectionChangeRequest *albumChangeRequest = [PHAssetCollectionChangeRequest changeRequestForAssetCollection:_collection
+//                                                                                                                                      assets:_photosAsset];
+//                        [albumChangeRequest addAssets:@[_placeholder]];
+//                        
+//                    } completionHandler:^(BOOL success, NSError *error) {
+//                        if (success)
+//                        {
+//                            if ([_imagesArray[0] isEqual:_imagesArray.firstObject]) {
+//                               PHFetchResult *assets = [PHAsset fetchAssetsWithLocalIdentifiers:@[_placeholder.localIdentifier] options:nil];
+//                                PHAsset *asset = assets.firstObject;
+//                                [[PHImageManager defaultManager] requestImageDataForAsset:asset options:0 resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation,NSDictionary *dictionary){
+//                                    
+//                                    NSLog(@"\nuserName:%@\npathToImagesFolder:Sprouts/%@/%@\nsproutFileName:%@\ntitle:%@\ndescription:%@\nframesPerMinute:%f\nstartDt:%@\nendDt:%@\n",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],fieldTitle.text,[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,fieldTitle.text,fieldDesc.text,((slider.value/_imagesArray.count)/slider.value) * 60,@"01/01/2016",@"01/31/2016");
+//                                    
+//                                    NSString *username = [[[NSUserDefaults standardUserDefaults] valueForKeyPath:@"user"] valueForKeyPath:@"name"];
+//                                    NSString *projectTitle = [NSString stringWithFormat:@"%@", fieldTitle.text];
+//                                    
+//                                    NSLog(@"Username: %@", username);
+//                                    NSLog(@"Project Title: %@", projectTitle);
+//                                    
+////                                    ftpManager = [[FTPManager alloc] init];
+////                                    [ftpManager startCreate:@"104.197.93.149/Sprouts/" andDirName:@"brenda"];
+//                                    
+////                                   [ftpManager listDirectories];
+//                                    //[ftpManager createDirectory:[NSString stringWithFormat:@"%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],fieldTitle.text]];
+//                                    
+//                                    /*[self uploadSuccessful:@{@"userName":[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],
+//                                                             @"PathToImages":[NSString stringWithFormat:@"Sprouts/%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject],
+//                                                             @"sproutFileName":[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,
+//                                                             @"title":fieldTitle.text,
+//                                                             @"description":fieldDesc.text,
+//                                                             @"framesPerMinute":[NSNumber numberWithInt:((slider.value/_imagesArray.count)/slider.value) * 60],
+//                                                             @"startDt":@"01/01/2016",
+//                                                             @"endDt":@"01/31/2016"
+//                                                             }];*/
+//                                    webService = [[WebService alloc] init];
+//                                    [webService requestUploadSprout:@{@"userName":[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],
+//                                                                      @"pathToImagesFolder":[NSString stringWithFormat:@"Sprouts/%@/%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],fieldTitle.text],
+//                                                                      @"sproutFileName":[((NSString *)[[NSString stringWithFormat:@"%@",[dictionary objectForKey:@"PHImageFileURLKey"]] componentsSeparatedByString:@"/"].lastObject) componentsSeparatedByString:@"."].firstObject,
+//                                                                      @"title":[[projectTitle stringByReplacingOccurrencesOfString:@" " withString:@""] lowercaseString],
+//                                                                      @"description":fieldDesc.text,
+//                                                                      @"framesPerMinute":[NSNumber numberWithInt:((slider.value/_imagesArray.count)/slider.value) * 60],
+//                                                                      @"startDt":@"01/01/2016",
+//                                                                      @"endDt":@"01/31/2016"
+//                                                                      } withTarget:self];
+//                                }];
+//                            }
+//                        }
+//                        else
+//                        {
+//                            NSLog(@"%@", error);
+//                        }
+//                    }];
+//                //}
+//            }
+//        }];
+//    }
 }
 
 
@@ -602,5 +605,20 @@
     [[SVProgressHUD appearance] setForegroundColor:[UIColor colorWithRed:101.0f/255.0f green:179.0f/255.0f blue:179.0f/255.0f alpha:1.0f]];
     [[SVProgressHUD appearance] setBackgroundColor:[UIColor whiteColor]];
     [SVProgressHUD show];
+}
+
+#pragma FTPCreate Delegate;
+-(void)didCreateSuccess{
+    [self startImageUpload];
+}
+
+-(void)startImageUpload{
+    NSString *username = [[[NSUserDefaults standardUserDefaults] valueForKeyPath:@"user"] valueForKeyPath:@"name"];
+    NSString *projectTitle = [NSString stringWithFormat:@"%@", fieldTitle.text];
+    
+    NSLog(@"Uploading: %@",self.imagePath);
+    
+    FTPUploadManager *uploadManager = [[FTPUploadManager alloc] init];
+    [uploadManager startSend:self.imagePath andDirectory:[NSString stringWithFormat:@"104.197.93.149/Sprouts/%@/%@",username,[[projectTitle stringByReplacingOccurrencesOfString:@" " withString:@""] lowercaseString]]];
 }
 @end

@@ -9,7 +9,7 @@
 #import "FTPUploadManager.h"
 
 enum {
-    kSendBufferSize = 32768
+    kSendBufferSize = 2048
 };
 
 @implementation FTPUploadManager {
@@ -33,7 +33,7 @@ enum {
 {
     assert(statusString != nil);
 //    self.statusLabel.text = statusString;
-    NSLog(@"%@", statusString);
+    NSLog(@"FTP Upload: %@", statusString);
 }
 
 - (void)sendDidStopWithStatus:(NSString *)statusString
@@ -72,6 +72,11 @@ enum {
     NSString *userName = [NSString stringWithFormat:@"info"];
     NSString *password = [NSString stringWithFormat:@"a2Di;m&rf9{^F:X"];
     
+    filePath = [self convertPathName:filePath];
+    NSLog(@"FTP Upload: %@",filePath);
+    
+    NSLog(@"REMOTE DIR: %@",dirStr);
+    
     assert(filePath != nil);
     assert([[NSFileManager defaultManager] fileExistsAtPath:filePath]);
     assert( [filePath.pathExtension isEqual:@"png"] || [filePath.pathExtension isEqual:@"jpg"] );
@@ -103,9 +108,11 @@ enum {
         // NSURLConnection will do it for us.
         
         fileStream = [NSInputStream inputStreamWithFileAtPath:filePath];
+        
         assert(fileStream != nil);
         
         [fileStream open];
+        NSLog(@"file has bytes available %@", [fileStream hasBytesAvailable]?@"YES":@"NO");
         
         // Open a CFFTPStream for the URL.
         
@@ -117,14 +124,16 @@ enum {
             assert(success);
             success = [networkStream setProperty:password forKey:(id)kCFStreamPropertyFTPPassword];
             assert(success);
+            
+            NSLog(@"Yep!");
         }
         
         networkStream.delegate = self;
         [networkStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         [networkStream open];
         
-        // Tell the UI we're sending.
         
+        // Tell the UI we're sending.
         [self sendDidStart];
     }
 }
@@ -147,48 +156,63 @@ enum {
 // An NSStream delegate callback that's called when events happen on our
 // network stream.
 {
+    NSLog(@"SA STREAM.....gwapo ko ");
 #pragma unused(aStream)
     assert(aStream == networkStream);
     
     switch (eventCode) {
         case NSStreamEventOpenCompleted: {
+            NSLog(@"Opened stream");
             [self updateStatus:@"Opened connection"];
         } break;
         case NSStreamEventHasBytesAvailable: {
+            NSLog(@"Stream has bytes available");
             assert(NO);     // should never happen for the output stream
         } break;
         case NSStreamEventHasSpaceAvailable: {
-            [self updateStatus:@"Sending"];
+            [self updateStatus:@"Sendinggg"];
             
-            // If we don't have any data buffered, go read the next chunk of data.
+//            // If we don't have any data buffered, go read the next chunk of data.
+//            
+//            if (bufferOffset == bufferLimit) {
+//                NSLog(@"Upload check 1");
+//                NSInteger   bytesRead;
+//                
+//                bytesRead = [fileStream read:buffer maxLength:kSendBufferSize];
+//                NSLog(@"Upload check 2");
+//                if (bytesRead == -1) {
+//                    NSLog(@"Upload check 3");
+//                    [self stopSendWithStatus:@"File read error"];
+//                } else if (bytesRead == 0) {
+//                    NSLog(@"Upload check 4");
+//                    [self stopSendWithStatus:nil];
+//                } else {
+//                    NSLog(@"Upload check 5");
+//                    bufferOffset = 0;
+//                    bufferLimit  = bytesRead;
+//                }
+//            }
+//            
+//            // If we're not out of data completely, send the next chunk.
+//            
+//            NSLog(@"Upload check 6");
+//            if (bufferOffset != bufferLimit) {
+//                NSLog(@"Upload check 7");
+//                
+//                NSInteger   bytesWritten;
+//                bytesWritten = [networkStream write:&buffer[bufferOffset] maxLength:bufferLimit - bufferOffset];
+//                NSLog(@"Upload check 8");
+//                assert(bytesWritten != 0);
+//                if (bytesWritten == -1) {
+//                    NSLog(@"Upload check 9");
+//                    [self stopSendWithStatus:@"Network write error"];
+//                } else {
+//                    NSLog(@"Upload check 10");
+//                    bufferOffset += bytesWritten;
+//                }
+//            }
             
-            if (bufferOffset == bufferLimit) {
-                NSInteger   bytesRead;
-                
-                bytesRead = [fileStream read:buffer maxLength:kSendBufferSize];
-                
-                if (bytesRead == -1) {
-                    [self stopSendWithStatus:@"File read error"];
-                } else if (bytesRead == 0) {
-                    [self stopSendWithStatus:nil];
-                } else {
-                    bufferOffset = 0;
-                    bufferLimit  = bytesRead;
-                }
-            }
-            
-            // If we're not out of data completely, send the next chunk.
-            
-            if (bufferOffset != bufferLimit) {
-                NSInteger   bytesWritten;
-                bytesWritten = [networkStream write:&buffer[bufferOffset] maxLength:bufferLimit - bufferOffset];
-                assert(bytesWritten != 0);
-                if (bytesWritten == -1) {
-                    [self stopSendWithStatus:@"Network write error"];
-                } else {
-                    bufferOffset += bytesWritten;
-                }
-            }
+            NSLog(@"Upload check 11");
         } break;
         case NSStreamEventErrorOccurred: {
             [self stopSendWithStatus:@"Stream open error"];
@@ -220,6 +244,28 @@ enum {
 //        [self startSend:filePath];
 //    }
 //}
+
+
+- (NSString*)convertPathName:(NSString*) orgPath
+{
+//    assert( [sender isKindOfClass:[UIView class]] );
+
+//    if ( ! self.isSending ) {
+        NSString *  filePath;
+
+        // User the tag on the UIButton to determine which image to send.
+
+//        assert(sender.tag >= 0);
+        filePath = [[NetworkManager sharedInstance] pathForTestImage:orgPath];
+        assert(filePath != nil);
+
+//        [self startSend:filePath];
+//    }
+    
+    return filePath;
+}
+
+
 
 //
 //- (IBAction)cancelAction:(id)sender

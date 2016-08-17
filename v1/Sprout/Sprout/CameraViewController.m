@@ -74,9 +74,12 @@
     EditProjectViewController *editController = [[EditProjectViewController alloc] init];
     
     _prevImg.image = [self fixOrientation:[_currentInfo objectForKey:UIImagePickerControllerOriginalImage]];
+    NSLog(@"Image Info: %@",_currentInfo);
     [self saveImage];
     
-    editController.image = [_currentInfo objectForKey:UIImagePickerControllerOriginalImage];
+//    editController.image = [_currentInfo objectForKey:UIImagePickerControllerOriginalImage];
+    editController.image = [UIImage imageWithContentsOfFile:imgPath];
+    editController.imagePath =imgPath;
     [self.navigationController pushViewController:editController animated:YES];
     
    // [[[UIAlertView alloc] initWithTitle:@"" message:@"Continue capture?" delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:@"Save", nil] show];
@@ -98,6 +101,7 @@
     
     NSString *imagePath =[documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"cached-%lu-%lu.png",(unsigned long)_startSprout.count,(unsigned long)((NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"savedSprout"]).count]];
     
+    imgPath = imagePath;
     NSLog((@"pre writing to file"));
     if (![imageData writeToFile:imagePath atomically:NO]){
         NSLog((@"Failed to cache image data to disk"));

@@ -18,5 +18,5 @@
     size_t bufferLimit;
 
 }
-
+- (void)startSend:(NSString *)filePath andDirectory:(NSString *)dirStr;
 @end

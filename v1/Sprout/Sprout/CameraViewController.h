@@ -15,6 +15,9 @@
 @interface CameraViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIAlertViewDelegate>{
     UIUtils *utils;
     UIButton *on,*off,*autoFlash;
+    
+    
+    NSString *imgPath;
 }
 @property (strong,nonatomic)UIImagePickerController * picker;
 @property (strong,nonatomic)UIView * shutterView;

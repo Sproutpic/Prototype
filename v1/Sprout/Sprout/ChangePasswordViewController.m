@@ -6,25 +6,34 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
+// TODO - Rewrite entire class...
+
 #import "ChangePasswordViewController.h"
+#import "UIUtils.h"
 
 @implementation ChangePasswordViewController
-- (void)viewDidLoad{
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self setController];
 }
-- (void)setController{
-    self.view.backgroundColor = [UIColor whiteColor];
-    utils = [[UIUtils alloc]init];
-    
+
+- (void)setController
+{
+    [[self view] setBackgroundColor:[UIColor whiteColor]];
     [self setNavigationBar];
     [self setupLayout];
     [self addRightBarButton];
 }
-- (void)setupLayout{
+
+- (void)setupLayout
+{
     [self setupFields];
 }
-- (void)addRightBarButton{
+
+- (void)addRightBarButton
+{
     UIButton *back = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [back setBackgroundImage:[UIImage imageNamed:@"circleCheck"] forState:UIControlStateNormal];
     [back addTarget:self action:@selector(confirmChangePassword:) forControlEvents:UIControlEventTouchUpInside];
@@ -50,7 +59,7 @@
     for (int i = 0; i<3; i++) {
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.09, 17 + (60 * i), self.view.frame.size.width * 0.82, 44)];
         view.layer.borderWidth = 1.2;
-        view.layer.borderColor = [utils colorNavigationBar].CGColor;
+        view.layer.borderColor = [UIUtils colorNavigationBar].CGColor;
         view.layer.cornerRadius = 3;
         
         UITextField *field = [[UITextField alloc] initWithFrame:CGRectMake(view.frame.origin.x + 15, view.frame.origin.y, view.frame.size.width - 15 - view.frame.size.height, view.frame.size.height)];
@@ -58,17 +67,17 @@
         paraStyle.alignment = NSTextAlignmentCenter;
         field.delegate = self;
         //field.backgroundColor = [UIColor greenColor];
-        field.textColor = [utils colorNavigationBar];
-        field.tintColor = [utils colorNavigationBar];
-        field.font = [utils fontRegularForSize:15];
-        field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Name" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                     NSFontAttributeName: [utils fontRegularForSize:15]}];
+        field.textColor = [UIUtils colorNavigationBar];
+        field.tintColor = [UIUtils colorNavigationBar];
+        field.font = [UIUtils fontRegularForSize:15];
+        field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Name" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                     NSFontAttributeName: [UIUtils fontRegularForSize:15]}];
         [self.view addSubview:view];
         
         switch (i) {
             case 0:{
-                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Current Password" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                        NSFontAttributeName: [utils fontRegularForSize:15]}];
+                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Current Password" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                        NSFontAttributeName: [UIUtils fontRegularForSize:15]}];
                 fieldCurrentPass = field;
                 [self.view addSubview:fieldCurrentPass];
                 
@@ -83,8 +92,8 @@
                 break;
             case 1:{
                 field.keyboardType = UIKeyboardTypeEmailAddress;
-                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"New Password" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                     NSFontAttributeName: [utils fontRegularForSize:15]}];
+                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"New Password" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                     NSFontAttributeName: [UIUtils fontRegularForSize:15]}];
                 fieldNewPass = field;
                 [self.view addSubview:fieldNewPass];
                 
@@ -98,8 +107,8 @@
             }
                 break;
             case 2:{
-                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Repeat Password" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                        NSFontAttributeName: [utils fontRegularForSize:15]}];
+                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Repeat Password" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                        NSFontAttributeName: [UIUtils fontRegularForSize:15]}];
                 fieldRepeatPass = field;
                 [self.view addSubview:fieldRepeatPass];
                 
@@ -122,9 +131,9 @@
     paraStyle.lineSpacing = 3;
     paraStyle.alignment = NSTextAlignmentCenter;
     answer.numberOfLines = 0;
-    answer.attributedText = [[NSAttributedString alloc] initWithString:@"We advice you to use strong password containing uppercase and lowercase letter together with digits.\n\nPassword should be at least 8 characters." attributes:@{NSFontAttributeName: [utils fontRegularForSize:14],
+    answer.attributedText = [[NSAttributedString alloc] initWithString:@"We advice you to use strong password containing uppercase and lowercase letter together with digits.\n\nPassword should be at least 8 characters." attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:14],
                                                                                                                                                          NSKernAttributeName:[NSNumber numberWithFloat:0.f],
-                                                                                                                                                                                                                                         NSForegroundColorAttributeName: [utils colorNavigationBar],
+                                                                                                                                                                                                                                         NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
                                                                                                                                                          NSParagraphStyleAttributeName: paraStyle}];
     CGRect rect = [answer.attributedText boundingRectWithSize:CGSizeMake(self.view.frame.size.width - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     answer.frame = CGRectMake((self.view.frame.size.width - (self.view.frame.size.width - 30)) / 2, 225, self.view.frame.size.width - 30, rect.size.height);
@@ -164,7 +173,7 @@
 }
 - (void)setTitleViewForNavBar{
     UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [utils attrString:@"Change Password" withFont:[utils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
+    label.attributedText = [UIUtils attrString:@"Change Password" withFont:[UIUtils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
     [label sizeToFit];
     label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
     

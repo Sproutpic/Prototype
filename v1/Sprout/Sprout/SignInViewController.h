@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIUtils.h"
 #import "AccountInformationViewController.h"
 @class AccountInformationViewController;
 #import "CreateNewPasswordViewController.h"
@@ -15,7 +14,6 @@
 @class WebService;
 
 @interface SignInViewController : UIViewController<UITextFieldDelegate,UIAlertViewDelegate>{
-    UIUtils *utils;
     UITextField *fieldEmail, *fieldPassword;
     WebService *webService;
 }

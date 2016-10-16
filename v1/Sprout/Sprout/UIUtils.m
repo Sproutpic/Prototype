@@ -9,39 +9,60 @@
 #import "UIUtils.h"
 
 @implementation UIUtils
-- (UIColor *)colorNavigationBar{
+
++ (UIColor *)colorNavigationBar
+{
     return [UIColor colorWithRed:101.0f/255.0f green:179.0f/255.0f blue:179.0f/255.0f alpha:1.0f];
 }
-- (UIColor *)colorMenuButtonsSeparator{
+
++ (UIColor *)colorMenuButtonsSeparator
+{
     return [UIColor colorWithRed:206.0f/255.0f green:205.0f/255.0f blue:205.0f/255.0f alpha:1.0f];
 }
-- (UIColor *)colorSproutGreen{
+
++ (UIColor *)colorSproutGreen
+{
     return [UIColor colorWithRed:216.0f/255.0f green:215.0f/255.0f blue:206.0f/255.0f alpha:1.0f];
 }
 
--(NSAttributedString *)attrString:(NSString *) attrStr withFont:(UIFont *) attrFont color:(UIColor *)attrColor andCharSpacing:(NSNumber *) attrSpace{
-    return [[NSAttributedString alloc] initWithString:attrStr attributes:@{NSFontAttributeName: attrFont,
-                                                                           NSForegroundColorAttributeName: attrColor,
-                                                                           NSKernAttributeName: attrSpace}];
-}
-
-- (UIFont *)fontForNavBarTitle{
++ (UIFont *)fontForNavBarTitle
+{
     return [self fontRegularForSize:17];
 }
-- (UIFont *)fontForFAQQuestionActive{
+
++ (UIFont *)fontForFAQQuestionActive
+{
     return [self fontBoldForSize:16];
 }
-- (UIFont *)fontForFAQAnswerActive{
+
++ (UIFont *)fontForFAQAnswerActive
+{
     return [self fontRegularForSize:14];
 }
 
-- (UIFont *)fontRegularForSize:(CGFloat) size{
++ (UIFont *)fontRegularForSize:(CGFloat)size
+{
     return [UIFont systemFontOfSize:size];
 }
-- (UIFont *)fontBoldForSize:(CGFloat) size{
+
++ (UIFont *)fontBoldForSize:(CGFloat)size
+{
     return [UIFont boldSystemFontOfSize:size];
 }
-- (UIFont *)fontItalicForSize:(CGFloat) size{
+
++ (UIFont *)fontItalicForSize:(CGFloat)size
+{
     return [UIFont italicSystemFontOfSize:size];
 }
+
++ (NSAttributedString *)attrString:(NSString *)attrStr
+                          withFont:(UIFont *)attrFont
+                             color:(UIColor *)attrColor
+                    andCharSpacing:(NSNumber *)attrSpace{
+    return [[NSAttributedString alloc] initWithString:attrStr
+                                           attributes:@{NSFontAttributeName:attrFont,
+                                                        NSForegroundColorAttributeName:attrColor,
+                                                        NSKernAttributeName:attrSpace}];
+}
+
 @end

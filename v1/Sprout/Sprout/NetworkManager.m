@@ -186,11 +186,12 @@
         const uint8_t *     dataBuffer;
         NSUInteger          dataLength;
         NSUInteger          dataOffset;
-        NSUInteger          counter;
+//        NSUInteger          counter;
 
         NSLog(@"%5zu - %@", (size_t) expansionFactor, bigFilePath);
 
-        data = [NSData dataWithContentsOfMappedFile:originalFilePath];
+//        data = [NSData dataWithContentsOfMappedFile:originalFilePath];
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:originalFilePath]];
         assert(data != nil);
         NSLog(@"DATA NOT NIL %@",data!=nil?@"YES":@"NO");
         

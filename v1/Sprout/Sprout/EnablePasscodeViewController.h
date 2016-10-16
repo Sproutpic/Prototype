@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIUtils.h"
 
-@interface EnablePasscodeViewController : UIViewController<UITextFieldDelegate>{
-    UIUtils *utils;
+@interface EnablePasscodeViewController : UIViewController<UITextFieldDelegate>
+{
     UITextField *field;
     UILabel *lblPass;
 }

@@ -6,11 +6,10 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "UIUtils.h"
+#import "BaseViewController.h"
 
-@interface AboutViewController : UIViewController{
-    UIUtils *utils;
+@interface AboutViewController : BaseViewController {
+    
 }
 
 @end

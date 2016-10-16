@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIUtils.h"
 #import "WebService.h"
+
 @class WebService;
 
 @interface ChangePasswordViewController : UIViewController<UITextFieldDelegate, UIAlertViewDelegate>{
-    UIUtils *utils;
     UITextField *fieldNewPass, *fieldRepeatPass, *fieldCurrentPass;
     WebService *webService;
 }
+
 - (void)showAlertWithMessage:(NSString *)str;
+
 @end

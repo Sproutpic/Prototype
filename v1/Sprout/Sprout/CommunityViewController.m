@@ -6,29 +6,45 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
+// TODO - Rewrite entire class...
+
 #import "CommunityViewController.h"
-#import <UIKit/UIKit.h>
+#import "UIUtils.h"
+#import "SDWebImage/UIImageView+WebCache.h"
 
 @implementation CommunityViewController
-- (void)viewDidLoad{
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self setController];
 }
-- (void)setController{
-    self.view.backgroundColor = [UIColor whiteColor];
-    utils = [[UIUtils alloc]init];
+
+- (void)setController
+{
+    [[self view] setBackgroundColor:[UIColor whiteColor]];
     [self setNavigationBar];
     [self populateProjects];
     [self setupWeb];
-    //[self setupLayout];
 }
--(void)setupWeb{
+
+- (UITabBarItem*)tabBarItem
+{
+    return [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Community", @"Community")
+                                         image:[UIImage imageNamed:@"Team-grey"]
+                                           tag:3];
+}
+
+- (void)setupWeb
+{
     UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 64)];
     webView.backgroundColor = [UIColor whiteColor];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.sproutpic.com/Community"]]];
     [self.view addSubview:webView];
 }
-- (void)populateProjects{
+
+- (void)populateProjects
+{
     _projects = [[NSMutableArray alloc]initWithArray:@[@{@"projectTitle":@"Project Title",
                                                         @"projectDetail":@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it.",
                                                         @"projectThumbnails":[[NSMutableArray alloc]initWithArray:@[@"http://cdn4.fast-serve.net/cdn/plugplants/Pack-X6-Blue-Agapanthus-Perennial-Summer-Flowering-Plug-Plants_700_600_78HAG.jpg",
@@ -57,7 +73,7 @@
     fSprout.text = @"My Sprout";
     fSprout.textColor = [UIColor colorWithRed:120.f/255.f green:120.f/255.f blue:120.f/255.f alpha:1.f];
     fSprout.textAlignment = NSTextAlignmentCenter;
-    fSprout.font = [utils fontBoldForSize:12];
+    fSprout.font = [UIUtils fontBoldForSize:12];
     fSprout.tag = 0;
     [fSprout addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectFilter:)]];
     fSprout.userInteractionEnabled = YES;
@@ -67,7 +83,7 @@
     fFeatured.text = @"Featured";
     fFeatured.textColor = [UIColor colorWithRed:120.f/255.f green:120.f/255.f blue:120.f/255.f alpha:1.f];
     fFeatured.textAlignment = NSTextAlignmentCenter;
-    fFeatured.font = [utils fontBoldForSize:12];
+    fFeatured.font = [UIUtils fontBoldForSize:12];
     fFeatured.tag = 1;
     [fFeatured addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectFilter:)]];
     fFeatured.userInteractionEnabled = YES;
@@ -77,7 +93,7 @@
     fTopViewed.text = @"Top Viewed";
     fTopViewed.textColor = [UIColor colorWithRed:120.f/255.f green:120.f/255.f blue:120.f/255.f alpha:1.f];
     fTopViewed.textAlignment = NSTextAlignmentCenter;
-    fTopViewed.font = [utils fontBoldForSize:12];
+    fTopViewed.font = [UIUtils fontBoldForSize:12];
     fTopViewed.tag = 2;
     [fTopViewed addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectFilter:)]];
     fTopViewed.userInteractionEnabled = YES;
@@ -87,7 +103,7 @@
     fLongest.text = @"Longest";
     fLongest.textColor = [UIColor colorWithRed:120.f/255.f green:120.f/255.f blue:120.f/255.f alpha:1.f];
     fLongest.textAlignment = NSTextAlignmentCenter;
-    fLongest.font = [utils fontBoldForSize:12];
+    fLongest.font = [UIUtils fontBoldForSize:12];
     fLongest.tag = 3;
     [fLongest addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectFilter:)]];
     fLongest.userInteractionEnabled = YES;
@@ -111,16 +127,16 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     UILabel *titleLabel = [[UILabel alloc]init];
     titleLabel.text = [((NSDictionary *)(_projects[indexPath.row])) objectForKey:@"projectTitle"];
-    titleLabel.font = [utils fontRegularForSize:18];
-    titleLabel.textColor = [utils colorNavigationBar];
+    titleLabel.font = [UIUtils fontRegularForSize:18];
+    titleLabel.textColor = [UIUtils colorNavigationBar];
     [titleLabel sizeToFit];
     titleLabel.frame = CGRectMake(15, 12, titleLabel.frame.size.width, titleLabel.frame.size.height);
     [cell.contentView addSubview:titleLabel];
     
     titleLabel = [[UILabel alloc]init];
     titleLabel.text = @"2k views";
-    titleLabel.font = [utils fontRegularForSize:16];
-    titleLabel.textColor = [utils colorNavigationBar];
+    titleLabel.font = [UIUtils fontRegularForSize:16];
+    titleLabel.textColor = [UIUtils colorNavigationBar];
     titleLabel.textAlignment = NSTextAlignmentRight;
     [titleLabel sizeToFit];
     titleLabel.frame = CGRectMake(self.view.frame.size.width - 15 - titleLabel.frame.size.width, 15, titleLabel.frame.size.width, titleLabel.frame.size.height);
@@ -142,21 +158,21 @@
     UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, sprout.frame.size.width - 40, 100)];
     descLabel.numberOfLines = 3;
     descLabel.attributedText = [[NSAttributedString alloc]initWithString:[((NSDictionary *)(_projects[indexPath.row])) objectForKey:@"projectDetail"] attributes:@{NSParagraphStyleAttributeName: paraStyle,
-                                                                                                                                        NSFontAttributeName: [utils fontRegularForSize:12],
+                                                                                                                                        NSFontAttributeName: [UIUtils fontRegularForSize:12],
                                                                                                                                         NSForegroundColorAttributeName: [UIColor grayColor]}];
     [descLabel sizeToFit];
     descLabel.frame = CGRectMake(15, sprout.frame.size.height + sprout.frame.origin.y + 10, descLabel.frame.size.width, descLabel.frame.size.height);
     [cell.contentView addSubview:descLabel];
     UIView *separator = [[UIView alloc]initWithFrame:CGRectMake(15, descLabel.frame.size.height + descLabel.frame.origin.y + 9, self.view.frame.size.width - 15, 1)];
-    separator.backgroundColor = [[utils colorNavigationBar] colorWithAlphaComponent:0.3f];
+    separator.backgroundColor = [[UIUtils colorNavigationBar] colorWithAlphaComponent:0.3f];
     [cell.contentView addSubview:separator];
     return cell;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     UILabel *titleLabel = [[UILabel alloc]init];
     titleLabel.text = @"P";
-    titleLabel.font = [utils fontRegularForSize:18];
-    titleLabel.textColor = [utils colorNavigationBar];
+    titleLabel.font = [UIUtils fontRegularForSize:18];
+    titleLabel.textColor = [UIUtils colorNavigationBar];
     [titleLabel sizeToFit];
     titleLabel.frame = CGRectMake(10, 12, titleLabel.frame.size.width, titleLabel.frame.size.height);
     UIImageView *sprout = [[UIImageView alloc] initWithFrame:CGRectMake(0, titleLabel.frame.origin.y + titleLabel.frame.size.height + 10, self.view.frame.size.width, self.view.frame.size.width * 0.6)];
@@ -168,7 +184,7 @@
     UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, sprout.frame.size.width - 20, 100)];
     descLabel.numberOfLines = 3;
     descLabel.attributedText = [[NSAttributedString alloc]initWithString:[((NSDictionary *)(_projects[indexPath.row])) objectForKey:@"projectDetail"] attributes:@{NSParagraphStyleAttributeName: paraStyle,
-                                                                                                                                                                   NSFontAttributeName: [utils fontRegularForSize:13],
+                                                                                                                                                                   NSFontAttributeName: [UIUtils fontRegularForSize:13],
                                                                                                                                                                    NSForegroundColorAttributeName: [UIColor grayColor]}];
     [descLabel sizeToFit];
     descLabel.frame = CGRectMake(10, sprout.frame.size.height + sprout.frame.origin.y + 10, descLabel.frame.size.width, descLabel.frame.size.height);
@@ -176,7 +192,7 @@
 }
 - (void)selectFilter:(UITapGestureRecognizer *)sender{
     [self resetFilter];
-    ((UILabel *)sender.view).textColor = [utils colorNavigationBar];
+    ((UILabel *)sender.view).textColor = [UIUtils colorNavigationBar];
     [self showLine:((UILabel *)sender.view)];
     switch (sender.view.tag) {
         case 0:
@@ -200,9 +216,9 @@
         underlineView.alpha = 0;
     } completion:^(BOOL finished){
         [underlineView removeFromSuperview];
-        CGRect rect = [label.text boundingRectWithSize:CGSizeMake(MAXFLOAT, label.frame.size.height) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[utils fontBoldForSize:12]} context:nil];
+        CGRect rect = [label.text boundingRectWithSize:CGSizeMake(MAXFLOAT, label.frame.size.height) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIUtils fontBoldForSize:12]} context:nil];
         underlineView = [[UIView alloc]initWithFrame:CGRectMake(label.frame.origin.x + ((label.frame.size.width - rect.size.width)/2), label.frame.size.height * 0.92, rect.size.width, label.frame.size.height * 0.08)];
-        underlineView.backgroundColor = [utils colorNavigationBar];
+        underlineView.backgroundColor = [UIUtils colorNavigationBar];
         underlineView.alpha = 0;
         [self.view addSubview:underlineView];
         [UIView animateWithDuration:0.2 animations:^{
@@ -217,7 +233,7 @@
     fLongest.textColor = [UIColor colorWithRed:120.f/255.f green:120.f/255.f blue:120.f/255.f alpha:1.f];
 }
 - (void)setNavigationBar{
-    [self setTitleViewForNavBar];
+    [self setTitle:NSLocalizedString(@"Community Sprouts", @"Community Sprouts")];
     [self addRightBarButton];
     [self addLeftBarButton];
 }
@@ -237,7 +253,7 @@
 }
 - (IBAction)tappedSettingsButton:(UIButton *)sender{
     searchView = [[UIView alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 0)];
-    searchView.backgroundColor = [utils colorNavigationBar];
+    searchView.backgroundColor = [UIUtils colorNavigationBar];
     UIButton *close = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 35, 12, 20, 20)];
     [close setImage:[UIImage imageNamed:@"exk"] forState:UIControlStateNormal];
     [close addTarget:self action:@selector(closeSearchView:) forControlEvents:UIControlEventTouchUpInside];
@@ -256,10 +272,10 @@
     [textContainer addSubview:searchButton];
     UITextField *searchField = [[UITextField alloc] initWithFrame:CGRectMake(38, 0, textContainer.frame.size.width - 43, 28)];
     searchField.textColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
-    searchField.font = [utils fontRegularForSize:12];
+    searchField.font = [UIUtils fontRegularForSize:12];
     searchField.tintColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
     searchField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Search request" attributes:@{NSForegroundColorAttributeName: [[UIColor blackColor] colorWithAlphaComponent:0.3],
-                                                                                                                  NSFontAttributeName:[utils fontRegularForSize:12]}];
+                                                                                                                  NSFontAttributeName:[UIUtils fontRegularForSize:12]}];
     [textContainer addSubview:searchField];
     [self.navigationController.view addSubview:sillhou];
     [self.navigationController.view addSubview:searchView];
@@ -280,7 +296,7 @@
         imageView.image = [UIImage imageNamed:@"zoom"];
         [noResultView addSubview:imageView];
         UILabel *label = [[UILabel alloc] init];
-        label.attributedText = [[NSAttributedString alloc] initWithString:@"No results found\n\nTry again" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar], NSFontAttributeName: [utils fontRegularForSize:16]}];
+        label.attributedText = [[NSAttributedString alloc] initWithString:@"No results found\n\nTry again" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar], NSFontAttributeName: [UIUtils fontRegularForSize:16]}];
         label.textAlignment = NSTextAlignmentCenter;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -305,14 +321,6 @@
         [noResultView removeFromSuperview];
         [sillhou removeFromSuperview];
     }];
-}
-- (void)setTitleViewForNavBar{
-    UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [utils attrString:@"SproutPic" withFont:[utils fontRegularForSize:16] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
-    [label sizeToFit];
-    label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
-    
-    self.navigationItem.titleView = label;
 }
 
 @end

@@ -6,14 +6,10 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "UIUtils.h"
+#import "BaseViewController.h"
 
+@interface FAQViewController : BaseViewController {
 
-@interface FAQViewController : UIViewController{
-    UIUtils *utils;
-    NSMutableArray *questions;
-    UIScrollView *questionScroller;
 }
 
 @end

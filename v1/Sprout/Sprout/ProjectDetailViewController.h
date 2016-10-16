@@ -7,17 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIUtils.h"
-#import "SDWebImage/UIImageView+WebCache.h"
-#import "EditProjectDetailsViewController.h"
+
+@class Project;
 
 @interface ProjectDetailViewController : UIViewController<UICollectionViewDelegate, UICollectionViewDataSource>{
-    UIUtils *utils;
     UIScrollView *scroller;
     BOOL forCreate;
     UIImageView *sprout, *play;
 }
-@property (strong,nonatomic)NSDictionary *project;
-@property (strong,nonatomic)UICollectionView *timelineCollection;
-@property (strong,nonatomic)NSNumber *useFile;
+
+@property (strong,nonatomic) Project *project;
+@property (strong,nonatomic) UICollectionView *timelineCollection;
+@property (strong,nonatomic) NSNumber *useFile;
+
 @end

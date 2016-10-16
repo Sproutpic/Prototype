@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIUtils.h"
 #import "WebService.h"
 @class WebService;
 
-@interface CreateNewPasswordViewController : UIViewController<UITextFieldDelegate, UIAlertViewDelegate>{
-    UIUtils *utils;
+@interface CreateNewPasswordViewController : UIViewController <UITextFieldDelegate, UIAlertViewDelegate> {
     UITextField *fieldNewPass, *fieldRepeatPass;
     WebService *webService;
 }
+
 @property (strong,nonatomic)NSString *email;
+
 @end

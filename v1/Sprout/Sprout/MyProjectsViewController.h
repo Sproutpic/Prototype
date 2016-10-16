@@ -6,20 +6,11 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "JASidePanelController.h"
-#import "UIViewController+JASidePanel.h"
-#import "UIUtils.h"
-#import "SDWebImage/UIImageView+WebCache.h"
-#import "AppDelegate.h"
-#import "ProjectDetailViewController.h"
+#import "BaseViewController.h"
 
-@interface MyProjectsViewController : UIViewController{
-    UIUtils *utils;
+@interface MyProjectsViewController : BaseViewController {
     UIScrollView *projectScroller;
     NSDictionary *currentDictionary;
 }
-@property (strong,nonatomic)NSMutableArray *projects;
-@property (strong,nonatomic)NSNumber *useFile;
-- (NSMutableArray *)getProjects;
+
 @end

@@ -7,11 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIUtils.h"
 #import "EnablePasscodeViewController.h"
 
 @interface SecureAccessViewController : UIViewController<UIPickerViewDataSource, UIPickerViewDelegate>{
-    UIUtils *utils;
     UIView *switcherView, *pickerTool;
     UISwitch *enableSwitch;
     UIPickerView *autolockSelect;

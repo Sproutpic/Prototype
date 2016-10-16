@@ -6,36 +6,50 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
+// TODO - Rewrite entire class...
+
 #import "CameraViewController.h"
+#import "UIUtils.h"
+#import "AppDelegate.h"
+#import "EditProjectViewController.h"
+#import "SVProgressHUD.h"
 
 @implementation CameraViewController
-- (void)viewDidLoad{
+
+- (void)viewDidLoad
+{
     [[NSUserDefaults standardUserDefaults]setObject:@[] forKey:@"savedSprout"];
     [super viewDidLoad];
     [self setController];
 }
-- (void)setController{
-    self.view.backgroundColor = [UIColor blackColor];
-    utils = [[UIUtils alloc]init];
-    
+
+- (void)setController
+{
+    [[self view] setBackgroundColor:[UIColor blackColor]];
     [self setNavigationBar];
     [self setupLayout];
 }
--(void)viewWillAppear:(BOOL)animated{
-    AppDelegate *appDel = [[UIApplication sharedApplication] delegate];
-    [UIView animateWithDuration:0.2 animations:^{
-        appDel.tabBarView.alpha = 0;
-    }];
+
+- (void)viewWillAppear:(BOOL)animated
+{
+//    AppDelegate *appDel = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+//    [UIView animateWithDuration:0.2 animations:^{
+//        appDel.tabBarView.alpha = 0;
+//    }];
     [self.navigationController.view addSubview:_shutterView];
 }
--(void)viewDidDisappear:(BOOL)animated{
-    AppDelegate *appDel = [[UIApplication sharedApplication] delegate];
-    [UIView animateWithDuration:0.2 animations:^{
-        appDel.tabBarView.alpha = 1;
-    }];
-    [_shutterView removeFromSuperview]; 
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+//    AppDelegate *appDel = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+//    [UIView animateWithDuration:0.2 animations:^{
+//        appDel.tabBarView.alpha = 1;
+//    }];
+    [_shutterView removeFromSuperview];
 }
-- (void) setupLayout{
+
+- (void)setupLayout
+{
     [[NSUserDefaults standardUserDefaults] setObject:@[] forKey:@"tempSprout"];
     _picker = [[UIImagePickerController alloc] init];
     _picker.delegate = self;
@@ -55,7 +69,7 @@
     _shutterView.layer.cornerRadius = _shutterView.frame.size.height * 0.5;
     _shutterView.backgroundColor = [UIColor whiteColor];
     UIButton *shutterButton = [[UIButton alloc]initWithFrame:CGRectMake(_shutterView.frame.size.width * 0.075, _shutterView.frame.size.width * 0.075, _shutterView.frame.size.width * 0.85, _shutterView.frame.size.width * 0.85)];
-    shutterButton.backgroundColor = [utils colorNavigationBar];
+    shutterButton.backgroundColor = [UIUtils colorNavigationBar];
     shutterButton.clipsToBounds = YES;
     shutterButton.layer.cornerRadius = shutterButton.frame.size.width * 0.5;
     shutterButton.layer.borderWidth = 2;
@@ -161,17 +175,17 @@
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width * .5, 44)];
     self.navigationItem.titleView.userInteractionEnabled = YES;
     UIButton *flash = [[UIButton alloc]initWithFrame:CGRectMake(view.frame.size.width * .4, 0, view.frame.size.width * .3, view.frame.size.height)];
-    [flash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"off" attributes:@{NSFontAttributeName: [utils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
+    [flash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"off" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
     [flash addTarget:self action:@selector(offAction:) forControlEvents:UIControlEventTouchUpInside];
     off = flash;
     [view addSubview:off];
     flash = [[UIButton alloc]initWithFrame:CGRectMake(view.frame.size.width * .3 * 2 + view.frame.size.width * .1, 0, view.frame.size.width * .3, view.frame.size.height)];
-    [flash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"on" attributes:@{NSFontAttributeName: [utils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
+    [flash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"on" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
     [flash addTarget:self action:@selector(onAction:) forControlEvents:UIControlEventTouchUpInside];
     on = flash;
     [view addSubview:on];
     flash = [[UIButton alloc]initWithFrame:CGRectMake(view.frame.size.width * .1, 0, view.frame.size.width * .3, view.frame.size.height)];
-    [flash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"auto" attributes:@{NSFontAttributeName: [utils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
+    [flash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"auto" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
     [flash addTarget:self action:@selector(autoAction:) forControlEvents:UIControlEventTouchUpInside];
     autoFlash = flash;
     [view addSubview:autoFlash];
@@ -182,25 +196,25 @@
 }
 -(IBAction)onAction:(UIButton *)sender{
     [self resetFlash];
-    [on setAttributedTitle:[[NSAttributedString alloc] initWithString:@"on" attributes:@{NSFontAttributeName: [utils fontBoldForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
+    [on setAttributedTitle:[[NSAttributedString alloc] initWithString:@"on" attributes:@{NSFontAttributeName: [UIUtils fontBoldForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
     //_picker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
     _prevImg.alpha = 0.3;
 }
 -(IBAction)offAction:(UIButton *)sender{
     [self resetFlash];
-    [off setAttributedTitle:[[NSAttributedString alloc] initWithString:@"off" attributes:@{NSFontAttributeName: [utils fontBoldForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
+    [off setAttributedTitle:[[NSAttributedString alloc] initWithString:@"off" attributes:@{NSFontAttributeName: [UIUtils fontBoldForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
     //_picker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
     _prevImg.alpha = 0;
 }
 -(IBAction)autoAction:(UIButton *)sender{
     [self resetFlash];
-    [autoFlash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"auto" attributes:@{NSFontAttributeName: [utils fontBoldForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
+    [autoFlash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"auto" attributes:@{NSFontAttributeName: [UIUtils fontBoldForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
     _picker.cameraFlashMode = UIImagePickerControllerCameraFlashModeAuto;
 }
 -(void)resetFlash{
-    [on setAttributedTitle:[[NSAttributedString alloc] initWithString:@"on" attributes:@{NSFontAttributeName: [utils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
-    [off setAttributedTitle:[[NSAttributedString alloc] initWithString:@"off" attributes:@{NSFontAttributeName: [utils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
-    [autoFlash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"auto" attributes:@{NSFontAttributeName: [utils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
+    [on setAttributedTitle:[[NSAttributedString alloc] initWithString:@"on" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
+    [off setAttributedTitle:[[NSAttributedString alloc] initWithString:@"off" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
+    [autoFlash setAttributedTitle:[[NSAttributedString alloc] initWithString:@"auto" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:14], NSForegroundColorAttributeName:[UIColor whiteColor]}] forState:UIControlStateNormal];
 }
 - (UIImage *)fixOrientation:(UIImage *)image {
     

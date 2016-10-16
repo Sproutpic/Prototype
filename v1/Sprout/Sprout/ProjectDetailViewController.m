@@ -6,21 +6,32 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
+// TODO - Rewrite entire class...
+
 #import "ProjectDetailViewController.h"
+#import "CameraViewController.h"
+#import "UIUtils.h"
+#import "SDWebImage/UIImageView+WebCache.h"
+#import "EditProjectDetailsViewController.h"
+#import "Project.h"
+#import "Timeline.h"
 
 @implementation ProjectDetailViewController
-- (void)viewDidLoad{
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self setController];
 }
-- (void)setController{
-    self.view.backgroundColor = [UIColor whiteColor];
-    utils = [[UIUtils alloc]init];
-    
+
+- (void)setController
+{
+    [[self view] setBackgroundColor:[UIColor whiteColor]];
     [self setNavigationBar];
     forCreate = YES;
     [self setupLayout];
 }
+
 - (void)setupLayout{
     scroller = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 64)];
      [self.view addSubview:scroller];
@@ -30,21 +41,22 @@
         [self setupLayoutForEdit];
     }
 }
+
 - (void)setupLayoutForCreate{
     for (UIView *view in scroller.subviews) {
         [view removeFromSuperview];
     }
     
     UIButton *btnCreate = [[UIButton alloc] initWithFrame:CGRectMake(0, scroller.frame.size.height - 44, self.view.frame.size.width, 44)];
-    btnCreate.backgroundColor = [utils colorNavigationBar];
-    [btnCreate setAttributedTitle:[[NSAttributedString alloc] initWithString:@"CREATE SPROUT >>" attributes:@{NSFontAttributeName: [utils fontRegularForSize:17],
+    btnCreate.backgroundColor = [UIUtils colorNavigationBar];
+    [btnCreate setAttributedTitle:[[NSAttributedString alloc] initWithString:@"CREATE SPROUT >>" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:17],
                                                                                                             NSForegroundColorAttributeName: [UIColor whiteColor]}] forState:UIControlStateNormal];
     [scroller addSubview:btnCreate];
     UILabel *lblTitle = [[UILabel alloc] init];
-    lblTitle.text = ((NSString *)[_project objectForKey:@"projectTitle"]).uppercaseString ;
-    lblTitle.textColor = [utils colorNavigationBar];
+    lblTitle.text = [[[self project] title] uppercaseString];
+    lblTitle.textColor = [UIUtils colorNavigationBar];
     lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [utils fontRegularForSize:18];
+    lblTitle.font = [UIUtils fontRegularForSize:18];
     [lblTitle sizeToFit];
     lblTitle.frame = CGRectMake(0, 28, self.view.frame.size.width, lblTitle.frame.size.height);
     [scroller addSubview:lblTitle];
@@ -53,8 +65,8 @@
     paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
     UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, lblTitle.frame.size.height + 40, self.view.frame.size.width - 30, 100)];
     descLabel.numberOfLines = 0;
-    descLabel.attributedText = [[NSAttributedString alloc]initWithString:[_project objectForKey:@"projectDetail"] attributes:@{NSParagraphStyleAttributeName: paraStyle,
-                                                                                                                               NSFontAttributeName: [utils fontRegularForSize:16],
+    descLabel.attributedText = [[NSAttributedString alloc]initWithString:[_project subtitle] attributes:@{NSParagraphStyleAttributeName: paraStyle,
+                                                                                                                               NSFontAttributeName: [UIUtils fontRegularForSize:16],
                                                                                                                                NSForegroundColorAttributeName: [UIColor grayColor]}];
     CGRect rect = [descLabel .attributedText boundingRectWithSize:CGSizeMake(self.view.frame.size.width - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     descLabel.frame = CGRectMake(15, lblTitle.frame.size.height + 40, descLabel.frame.size.width, rect.size.height);
@@ -62,9 +74,9 @@
     
     lblTitle = [[UILabel alloc] init];
     lblTitle.text = @"PROJECT TIMELINE" ;
-    lblTitle.textColor = [utils colorNavigationBar];
+    lblTitle.textColor = [UIUtils colorNavigationBar];
     lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [utils fontRegularForSize:18];
+    lblTitle.font = [UIUtils fontRegularForSize:18];
     [lblTitle sizeToFit];
     lblTitle.frame = CGRectMake(0, descLabel.frame.origin.y + descLabel.frame.size.height + 28, self.view.frame.size.width, lblTitle.frame.size.height);
     [scroller addSubview:lblTitle];
@@ -90,10 +102,10 @@
         [view removeFromSuperview];
     }
     UILabel *lblTitle = [[UILabel alloc] init];
-    lblTitle.text = ((NSString *)[_project objectForKey:@"projectTitle"]).uppercaseString ;
-    lblTitle.textColor = [utils colorNavigationBar];
+    lblTitle.text = ((NSString *)[_project title]).uppercaseString ;
+    lblTitle.textColor = [UIUtils colorNavigationBar];
     lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [utils fontRegularForSize:18];
+    lblTitle.font = [UIUtils fontRegularForSize:18];
     [lblTitle sizeToFit];
     lblTitle.frame = CGRectMake(0, 28, self.view.frame.size.width, lblTitle.frame.size.height);
     [scroller addSubview:lblTitle];
@@ -102,8 +114,8 @@
     paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
     UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, lblTitle.frame.size.height + 40, self.view.frame.size.width - 30, 100)];
     descLabel.numberOfLines = 0;
-    descLabel.attributedText = [[NSAttributedString alloc]initWithString:[_project objectForKey:@"projectDetail"] attributes:@{NSParagraphStyleAttributeName: paraStyle,
-                                                                                                                               NSFontAttributeName: [utils fontRegularForSize:16],
+    descLabel.attributedText = [[NSAttributedString alloc]initWithString:[_project subtitle] attributes:@{NSParagraphStyleAttributeName: paraStyle,
+                                                                                                                               NSFontAttributeName: [UIUtils fontRegularForSize:16],
                                                                                                                                NSForegroundColorAttributeName: [UIColor grayColor]}];
     CGRect rect = [descLabel .attributedText boundingRectWithSize:CGSizeMake(self.view.frame.size.width - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     descLabel.frame = CGRectMake(15, lblTitle.frame.size.height + 40, descLabel.frame.size.width, rect.size.height);
@@ -111,9 +123,9 @@
     
     lblTitle = [[UILabel alloc] init];
     lblTitle.text = @"PROJECT TIMELINE" ;
-    lblTitle.textColor = [utils colorNavigationBar];
+    lblTitle.textColor = [UIUtils colorNavigationBar];
     lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [utils fontRegularForSize:18];
+    lblTitle.font = [UIUtils fontRegularForSize:18];
     [lblTitle sizeToFit];
     lblTitle.frame = CGRectMake(0, descLabel.frame.origin.y + descLabel.frame.size.height + 28, self.view.frame.size.width, lblTitle.frame.size.height);
     [scroller addSubview:lblTitle];
@@ -136,18 +148,18 @@
     
     lblTitle = [[UILabel alloc] init];
     lblTitle.text = @"PROJECT SPROUT" ;
-    lblTitle.textColor = [utils colorNavigationBar];
+    lblTitle.textColor = [UIUtils colorNavigationBar];
     lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [utils fontRegularForSize:18];
+    lblTitle.font = [UIUtils fontRegularForSize:18];
     [lblTitle sizeToFit];
     lblTitle.frame = CGRectMake(0, _timelineCollection.frame.origin.y + _timelineCollection.frame.size.height - 15, self.view.frame.size.width, lblTitle.frame.size.height);
     [scroller addSubview:lblTitle];
     
     sprout = [[UIImageView alloc] initWithFrame:CGRectMake(0, lblTitle.frame.origin.y + lblTitle.frame.size.height + 10, scroller.frame.size.width, self.view.frame.size.width * 0.6)];
     if ([_useFile boolValue]) {
-        sprout.image = [UIImage imageWithContentsOfFile:((NSString *)[_project objectForKey:@"projectThumbnails"][0])];
+        sprout.image = [UIImage imageWithContentsOfFile:[[[[_project timelines] allObjects] objectAtIndex:0] localURL]];
     } else {
-        [sprout sd_setImageWithURL:[NSURL URLWithString:((NSString *)[_project objectForKey:@"projectThumbnails"][0])]];
+        [sprout sd_setImageWithURL:[NSURL URLWithString:[[[[_project timelines] allObjects] objectAtIndex:0] serverURL]]];
     }
     play = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.405, self.view.frame.size.width * 0.205, self.view.frame.size.width * 0.19, self.view.frame.size.width * 0.19)];
     play.image = [UIImage imageNamed:@"play-button"];
@@ -156,9 +168,9 @@
     
     lblTitle = [[UILabel alloc] init];
     lblTitle.text = @"SHARE YOUR SPROUT WITH FRIENDS" ;
-    lblTitle.textColor = [utils colorNavigationBar];
+    lblTitle.textColor = [UIUtils colorNavigationBar];
     lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [utils fontRegularForSize:15];
+    lblTitle.font = [UIUtils fontRegularForSize:15];
     [lblTitle sizeToFit];
     lblTitle.frame = CGRectMake(0, sprout.frame.origin.y + sprout.frame.size.height + 20, self.view.frame.size.width, lblTitle.frame.size.height);
     [scroller addSubview:lblTitle];
@@ -196,8 +208,8 @@
     
     
     UIButton *btnCreate = [[UIButton alloc] initWithFrame:CGRectMake(0, lastY + 30, self.view.frame.size.width, 44)];
-    btnCreate.backgroundColor = [utils colorNavigationBar];
-    [btnCreate setAttributedTitle:[[NSAttributedString alloc] initWithString:@"EDIT SPROUT >>" attributes:@{NSFontAttributeName: [utils fontRegularForSize:17],
+    btnCreate.backgroundColor = [UIUtils colorNavigationBar];
+    [btnCreate setAttributedTitle:[[NSAttributedString alloc] initWithString:@"EDIT SPROUT >>" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:17],
                                                                                                             NSForegroundColorAttributeName: [UIColor whiteColor]}] forState:UIControlStateNormal];
     [btnCreate addTarget:self action:@selector(editProject:) forControlEvents:UIControlEventTouchUpInside];
     [scroller addSubview:btnCreate];
@@ -214,8 +226,8 @@
     }
     forCreate = forCreate ? NO : YES;
 }
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return ((NSArray *)[_project objectForKey:@"projectThumbnails"]).count + 1;
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return [[_project timelines] allObjects].count + 1;
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     return CGSizeMake(self.view.frame.size.width * 0.2375, self.view.frame.size.width * 0.2375);
@@ -233,14 +245,14 @@
     for (UIView *view in cell.contentView.subviews) {
         [view removeFromSuperview];
     }
-    if (indexPath.row == ((NSArray *)[_project objectForKey:@"projectThumbnails"]).count) {
-        cell.contentView.backgroundColor = [utils colorNavigationBar];
+    if (indexPath.row == [[_project timelines] allObjects].count) {
+        cell.contentView.backgroundColor = [UIUtils colorNavigationBar];
         UILabel *lblCell = [[UILabel alloc] initWithFrame:CGRectMake(0, cell.contentView.frame.size.height / 5 * 4, cell.contentView.frame.size.width, cell.contentView.frame.size.height / 5)];
         lblCell.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.5];
         lblCell.text = @"ADD PHOTO";
         lblCell.textColor = [UIColor whiteColor];
         lblCell.textAlignment = NSTextAlignmentCenter;
-        lblCell.font = [utils fontRegularForSize:cell.contentView.frame.size.height / 8.5];
+        lblCell.font = [UIUtils fontRegularForSize:cell.contentView.frame.size.height / 8.5];
         [cell.contentView addSubview:lblCell];
         UIImageView *plus = [[UIImageView alloc] initWithFrame:CGRectMake(cell.contentView.frame.size.height * 0.325, cell.contentView.frame.size.height * 0.25, cell.contentView.frame.size.height * 0.35, cell.contentView.frame.size.height * 0.35)];
         plus.image = [UIImage imageNamed:@"plus"];
@@ -248,41 +260,41 @@
     }else{
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.contentView.frame];
         if ([_useFile boolValue]) {
-            imageView.image = [UIImage imageWithContentsOfFile:((NSString *)[_project objectForKey:@"projectThumbnails"][indexPath.row])];
+            imageView.image = [UIImage imageWithContentsOfFile:[[[[_project timelines] allObjects] objectAtIndex:indexPath.row] localURL]];
         } else {
-            [imageView sd_setImageWithURL:[NSURL URLWithString:((NSString *)[_project objectForKey:@"projectThumbnails"][indexPath.row])]];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:[[[[_project timelines] allObjects] objectAtIndex:indexPath.row] serverURL]]];
         }
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.clipsToBounds = YES;
         [cell.contentView addSubview:imageView];
         UILabel *lblCell = [[UILabel alloc] initWithFrame:CGRectMake(0, cell.contentView.frame.size.height / 5 * 4, cell.contentView.frame.size.width, cell.contentView.frame.size.height / 5)];
         lblCell.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.5];
-        lblCell.font = [utils fontRegularForSize:cell.contentView.frame.size.height / 8.5];
+        lblCell.font = [UIUtils fontRegularForSize:cell.contentView.frame.size.height / 8.5];
         [cell.contentView addSubview:lblCell];
         lblCell = [[UILabel alloc] initWithFrame:CGRectMake(0, cell.contentView.frame.size.height / 5 * 4, cell.contentView.frame.size.width - cell.contentView.frame.size.height / 13, cell.contentView.frame.size.height / 5)];
         lblCell.text = @"05 JAN 16";
         lblCell.textColor = [UIColor whiteColor];
         lblCell.textAlignment = NSTextAlignmentRight;
-        lblCell.font = [utils fontRegularForSize:cell.contentView.frame.size.height / 8.5];
+        lblCell.font = [UIUtils fontRegularForSize:cell.contentView.frame.size.height / 8.5];
         [cell.contentView addSubview:lblCell];
     }
     return cell;
 }
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row == ((NSArray *)[_project objectForKey:@"projectThumbnails"]).count) {
+    if (indexPath.row == ((NSArray *)[[_project timelines] allObjects]).count) {
         [self.navigationController pushViewController:[[CameraViewController alloc]init] animated:YES];
     }
 }
 - (void)addCreateButton{
     UIButton *btnCreate = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 108, self.view.frame.size.width, 44)];
-    btnCreate.backgroundColor = [utils colorNavigationBar];
-    [btnCreate setAttributedTitle:[[NSAttributedString alloc] initWithString:@"CREATE SPROUT >>" attributes:@{NSFontAttributeName: [utils fontRegularForSize:17],
+    btnCreate.backgroundColor = [UIUtils colorNavigationBar];
+    [btnCreate setAttributedTitle:[[NSAttributedString alloc] initWithString:@"CREATE SPROUT >>" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:17],
                                                                                                                NSForegroundColorAttributeName: [UIColor whiteColor]}] forState:UIControlStateNormal];
     [self.view addSubview:btnCreate];
 }
 - (void)setNavigationBar{
     [self setTitleViewForNavBar];
-    [self addLeftBarButton];
+//    [self addLeftBarButton];
     [self addRightBarButton];
 }
 - (void)addLeftBarButton{
@@ -310,7 +322,7 @@
 }
 - (void)setTitleViewForNavBar{
     UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [utils attrString:@"Project Details" withFont:[utils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
+    label.attributedText = [UIUtils attrString:@"Project Details" withFont:[UIUtils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
     [label sizeToFit];
     label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
     

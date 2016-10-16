@@ -6,40 +6,49 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
+// TODO - Rewrite entire class...
+
 #import "SignUpViewController.h"
+#import "UIUtils.h"
 
 @implementation SignUpViewController
-- (void)viewDidLoad{
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self setController];
 }
-- (void)setController{
+
+- (void)setController
+{
     self.view.backgroundColor = [UIColor whiteColor];
-    utils = [[UIUtils alloc]init];
-    
     [self setNavigationBar];
     [self setupLayout];
 }
-- (void)setupLayout{
+
+- (void)setupLayout
+{
     [self setupFields];
     [self setupSignUPButton];
     [self setupFooter];
     [self setupCheckBox];
 }
-- (void)setupCheckBox{
+
+- (void)setupCheckBox
+{
     [self addCheckBox];
     UILabel *lblNote = [[UILabel alloc] init];
     lblNote.numberOfLines = 0;
     lblNote.lineBreakMode = NSLineBreakByWordWrapping;
-    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"I aggree to " attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                         NSFontAttributeName: [utils fontRegularForSize:13.3]}];
-    [attrStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"Terms and Condition" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                           NSFontAttributeName: [utils fontRegularForSize:13.3],
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"I aggree to " attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                         NSFontAttributeName: [UIUtils fontRegularForSize:13.3]}];
+    [attrStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"Terms and Condition" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                           NSFontAttributeName: [UIUtils fontRegularForSize:13.3],
                                                                                                                    NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle)}]];
-    [attrStr appendAttributedString:[[NSAttributedString alloc] initWithString:@" and " attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                   NSFontAttributeName: [utils fontRegularForSize:13.3]}]];
-    [attrStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"Privacy Policy" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                   NSFontAttributeName: [utils fontRegularForSize:13.3],
+    [attrStr appendAttributedString:[[NSAttributedString alloc] initWithString:@" and " attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                   NSFontAttributeName: [UIUtils fontRegularForSize:13.3]}]];
+    [attrStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"Privacy Policy" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                   NSFontAttributeName: [UIUtils fontRegularForSize:13.3],
                                                                                                                    NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle)}]];
     lblNote.attributedText = attrStr;
     CGRect size = [attrStr boundingRectWithSize:CGSizeMake(self.view.frame.size.width - (self.view.frame.size.width * 0.2 + 32), MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
@@ -58,15 +67,15 @@
 }
 - (void)setupFooter{
     UILabel *lblNote = [[UILabel alloc] init];
-    lblNote.attributedText = [[NSAttributedString alloc]initWithString:@"Already SproutPic user?" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                               NSFontAttributeName: [utils fontRegularForSize:15]}];
+    lblNote.attributedText = [[NSAttributedString alloc]initWithString:@"Already SproutPic user?" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                               NSFontAttributeName: [UIUtils fontRegularForSize:15]}];
     [lblNote sizeToFit];
     lblNote.frame = CGRectMake(self.view.frame.size.width * 0.09, 337, lblNote.frame.size.width, lblNote.frame.size.height);
     [self.view addSubview:lblNote];
     
     lblNote = [[UILabel alloc] init];
-    lblNote.attributedText =  [[NSAttributedString alloc]initWithString:@"Sign In" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                NSFontAttributeName: [utils fontRegularForSize:15],
+    lblNote.attributedText =  [[NSAttributedString alloc]initWithString:@"Sign In" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                NSFontAttributeName: [UIUtils fontRegularForSize:15],
                                                                                                 NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle)}];
     [lblNote sizeToFit];
     lblNote.frame = CGRectMake(self.view.frame.size.width * 0.91 - lblNote.frame.size.width, 337, lblNote.frame.size.width, lblNote.frame.size.height);
@@ -81,10 +90,10 @@
 }
 - (void)setupSignUPButton{
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.09, 263, self.view.frame.size.width * 0.82, 44)];
-    button.backgroundColor = [utils colorNavigationBar];
+    button.backgroundColor = [UIUtils colorNavigationBar];
     button.layer.cornerRadius = 3;
     [button setAttributedTitle:[[NSAttributedString alloc]initWithString:@"Sign Up" attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor],
-                                                                                              NSFontAttributeName: [utils fontRegularForSize:15]}] forState:UIControlStateNormal];
+                                                                                              NSFontAttributeName: [UIUtils fontRegularForSize:15]}] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(tappedSignUp:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
 }
@@ -108,7 +117,7 @@
     for (int i = 0; i<3; i++) {
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.09, 17 + (60 * i), self.view.frame.size.width * 0.82, 44)];
         view.layer.borderWidth = 1.2;
-        view.layer.borderColor = [utils colorNavigationBar].CGColor;
+        view.layer.borderColor = [UIUtils colorNavigationBar].CGColor;
         view.layer.cornerRadius = 3;
         
         UITextField *field = [[UITextField alloc] initWithFrame:view.frame];
@@ -116,11 +125,11 @@
         paraStyle.alignment = NSTextAlignmentCenter;
         field.delegate = self;
         field.textAlignment = NSTextAlignmentCenter;
-        field.textColor = [utils colorNavigationBar];
-        field.tintColor = [utils colorNavigationBar];
-        field.font = [utils fontRegularForSize:15];
-        field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Name" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                     NSFontAttributeName: [utils fontRegularForSize:15],
+        field.textColor = [UIUtils colorNavigationBar];
+        field.tintColor = [UIUtils colorNavigationBar];
+        field.font = [UIUtils fontRegularForSize:15];
+        field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Name" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                     NSFontAttributeName: [UIUtils fontRegularForSize:15],
                                                                                                      NSParagraphStyleAttributeName: paraStyle}];
         [self.view addSubview:view];
         
@@ -131,16 +140,16 @@
                 break;
             case 1:
                 field.keyboardType = UIKeyboardTypeEmailAddress;
-                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Type Your Email Here" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                             NSFontAttributeName: [utils fontRegularForSize:15],
+                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Type Your Email Here" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                             NSFontAttributeName: [UIUtils fontRegularForSize:15],
                                                                                                                              NSParagraphStyleAttributeName: paraStyle}];
                 fieldEmail = field;
                 [self.view addSubview:fieldEmail];
                 break;
             case 2:{
                 field.secureTextEntry = YES;
-                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Type Your Password Here" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                                NSFontAttributeName: [utils fontRegularForSize:15],
+                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Type Your Password Here" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                                NSFontAttributeName: [UIUtils fontRegularForSize:15],
                                                                                                                                 NSParagraphStyleAttributeName: paraStyle}];
                 field.frame = CGRectMake(field.frame.origin.x + field.frame.size.width * 0.15, field.frame.origin.y, field.frame.size.width * 0.7, field.frame.size.height);
                 fieldPassword = field;
@@ -168,8 +177,8 @@
 }
 
 - (void)setNavigationBar{
-    self.navigationController.navigationBar.barTintColor = [utils colorNavigationBar];
-    self.navigationController.navigationBar.backgroundColor = [utils colorNavigationBar];
+    self.navigationController.navigationBar.barTintColor = [UIUtils colorNavigationBar];
+    self.navigationController.navigationBar.backgroundColor = [UIUtils colorNavigationBar];
     self.navigationController.navigationBar.translucent = NO;
     
     [self setTitleViewForNavBar];
@@ -187,7 +196,7 @@
 }
 - (void)setTitleViewForNavBar{
     UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [utils attrString:@"Sign Up" withFont:[utils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
+    label.attributedText = [UIUtils attrString:@"Sign Up" withFont:[UIUtils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
     [label sizeToFit];
     label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
     

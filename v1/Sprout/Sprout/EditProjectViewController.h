@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIUtils.h"
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <ImageIO/ImageIO.h>
@@ -22,7 +21,6 @@
 #import "FTPUploadManager.h"
 
 @interface EditProjectViewController : UIViewController<UITextFieldDelegate, UITextViewDelegate,CreateFTPDirectoryDelegate>{
-    UIUtils *utils;
     UIScrollView *scroller;
     UITextField *fieldTitle, *fieldTag;
     UITextView *fieldDesc;

@@ -6,46 +6,56 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
-#import "EditProjectDetailsViewController.h"
+// TODO - Rewrite entire class...
 
+#import "EditProjectDetailsViewController.h"
+#import "UIUtils.h"
+#import "SDWebImage/UIImageView+WebCache.h"
+#import "WebService.h"
+#import "Project.h"
+#import "Timeline.h"
 
 @implementation EditProjectDetailsViewController
-- (void)viewDidLoad{
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self setController];
 }
-- (void)setController{
-    self.view.backgroundColor = [UIColor whiteColor];
-    utils = [[UIUtils alloc]init];
-    
+
+- (void)setController
+{
+    [[self view] setBackgroundColor:[UIColor whiteColor]];
     [self setNavigationBar];
     [self setupLayout];
 }
-- (void)setupLayout{
+
+- (void)setupLayout
+{
     scroller = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 64)];
     [self.view addSubview:scroller];
     
     fieldTitle = [[UITextField alloc] initWithFrame:CGRectMake(15, 7, scroller.frame.size.width - 15, 50)];
-    fieldTitle.font = [utils fontRegularForSize:18];
-    fieldTitle.textColor = [utils colorNavigationBar];
-    fieldTitle.text = [_project objectForKey:@"projectTitle"];
-    fieldTitle.tintColor = [utils colorNavigationBar];
+    fieldTitle.font = [UIUtils fontRegularForSize:18];
+    fieldTitle.textColor = [UIUtils colorNavigationBar];
+    fieldTitle.text = [_project title];
+    fieldTitle.tintColor = [UIUtils colorNavigationBar];
     fieldTitle.delegate = self;
     UIView *separator = [[UIView alloc]initWithFrame:CGRectMake(0, 49, fieldTitle.frame.size.width, 1)];
-    separator.backgroundColor = [[utils colorNavigationBar]colorWithAlphaComponent:0.5];
+    separator.backgroundColor = [[UIUtils colorNavigationBar]colorWithAlphaComponent:0.5];
     [fieldTitle addSubview:separator];
     [scroller addSubview:fieldTitle];
     
     UILabel *lblDesc = [[UILabel alloc] init];
-    lblDesc.font = [utils fontRegularForSize:18];
-    lblDesc.textColor = [utils colorNavigationBar];
+    lblDesc.font = [UIUtils fontRegularForSize:18];
+    lblDesc.textColor = [UIUtils colorNavigationBar];
     lblDesc.text = @"Project Description";
     [lblDesc sizeToFit];
     lblDesc.frame = CGRectMake(15, 17 + fieldTitle.frame.size.height, lblDesc.frame.size.width, lblDesc.frame.size.height);
     [scroller addSubview:lblDesc];
     
     UILabel *lblOpt = [[UILabel alloc] init];
-    lblOpt.font = [utils fontRegularForSize:16];
+    lblOpt.font = [UIUtils fontRegularForSize:16];
     lblOpt.textColor = [[UIColor grayColor]colorWithAlphaComponent:0.8];
     lblOpt.text = @"  (optional)";
     [lblOpt sizeToFit];
@@ -57,14 +67,14 @@
     paraStyle.minimumLineHeight = 11.f;
     paraStyle.maximumLineHeight = 11.f;
     fieldDesc = [[UITextView alloc]initWithFrame:CGRectMake(15, lblOpt.frame.origin.y + lblOpt.frame.size.height + 15, scroller.frame.size.width - 15, 0)];
-    fieldDesc.tintColor = [utils colorNavigationBar];
+    fieldDesc.tintColor = [UIUtils colorNavigationBar];
     fieldDesc.delegate = self;
-    fieldDesc.attributedText = [[NSAttributedString alloc] initWithString:[_project objectForKey:@"projectDetail"] attributes:@{NSFontAttributeName: [utils fontRegularForSize:16], NSForegroundColorAttributeName: [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f], NSParagraphStyleAttributeName: paraStyle}];
+    fieldDesc.attributedText = [[NSAttributedString alloc] initWithString:[_project subtitle] attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:16], NSForegroundColorAttributeName: [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f], NSParagraphStyleAttributeName: paraStyle}];
     CGRect rect = [fieldDesc.attributedText boundingRectWithSize:CGSizeMake(fieldDesc.frame.size.width - 15, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     fieldDesc.frame = CGRectMake(10, fieldDesc.frame.origin.y, fieldDesc.frame.size.width + 5, rect.size.height + 15);
     [scroller addSubview:fieldDesc];
     separator = [[UIView alloc]initWithFrame:CGRectMake(5, fieldDesc.frame.size.height - 1, fieldDesc.frame.size.width, 1)];
-    separator.backgroundColor = [[utils colorNavigationBar]colorWithAlphaComponent:0.5];
+    separator.backgroundColor = [[UIUtils colorNavigationBar]colorWithAlphaComponent:0.5];
     textViewsept = separator;
     [fieldDesc addSubview:textViewsept];
     
@@ -73,7 +83,7 @@
     
     UILabel *lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Remind me";
-    lblRemind.font = [utils fontRegularForSize:18];
+    lblRemind.font = [UIUtils fontRegularForSize:18];
     lblRemind.textColor = [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(15, (57 - lblRemind.frame.size.height) / 2 + 3, lblRemind.frame.size.width, lblRemind.frame.size.height);
@@ -81,15 +91,15 @@
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Mon, 1 Jul'16, at 4:12 pm";
-    lblRemind.font = [utils fontBoldForSize:14];
-    lblRemind.textColor = [utils colorNavigationBar];
+    lblRemind.font = [UIUtils fontBoldForSize:14];
+    lblRemind.textColor = [UIUtils colorNavigationBar];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(remindView.frame.size.width - lblRemind.frame.size.width - 15, (57 - lblRemind.frame.size.height) / 2 + 63, lblRemind.frame.size.width, lblRemind.frame.size.height);
     [remindView addSubview:lblRemind];
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Remind on";
-    lblRemind.font = [utils fontRegularForSize:18];
+    lblRemind.font = [UIUtils fontRegularForSize:18];
     lblRemind.textColor = [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(15, (57 - lblRemind.frame.size.height) / 2 + 60, lblRemind.frame.size.width, lblRemind.frame.size.height);
@@ -97,8 +107,8 @@
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Everyday";
-    lblRemind.font = [utils fontBoldForSize:14];
-    lblRemind.textColor = [utils colorNavigationBar];
+    lblRemind.font = [UIUtils fontBoldForSize:14];
+    lblRemind.textColor = [UIUtils colorNavigationBar];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(remindView.frame.size.width - lblRemind.frame.size.width - 40, (57 - lblRemind.frame.size.height) / 2 + 122, lblRemind.frame.size.width, lblRemind.frame.size.height);
     [remindView addSubview:lblRemind];
@@ -109,7 +119,7 @@
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Repeat";
-    lblRemind.font = [utils fontRegularForSize:18];
+    lblRemind.font = [UIUtils fontRegularForSize:18];
     lblRemind.textColor = [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(15, (57 - lblRemind.frame.size.height) / 2 + 122, lblRemind.frame.size.width, lblRemind.frame.size.height);
@@ -121,15 +131,15 @@
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Never";
-    lblRemind.font = [utils fontBoldForSize:14];
-    lblRemind.textColor = [utils colorNavigationBar];
+    lblRemind.font = [UIUtils fontBoldForSize:14];
+    lblRemind.textColor = [UIUtils colorNavigationBar];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(remindView.frame.size.width - lblRemind.frame.size.width - 40, (57 - lblRemind.frame.size.height) / 2 + 182, lblRemind.frame.size.width, lblRemind.frame.size.height);
     [remindView addSubview:lblRemind];
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Finish";
-    lblRemind.font = [utils fontRegularForSize:18];
+    lblRemind.font = [UIUtils fontRegularForSize:18];
     lblRemind.textColor = [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(15, (57 - lblRemind.frame.size.height) / 2 + 182, lblRemind.frame.size.width, lblRemind.frame.size.height);
@@ -150,7 +160,7 @@
     
      UISwitch *switchRemind = [[UISwitch alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 65, 13.5, 0, 0)];
      [remindView addSubview:switchRemind];
-     switchRemind.onTintColor = [utils colorNavigationBar];
+     switchRemind.onTintColor = [UIUtils colorNavigationBar];
      switchRemind.backgroundColor = [UIColor colorWithRed:173.f/255.f green:175.f/255.f blue:177.f/255.f alpha:1];
      switchRemind.tintColor = [UIColor colorWithRed:173.f/255.f green:175.f/255.f blue:177.f/255.f alpha:1];
      switchRemind.layer.cornerRadius = 16.0;
@@ -161,8 +171,8 @@
     
     projectPhotosLabel = [[UILabel alloc] init];
     projectPhotosLabel.text = @"Project Photos";
-    projectPhotosLabel.font = [utils fontRegularForSize:18];
-    projectPhotosLabel.textColor = [utils colorNavigationBar];
+    projectPhotosLabel.font = [UIUtils fontRegularForSize:18];
+    projectPhotosLabel.textColor = [UIUtils colorNavigationBar];
     projectPhotosLabel.textAlignment = NSTextAlignmentCenter;
     [projectPhotosLabel sizeToFit];
     projectPhotosLabel.frame = CGRectMake(0, remindView.frame.size.height + remindView.frame.origin.y + 44, remindView.frame.size.width, projectPhotosLabel.frame.size.height);
@@ -179,7 +189,7 @@
     [self updateScroller];
 }
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return ((NSArray *)[_project objectForKey:@"projectThumbnails"]).count;
+    return [[_project timelines] allObjects].count;
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     return CGSizeMake(self.view.frame.size.width * 0.27, self.view.frame.size.width * 0.27);
@@ -197,15 +207,15 @@
     }
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(2, 2, cell.contentView.frame.size.width - 4,  cell.contentView.frame.size.width - 4)];
     if ([_useFile boolValue]) {
-        imageView.image = [UIImage imageWithContentsOfFile:((NSString *)[_project objectForKey:@"projectThumbnails"][indexPath.row])];
+        imageView.image = [UIImage imageWithContentsOfFile:[[[[_project timelines] allObjects] objectAtIndex:indexPath.row] localURL]];
     } else {
-        [imageView sd_setImageWithURL:[NSURL URLWithString:((NSString *)[_project objectForKey:@"projectThumbnails"][indexPath.row])]];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:[[[[_project timelines] allObjects] objectAtIndex:indexPath.row] serverURL]]];
     }
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.clipsToBounds = YES;
     [cell.contentView addSubview:imageView];
     UIButton *removeButton = [[UIButton alloc] initWithFrame:CGRectMake(cell.contentView.frame.size.width - (self.view.frame.size.width * 0.049), 0, (self.view.frame.size.width * 0.049), (self.view.frame.size.width * 0.049))];
-    removeButton.backgroundColor = [utils colorNavigationBar];
+    removeButton.backgroundColor = [UIUtils colorNavigationBar];
     removeButton.layer.borderColor = [UIColor whiteColor].CGColor;
     removeButton.layer.borderWidth = 1;
     removeButton.layer.cornerRadius = 3;
@@ -219,7 +229,7 @@
     return cell;
 }
 -(IBAction)removeItem:(UIButton *)sender{
-    [((NSMutableArray *)[_project objectForKey:@"projectThumbnails"]) removeObjectAtIndex:sender.tag];
+//    [((NSMutableArray *)[_project objectForKey:@"projectThumbnails"]) removeObjectAtIndex:sender.tag];
     [_photosCollection deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:sender.tag inSection:0]]];
     [_photosCollection reloadData];
 }
@@ -258,7 +268,7 @@
     paraStyle.lineSpacing = 11.f;
     paraStyle.minimumLineHeight = 11.f;
     paraStyle.maximumLineHeight = 11.f;
-    textView.attributedText = [[NSAttributedString alloc] initWithString:textView.text attributes:@{NSFontAttributeName: [utils fontRegularForSize:16], NSForegroundColorAttributeName: [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f], NSParagraphStyleAttributeName: paraStyle}];
+    textView.attributedText = [[NSAttributedString alloc] initWithString:textView.text attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:16], NSForegroundColorAttributeName: [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f], NSParagraphStyleAttributeName: paraStyle}];
     CGRect rect = [textView.attributedText boundingRectWithSize:CGSizeMake(textView.frame.size.width - 15, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     [UIView animateWithDuration:0.2 animations:^{
         textView.frame = CGRectMake(textView.frame.origin.x, textView.frame.origin.y, textView.frame.size.width, rect.size.height + 15);
@@ -292,14 +302,14 @@
     self.navigationItem.rightBarButtonItem = barButton;
 }
 - (void)updateProjectDetail{
-    if (!([fieldTitle.text isEqualToString:[_project objectForKey:@"projectTitle"]]) || !([fieldDesc.text isEqualToString:[_project objectForKey:@"projectDetail"]])) {
+    if (!([fieldTitle.text isEqualToString:[_project title]]) || !([fieldDesc.text isEqualToString:[_project subtitle]])) {
         webService = [[WebService alloc] init];
-        [webService requestUpdateSprout:@{@"sproutId":[_project objectForKey:@"sproutId"],
+        [webService requestUpdateSprout:@{@"sproutId":[_project serverId],
                                           @"title":fieldTitle.text,
                                           @"description":fieldDesc.text,
                                           @"userName":[[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"],
-                                          @"pathToImagesFolder":[_project objectForKey:@"pathToImagesFolder"],
-                                          @"sproutFileName":[[NSString stringWithFormat:@"%@",[_project objectForKey:@"pathToImagesFolder"]] componentsSeparatedByString:@"/"].lastObject,
+                                          @"pathToImagesFolder":@"",
+                                          @"sproutFileName":[[NSString stringWithFormat:@"%@",@""] componentsSeparatedByString:@"/"].lastObject,
                                           @"framesPerMinute":[NSNumber numberWithInt:30],
                                           @"startDt":@"01/01/2016",
                                           @"endDt":@"01/31/206"} withTarget:self];
@@ -315,7 +325,7 @@
 }
 - (void)setTitleViewForNavBar{
     UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [utils attrString:@"Edit Project Details" withFont:[utils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
+    label.attributedText = [UIUtils attrString:@"Edit Project Details" withFont:[UIUtils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
     [label sizeToFit];
     label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
     

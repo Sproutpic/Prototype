@@ -7,13 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIUtils.h"
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "AppDelegate.h"
 #import "CameraViewController.h"
 
 @interface NewProjectViewController : UIViewController<UITextFieldDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>{
-    UIUtils *utils;
     UIScrollView *scroller;
     UITextField *fieldTitle;
     UITextView *fieldDesc;

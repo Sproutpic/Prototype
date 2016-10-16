@@ -6,54 +6,68 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
+// TODO - Rewrite entire class...
+
 #import "NewProjectViewController.h"
+#import "UIUtils.h"
 
 @implementation NewProjectViewController
-- (void)viewDidLoad{
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self setController];
 }
-- (void)setController{
-    self.view.backgroundColor = [UIColor whiteColor];
-    utils = [[UIUtils alloc]init];
-    
+
+- (void)setController
+{
+    [[self view] setBackgroundColor:[UIColor whiteColor]];
     [self setNavigationBar];
     [self setupLayout];
 }
 
--(void)viewDidAppear:(BOOL)animated{
+- (UITabBarItem*)tabBarItem
+{
+    return [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"New Project", @"New Project")
+                                         image:[UIImage imageNamed:@"Plus-grey"]
+                                           tag:2];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
     for (UIView *view in scroller.subviews) {
         [view removeFromSuperview];
     }
     [self viewDidLoad];
 }
 
-- (void)setupLayout{
+- (void)setupLayout
+{
     scroller = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 64)];
     [scroller setShowsVerticalScrollIndicator:NO];
     [self.view addSubview:scroller];
     
     fieldTitle = [[UITextField alloc] initWithFrame:CGRectMake(15, 7, scroller.frame.size.width - 15, 50)];
-    fieldTitle.font = [utils fontRegularForSize:18];
-    fieldTitle.textColor = [utils colorNavigationBar];
-    fieldTitle.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Project Title" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar], NSFontAttributeName: [utils fontRegularForSize:18]}];
-    fieldTitle.tintColor = [utils colorNavigationBar];
+    fieldTitle.font = [UIUtils fontRegularForSize:18];
+    fieldTitle.textColor = [UIUtils colorNavigationBar];
+    fieldTitle.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Project Title" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar], NSFontAttributeName: [UIUtils fontRegularForSize:18]}];
+    fieldTitle.tintColor = [UIUtils colorNavigationBar];
     fieldTitle.delegate = self;
     UIView *separator = [[UIView alloc]initWithFrame:CGRectMake(0, 49, fieldTitle.frame.size.width, 1)];
-    separator.backgroundColor = [[utils colorNavigationBar]colorWithAlphaComponent:0.5];
+    separator.backgroundColor = [[UIUtils colorNavigationBar]colorWithAlphaComponent:0.5];
     [fieldTitle addSubview:separator];
     [scroller addSubview:fieldTitle];
     
     UILabel *lblDesc = [[UILabel alloc] init];
-    lblDesc.font = [utils fontRegularForSize:18];
-    lblDesc.textColor = [utils colorNavigationBar];
+    lblDesc.font = [UIUtils fontRegularForSize:18];
+    lblDesc.textColor = [UIUtils colorNavigationBar];
     lblDesc.text = @"Project Description";
     [lblDesc sizeToFit];
     lblDesc.frame = CGRectMake(15, 17 + fieldTitle.frame.size.height, lblDesc.frame.size.width, lblDesc.frame.size.height);
     [scroller addSubview:lblDesc];
     
     UILabel *lblOpt = [[UILabel alloc] init];
-    lblOpt.font = [utils fontRegularForSize:16];
+    lblOpt.font = [UIUtils fontRegularForSize:16];
     lblOpt.textColor = [[UIColor grayColor]colorWithAlphaComponent:0.8];
     lblOpt.text = @"  (optional)";
     [lblOpt sizeToFit];
@@ -66,16 +80,16 @@
     paraStyle.maximumLineHeight = 11.f;
     
     fieldDesc = [[UITextView alloc]initWithFrame:CGRectMake(15, lblOpt.frame.origin.y + lblOpt.frame.size.height + 12, scroller.frame.size.width - 30, 86)];
-    fieldDesc.tintColor = [utils colorNavigationBar];
+    fieldDesc.tintColor = [UIUtils colorNavigationBar];
     fieldDesc.delegate = self;
     
-    fieldDesc.attributedText = [[NSAttributedString alloc] initWithString:@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it." attributes:@{NSFontAttributeName: [utils fontRegularForSize:16], NSForegroundColorAttributeName: [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f], NSParagraphStyleAttributeName: paraStyle}];
+    fieldDesc.attributedText = [[NSAttributedString alloc] initWithString:@"This is a description about this project, telling what user is tracking here and any other information user is willing to note down about it." attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:16], NSForegroundColorAttributeName: [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f], NSParagraphStyleAttributeName: paraStyle}];
     CGRect rect = [fieldDesc.attributedText boundingRectWithSize:CGSizeMake(fieldDesc.frame.size.width - 15, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     fieldDesc.frame = CGRectMake(10, fieldDesc.frame.origin.y, fieldDesc.frame.size.width + 5, rect.size.height + 15);
     [scroller addSubview:fieldDesc];
     
     separator = [[UIView alloc]initWithFrame:CGRectMake(5, fieldDesc.frame.size.height - 1, fieldDesc.frame.size.width, 1)];
-    separator.backgroundColor = [[utils colorNavigationBar]colorWithAlphaComponent:0.5];
+    separator.backgroundColor = [[UIUtils colorNavigationBar]colorWithAlphaComponent:0.5];
     textViewsept = separator;
     [fieldDesc addSubview:textViewsept];
     
@@ -90,7 +104,7 @@
     
     UILabel *lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Remind me";
-    lblRemind.font = [utils fontRegularForSize:18];
+    lblRemind.font = [UIUtils fontRegularForSize:18];
     lblRemind.textColor = [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(15, (57 - lblRemind.frame.size.height) / 2 + 3, lblRemind.frame.size.width, lblRemind.frame.size.height);
@@ -98,15 +112,15 @@
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Mon, 1 Jul'16, at 4:12 pm";
-    lblRemind.font = [utils fontBoldForSize:14];
-    lblRemind.textColor = [utils colorNavigationBar];
+    lblRemind.font = [UIUtils fontBoldForSize:14];
+    lblRemind.textColor = [UIUtils colorNavigationBar];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(remindView.frame.size.width - lblRemind.frame.size.width - 15, (57 - lblRemind.frame.size.height) / 2 + 63, lblRemind.frame.size.width, lblRemind.frame.size.height);
     [remindView addSubview:lblRemind];
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Remind on";
-    lblRemind.font = [utils fontRegularForSize:18];
+    lblRemind.font = [UIUtils fontRegularForSize:18];
     lblRemind.textColor = [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(15, (57 - lblRemind.frame.size.height) / 2 + 60, lblRemind.frame.size.width, lblRemind.frame.size.height);
@@ -114,8 +128,8 @@
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Everyday";
-    lblRemind.font = [utils fontBoldForSize:14];
-    lblRemind.textColor = [utils colorNavigationBar];
+    lblRemind.font = [UIUtils fontBoldForSize:14];
+    lblRemind.textColor = [UIUtils colorNavigationBar];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(remindView.frame.size.width - lblRemind.frame.size.width - 40, (57 - lblRemind.frame.size.height) / 2 + 122, lblRemind.frame.size.width, lblRemind.frame.size.height);
     [remindView addSubview:lblRemind];
@@ -126,7 +140,7 @@
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Repeat";
-    lblRemind.font = [utils fontRegularForSize:18];
+    lblRemind.font = [UIUtils fontRegularForSize:18];
     lblRemind.textColor = [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(15, (57 - lblRemind.frame.size.height) / 2 + 122, lblRemind.frame.size.width, lblRemind.frame.size.height);
@@ -138,15 +152,15 @@
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Never";
-    lblRemind.font = [utils fontBoldForSize:14];
-    lblRemind.textColor = [utils colorNavigationBar];
+    lblRemind.font = [UIUtils fontBoldForSize:14];
+    lblRemind.textColor = [UIUtils colorNavigationBar];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(remindView.frame.size.width - lblRemind.frame.size.width - 40, (57 - lblRemind.frame.size.height) / 2 + 182, lblRemind.frame.size.width, lblRemind.frame.size.height);
     [remindView addSubview:lblRemind];
     
     lblRemind = [[UILabel alloc] init];
     lblRemind.text = @"Finish";
-    lblRemind.font = [utils fontRegularForSize:18];
+    lblRemind.font = [UIUtils fontRegularForSize:18];
     lblRemind.textColor = [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f];
     [lblRemind sizeToFit];
     lblRemind.frame = CGRectMake(15, (57 - lblRemind.frame.size.height) / 2 + 182, lblRemind.frame.size.width, lblRemind.frame.size.height);
@@ -167,7 +181,7 @@
     
     UISwitch *switchRemind = [[UISwitch alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 65, 13.5, 0, 0)];
     [remindView addSubview:switchRemind];
-    switchRemind.onTintColor = [utils colorNavigationBar];
+    switchRemind.onTintColor = [UIUtils colorNavigationBar];
     switchRemind.backgroundColor = [UIColor colorWithRed:173.f/255.f green:175.f/255.f blue:177.f/255.f alpha:1];
     switchRemind.tintColor = [UIColor colorWithRed:173.f/255.f green:175.f/255.f blue:177.f/255.f alpha:1];
     switchRemind.layer.cornerRadius = 16.0;
@@ -216,7 +230,7 @@
     paraStyle.lineSpacing = 11.f;
     paraStyle.minimumLineHeight = 11.f;
     paraStyle.maximumLineHeight = 11.f;
-    textView.attributedText = [[NSAttributedString alloc] initWithString:textView.text attributes:@{NSFontAttributeName: [utils fontRegularForSize:16], NSForegroundColorAttributeName: [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f], NSParagraphStyleAttributeName: paraStyle}];
+    textView.attributedText = [[NSAttributedString alloc] initWithString:textView.text attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:16], NSForegroundColorAttributeName: [UIColor colorWithRed:67.f/255.f green:61.f/255.f blue:60.f/255.f alpha:1.f], NSParagraphStyleAttributeName: paraStyle}];
     CGRect rect = [textView.attributedText boundingRectWithSize:CGSizeMake(textView.frame.size.width - 15, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     [UIView animateWithDuration:0.2 animations:^{
         textView.frame = CGRectMake(textView.frame.origin.x, textView.frame.origin.y, textView.frame.size.width, rect.size.height + 15);
@@ -229,17 +243,17 @@
     }];
 }
 
-- (void)makeSprout:(UITapGestureRecognizer *)sender{
+- (void)makeSprout:(UITapGestureRecognizer *)sender {
     [self.navigationController pushViewController:[[CameraViewController alloc]init] animated:YES];
 }
 
-- (void)setNavigationBar{
-    [self setTitleViewForNavBar];
-    [self addLeftBarButton];
+- (void)setNavigationBar {
+    [self setTitle:NSLocalizedString(@"New Sprout", @"New Sprout")];
+//    [self addLeftBarButton];
     [self addRightBarButton];
 }
 
-- (void)addLeftBarButton{
+- (void)addLeftBarButton {
     UIButton *back = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
     [back setBackgroundImage:[UIImage imageNamed:@"arrow_left"] forState:UIControlStateNormal];
     [back addTarget:self action:@selector(backToMenu:) forControlEvents:UIControlEventTouchUpInside];
@@ -247,28 +261,22 @@
     self.navigationItem.leftBarButtonItem = barButton;
 }
 
-- (void)addRightBarButton{
+- (void)addRightBarButton {
     UIButton *download = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
     [download setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:download];
     self.navigationItem.rightBarButtonItem = barButton;
 }
 
-- (IBAction)backToMenu:(UIButton *)sender{
-    AppDelegate *appDel = [[UIApplication sharedApplication] delegate];
-    [appDel resetTab];
-    appDel.label.textColor = [utils colorNavigationBar];
-    appDel.imageView.image = [UIImage imageNamed:@"projector-green"];
+- (IBAction)backToMenu:(UIButton *)sender
+{
+//    if ([[[UIApplication sharedApplication] delegate] isKindOfClass:[AppDelegate class]]) {
+//        AppDelegate *appDel = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+//        [appDel resetTab];
+//        appDel.label.textColor = [UIUtils colorNavigationBar];
+//        appDel.imageView.image = [UIImage imageNamed:@"projector-green"];
+//    }
     self.tabBarController.selectedIndex = 0;
-}
-
-- (void)setTitleViewForNavBar{
-    UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [utils attrString:@"SproutPic" withFont:[utils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
-    [label sizeToFit];
-    label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
-    
-    self.navigationItem.titleView = label;
 }
 
 @end

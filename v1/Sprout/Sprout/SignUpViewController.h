@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIUtils.h"
 #import "AccountInformationViewController.h"
 @class AccountInformationViewController;
 #import "SignInViewController.h"
@@ -16,14 +15,16 @@
 
 @class WebService;
 
-@interface SignUpViewController : UIViewController<UITextFieldDelegate,UIAlertViewDelegate>{
-    UIUtils *utils;
+@interface SignUpViewController : UIViewController<UITextFieldDelegate,UIAlertViewDelegate>
+{
     UITextField *fieldName, *fieldEmail, *fieldPassword;
     WebService *webService;
     UIImageView *checkImage;
     FTPCreateManager *ftpCreateManager;
 }
+
 @property (strong,nonatomic)AccountInformationViewController *accountInfoController;
+
 - (void)showAlertWithMessage:(NSString *)str;
 - (void)signUpSuccess;
 @end

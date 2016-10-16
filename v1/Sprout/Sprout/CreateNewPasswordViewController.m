@@ -6,7 +6,10 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
+// TODO - Rewrite entire class...
+
 #import "CreateNewPasswordViewController.h"
+#import "UIUtils.h"
 
 @implementation CreateNewPasswordViewController
 - (void)viewDidLoad{
@@ -15,7 +18,6 @@
 }
 - (void)setController{
     self.view.backgroundColor = [UIColor whiteColor];
-    utils = [[UIUtils alloc]init];
     
     [self setNavigationBar];
     [self setupLayout];
@@ -37,7 +39,7 @@
     for (int i = 0; i<2; i++) {
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.09, 17 + (60 * i), self.view.frame.size.width * 0.82, 44)];
         view.layer.borderWidth = 1.2;
-        view.layer.borderColor = [utils colorNavigationBar].CGColor;
+        view.layer.borderColor = [UIUtils colorNavigationBar].CGColor;
         view.layer.cornerRadius = 3;
         
         UITextField *field = [[UITextField alloc] initWithFrame:CGRectMake(view.frame.origin.x + 15, view.frame.origin.y, view.frame.size.width - 15 - view.frame.size.height, view.frame.size.height)];
@@ -45,19 +47,19 @@
         paraStyle.alignment = NSTextAlignmentCenter;
         field.delegate = self;
         //field.backgroundColor = [UIColor greenColor];
-        field.textColor = [utils colorNavigationBar];
-        field.tintColor = [utils colorNavigationBar];
-        field.font = [utils fontRegularForSize:15];
-        field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Name" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                     NSFontAttributeName: [utils fontRegularForSize:15]}];
+        field.textColor = [UIUtils colorNavigationBar];
+        field.tintColor = [UIUtils colorNavigationBar];
+        field.font = [UIUtils fontRegularForSize:15];
+        field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Name" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                     NSFontAttributeName: [UIUtils fontRegularForSize:15]}];
         [self.view addSubview:view];
         
         switch (i) {
             case 0:{
                 field.secureTextEntry = YES;
                 field.keyboardType = UIKeyboardTypeEmailAddress;
-                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"New Password" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                             NSFontAttributeName: [utils fontRegularForSize:15]}];
+                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"New Password" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                             NSFontAttributeName: [UIUtils fontRegularForSize:15]}];
                 fieldNewPass = field;
                 [self.view addSubview:fieldNewPass];
                 
@@ -71,8 +73,8 @@
             }
                 break;
             case 1:{
-                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Repeat Password" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                                NSFontAttributeName: [utils fontRegularForSize:15]}];
+                field.attributedPlaceholder = [[NSAttributedString alloc]initWithString:@"Repeat Password" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                                NSFontAttributeName: [UIUtils fontRegularForSize:15]}];
                 fieldRepeatPass = field;
                 [self.view addSubview:fieldRepeatPass];
                 
@@ -107,8 +109,8 @@
     }];
 }
 - (void)setNavigationBar{
-    self.navigationController.navigationBar.barTintColor = [utils colorNavigationBar];
-    self.navigationController.navigationBar.backgroundColor = [utils colorNavigationBar];
+    self.navigationController.navigationBar.barTintColor = [UIUtils colorNavigationBar];
+    self.navigationController.navigationBar.backgroundColor = [UIUtils colorNavigationBar];
     self.navigationController.navigationBar.translucent = NO;
     
     [self setTitleViewForNavBar];
@@ -146,7 +148,7 @@
 }
 - (void)setTitleViewForNavBar{
     UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [utils attrString:@"Create New Password" withFont:[utils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
+    label.attributedText = [UIUtils attrString:@"Create New Password" withFont:[UIUtils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
     [label sizeToFit];
     label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
     

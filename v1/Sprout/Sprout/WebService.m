@@ -41,7 +41,7 @@
 }
 //requests
 - (void)getRequestFromUrl:(NSString *)url withParams:(NSDictionary *) params{
-    AppDelegate *appDel = [[UIApplication sharedApplication]delegate];
+    AppDelegate *appDel = (AppDelegate*)[[UIApplication sharedApplication]delegate];
     [self showProgress];
     appDel.window.userInteractionEnabled = NO;
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -61,7 +61,7 @@
     }];
 }
 - (void)postRequestFromUrl:(NSString *)url withParams:(NSDictionary *) params{
-    AppDelegate *appDel = [[UIApplication sharedApplication]delegate];
+    AppDelegate *appDel = (AppDelegate*)[[UIApplication sharedApplication]delegate];
     [self showProgress];
     appDel.window.userInteractionEnabled = NO;
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];

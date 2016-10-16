@@ -7,22 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIUtils.h"
-#import "AppDelegate.h"
-#import "EditProjectViewController.h"
-#import "SVProgressHUD.h"
 
 @interface CameraViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIAlertViewDelegate>{
-    UIUtils *utils;
     UIButton *on,*off,*autoFlash;
-    
-    
     NSString *imgPath;
 }
-@property (strong,nonatomic)UIImagePickerController * picker;
-@property (strong,nonatomic)UIView * shutterView;
-@property (strong,nonatomic)NSDictionary<NSString *,id> * currentInfo;
-@property (strong,nonatomic)UIImageView * prevImg;
-@property (strong,nonatomic)NSMutableArray * startSprout;
+
+@property (strong,nonatomic) UIImagePickerController * picker;
+@property (strong,nonatomic) UIView * shutterView;
+@property (strong,nonatomic) NSDictionary<NSString *,id> * currentInfo;
+@property (strong,nonatomic) UIImageView * prevImg;
+@property (strong,nonatomic) NSMutableArray * startSprout;
 
 @end

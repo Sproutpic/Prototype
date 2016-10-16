@@ -6,17 +6,22 @@
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
+// TODO - Rewrite entire class...
+
 #import "SecureAccessViewController.h"
+#import "UIUtils.h"
 
 @implementation SecureAccessViewController
-- (void)viewDidLoad{
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self setController];
 }
-- (void)setController{
-    self.view.backgroundColor = [UIColor whiteColor];
-    utils = [[UIUtils alloc]init];
-    
+
+- (void)setController
+{
+    [[self view] setBackgroundColor:[UIColor whiteColor]];
     [self setNavigationBar];
     [self setPassCodeView];
     pickerData = [[NSMutableArray alloc]initWithObjects:@"1 min",@"5 mins",@"10 mins",@"15 mins", @"45 mins",@"60 mins", nil];
@@ -29,18 +34,23 @@
     pickerTool = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 40)];
     pickerTool.backgroundColor = [UIColor whiteColor];
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.8, 0, self.view.frame.size.width * 0.2, 40)];
-    [button setAttributedTitle:[[NSAttributedString alloc]initWithString:@"Done" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar], NSFontAttributeName:[utils fontBoldForSize:16]}] forState:UIControlStateNormal];
+    [button setAttributedTitle:[[NSAttributedString alloc]initWithString:@"Done" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar], NSFontAttributeName:[UIUtils fontBoldForSize:16]}] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
     [pickerTool addSubview:button];
     [self.view addSubview:pickerTool];
 }
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView; {
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView;
+{
     return 1;
 }
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component; {
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
     return pickerData.count;
 }
--(NSString*) pickerView:(UIPickerView*)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+
+- (NSString*)pickerView:(UIPickerView*)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     return [pickerData objectAtIndex:row];
 }
@@ -49,7 +59,9 @@
 {
     
 }
-- (void)setPassCodeView{
+
+- (void)setPassCodeView
+{
     [self formatBlackNoteWithOrigin:24.5 andString:@"Enable Passcode" forView:self.view];
     
     [self setSeparatorView];
@@ -60,20 +72,26 @@
     [self.view addSubview:switcherView];
     [self switcherViewOff];
 }
-- (void)setSeparatorView{
+
+- (void)setSeparatorView
+{
     [self formatSeparatorWithOriginY:60 forView:self.view];
 }
-- (void)setSwitch{
+
+- (void)setSwitch
+{
     enableSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 65, 16.5, 0, 0)];
     [self.view addSubview:enableSwitch];
-    enableSwitch.onTintColor = [utils colorNavigationBar];
+    enableSwitch.onTintColor = [UIUtils colorNavigationBar];
     enableSwitch.backgroundColor = [UIColor colorWithRed:173.f/255.f green:175.f/255.f blue:177.f/255.f alpha:1];
     enableSwitch.tintColor = [UIColor colorWithRed:173.f/255.f green:175.f/255.f blue:177.f/255.f alpha:1];
     enableSwitch.layer.cornerRadius = 16.0;
     [enableSwitch addTarget:self action:@selector(switched:)
     forControlEvents:UIControlEventValueChanged];
 }
--(IBAction)switched:(UISwitch *)sender{
+
+- (IBAction)switched:(UISwitch *)sender
+{
     [UIView animateWithDuration:0.2 animations:^{
         switcherView.alpha = 0;
     } completion:^(BOOL finished){
@@ -87,7 +105,9 @@
         }
     }];
 }
-- (void)switcherViewOn{
+
+- (void)switcherViewOn
+{
     [self.navigationController pushViewController:[[EnablePasscodeViewController alloc] init] animated:YES];
     
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 53)];
@@ -112,31 +132,40 @@
         switcherView.alpha = 1;
     } ];
 }
--(IBAction)changePass:(id)sender{
+
+- (IBAction)changePass:(id)sender
+{
     [self.navigationController pushViewController:[[EnablePasscodeViewController alloc] init] animated:YES];
 }
--(IBAction)autoLockTap:(id)sender{
+
+- (IBAction)autoLockTap:(id)sender
+{
     [UIView animateWithDuration:0.2 animations:^{
         autolockSelect.backgroundColor = [UIColor whiteColor];
         autolockSelect.frame = CGRectMake(0, self.view.frame.size.height - 216, self.view.frame.size.width, 216);
         pickerTool.frame = CGRectMake(0, autolockSelect.frame.origin.y - 40, self.view.frame.size.width, 40);
     }];
 }
--(IBAction)doneAction:(id)sender{
+
+- (IBAction)doneAction:(id)sender
+{
     [UIView animateWithDuration:0.2 animations:^{
         autolockSelect.backgroundColor = [UIColor whiteColor];
         autolockSelect.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 216);
         pickerTool.frame = CGRectMake(0, autolockSelect.frame.origin.y, self.view.frame.size.width, 40);
     }];
 }
-- (void)addMinutes{
+
+- (void)addMinutes
+{
     UILabel *lblNote = [[UILabel alloc] init];
-    lblNote.attributedText = [[NSAttributedString alloc]initWithString:@"15 min" attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                        NSFontAttributeName: [utils fontBoldForSize:14]}];
+    lblNote.attributedText = [[NSAttributedString alloc]initWithString:@"15 min" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                        NSFontAttributeName: [UIUtils fontBoldForSize:14]}];
     [lblNote sizeToFit];
     lblNote.frame = CGRectMake(self.view.frame.size.width - lblNote.frame.size.width - 42, 158.5, lblNote.frame.size.width, lblNote.frame.size.height);
     [switcherView addSubview:lblNote];
 }
+
 - (UIImageView *)addArrowRightWithOriginY:(CGFloat)y{
     UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-27, y, 10, 18)];
     arrow.image = [UIImage imageNamed:@"arrow_right"];
@@ -144,14 +173,14 @@
 }
 - (void)formatSeparatorWithOriginY:(CGFloat)y forView:(UIView *)view{
     UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, y, self.view.frame.size.width, 2)];
-    separator.backgroundColor = [utils colorMenuButtonsSeparator];
+    separator.backgroundColor = [UIUtils colorMenuButtonsSeparator];
     [view addSubview:separator];
 }
 - (void)formatGreenNoteWithOrigin:(CGFloat)y andString:(NSString *)str forView:(UIView *)view{
     UILabel *lblNote = [[UILabel alloc] init];
     lblNote.numberOfLines = 0;
-    lblNote.attributedText = [[NSAttributedString alloc]initWithString:str attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                                                                                                                                                                                                                                                         NSFontAttributeName: [utils fontRegularForSize:13]}];
+    lblNote.attributedText = [[NSAttributedString alloc]initWithString:str attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                                                                                                                                                                                                                                                         NSFontAttributeName: [UIUtils fontRegularForSize:13]}];
     [lblNote sizeToFit];
     lblNote.frame = CGRectMake(15, y, lblNote.frame.size.width, lblNote.frame.size.height);
     [view addSubview:lblNote];
@@ -159,7 +188,7 @@
 - (void)formatBlackNoteWithOrigin:(CGFloat)y andString:(NSString *)str forView:(UIView *)view{
     UILabel *lblNote = [[UILabel alloc]init];
     lblNote.attributedText = lblNote.attributedText = [[NSAttributedString alloc]initWithString:str attributes:@{NSForegroundColorAttributeName: [UIColor blackColor],
-                                                                                                                             NSFontAttributeName: [utils fontRegularForSize:18]}];
+                                                                                                                             NSFontAttributeName: [UIUtils fontRegularForSize:18]}];
     [lblNote sizeToFit];
     lblNote.frame = CGRectMake(15, y, lblNote.frame.size.width, lblNote.frame.size.height);
     [view addSubview:lblNote];
@@ -167,8 +196,8 @@
 - (void)switcherViewOff{
     UILabel *lblNote = [[UILabel alloc] init];
     lblNote.numberOfLines = 0;
-    lblNote.attributedText = [[NSAttributedString alloc]initWithString:@"Don't worry about your projects and progress\nsecurity by setting up a passcode." attributes:@{NSForegroundColorAttributeName: [utils colorNavigationBar],
-                                                                                                                                NSFontAttributeName: [utils fontRegularForSize:13]}];
+    lblNote.attributedText = [[NSAttributedString alloc]initWithString:@"Don't worry about your projects and progress\nsecurity by setting up a passcode." attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
+                                                                                                                                NSFontAttributeName: [UIUtils fontRegularForSize:13]}];
     [lblNote sizeToFit];
     lblNote.frame = CGRectMake(15, 20, lblNote.frame.size.width, lblNote.frame.size.height);
     [switcherView addSubview:lblNote];
@@ -178,8 +207,8 @@
     } ];
 }
 - (void)setNavigationBar{
-    self.navigationController.navigationBar.barTintColor = [utils colorNavigationBar];
-    self.navigationController.navigationBar.backgroundColor = [utils colorNavigationBar];
+    self.navigationController.navigationBar.barTintColor = [UIUtils colorNavigationBar];
+    self.navigationController.navigationBar.backgroundColor = [UIUtils colorNavigationBar];
     self.navigationController.navigationBar.translucent = NO;
     
     [self setTitleViewForNavBar];
@@ -197,7 +226,7 @@
 }
 - (void)setTitleViewForNavBar{
     UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [utils attrString:@"Secure Access" withFont:[utils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
+    label.attributedText = [UIUtils attrString:@"Secure Access" withFont:[UIUtils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
     [label sizeToFit];
     label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
     

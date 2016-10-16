@@ -11,16 +11,19 @@
 
 @interface UIUtils : NSObject
 
-- (UIColor *)colorNavigationBar;
-- (UIColor *)colorMenuButtonsSeparator;
-- (UIColor *)colorSproutGreen;
++ (UIColor*)colorNavigationBar;
++ (UIColor*)colorMenuButtonsSeparator;
++ (UIColor*)colorSproutGreen;
 
-- (UIFont *)fontForNavBarTitle;
-- (UIFont *)fontForFAQQuestionActive;
-- (UIFont *)fontForFAQAnswerActive;
++ (UIFont*)fontForNavBarTitle;
++ (UIFont*)fontForFAQQuestionActive;
++ (UIFont*)fontForFAQAnswerActive;
++ (UIFont*)fontRegularForSize:(CGFloat) size;
++ (UIFont*)fontBoldForSize:(CGFloat) size;
 
-- (UIFont *)fontRegularForSize:(CGFloat) size;
-- (UIFont *)fontBoldForSize:(CGFloat) size;
++ (NSAttributedString*)attrString:(NSString*)attrStr
+                         withFont:(UIFont*)attrFont
+                            color:(UIColor*)attrColor
+                   andCharSpacing:(NSNumber*)attrSpace;
 
--(NSAttributedString *)attrString:(NSString *) attrStr withFont:(UIFont *) attrFont color:(UIColor *)attrColor andCharSpacing:(NSNumber *) attrSpace;
 @end

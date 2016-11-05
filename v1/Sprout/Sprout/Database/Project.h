@@ -1,40 +1,23 @@
 //
-//  Project.h
+//  Project+CoreDataClass.h
 //  Sprout
 //
-//  Created by Jeff Morris on 10/10/16.
+//  Created by Jeff Morris on 10/22/16.
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
-#import "ServerRecord.h"
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
 @class Timeline;
 
-@interface Project : ServerRecord
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, retain) NSString * title;
-@property (nonatomic, retain) NSString * subtitle;
-@property (nonatomic, retain) NSDate * repeatNextDate;
-@property (nonatomic, retain) NSNumber * repeatFrequency;
-@property (nonatomic, retain) NSDate * repeatEndDate;
-@property (nonatomic, retain) NSNumber * remindEnabled;
-@property (nonatomic, retain) NSSet * timelines;
-
-+ (Project*)createNewProject:(NSString*)title
-                    subTitle:(NSString*)subTitle
-    withManagedObjectContext:(NSManagedObjectContext*)managedObjectContext;
-
-+ (NSArray*)sortDescriptors;
+@interface Project : NSManagedObject
 
 @end
 
-@interface Project (CoreDataGeneratedAccessors)
+NS_ASSUME_NONNULL_END
 
-- (void)addTimelinesObject:(Timeline *)value;
-- (void)removeTimelinesObject:(Timeline *)value;
-- (void)addTimelines:(NSSet *)values;
-- (void)removeTimelines:(NSSet *)values;
-
-@end
+#import "Project+CoreDataProperties.h"
+#import "Project+Extras.h"

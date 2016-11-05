@@ -21,6 +21,16 @@
 + (NSURL*)modelURL;
 
 - (NSURL*)applicationDocumentsDirectory;
-- (NSManagedObjectContext*)createNewManagedObjectContext;
+- (NSManagedObjectContext *)createNewManagedObjectContextwithName:(NSString*)name andConcurrency:(NSManagedObjectContextConcurrencyType)concurrency;
+
+- (NSArray*)findObjects:(NSString*)entityType
+           forPredicate:(NSPredicate*)predicate
+               withSort:(NSArray*)sortDescriptors
+                  inMOC:(NSManagedObjectContext*)moc;
+
+- (NSManagedObject*)findAnObject:(NSString*)entityType
+                    forPredicate:(NSPredicate*)predicate
+                        withSort:(NSArray*)sortDescriptors
+                           inMOC:(NSManagedObjectContext*)moc;
 
 @end

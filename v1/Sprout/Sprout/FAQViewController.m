@@ -2,7 +2,7 @@
 //  FAQViewController.m
 //  Sprout
 //
-//  Created by LLDM 0038 on 06/07/2016.
+//  Created by Jeff Morris on 10/10/2016
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
@@ -42,12 +42,19 @@
     [self setTitle:NSLocalizedString(@"FAQ", @"FAQ")];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[self tableView] setFrame:[[self view] bounds]];
+}
+
 # pragma mark BaseViewControllerDelegate
 
 - (void)setController
 {
     [super setController];
-    [self setTableView:[self createBaseTableView]];
+    [self setTableView:[self createBaseTableView:UITableViewStyleGrouped]];
+    [self addSproutLogoTableFooter:[self tableView]];
     [[self view] addSubview:[self tableView]];
 }
 
@@ -64,7 +71,7 @@
 - (CGFloat)tableView:(UITableView *)tv heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSArray *dataRow = [self rowDataAtIndex:indexPath.row];
-    return ([[dataRow objectAtIndex:0] boolValue]) ? 150.0 : 44.0; // TODO - Make the height dynamic...
+    return ([[dataRow objectAtIndex:0] boolValue]) ? 150.0 : 44.0; // Make this height dynamic...
 }
 
 # pragma mark UITableViewDataSource
@@ -86,10 +93,10 @@
     [[cell textLabel] setText:[dataRow objectAtIndex:1]];
     if ([[dataRow objectAtIndex:0] boolValue]) {
         [[cell detailTextLabel] setText:[dataRow objectAtIndex:2]];
-        [cell setAccessoryView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"upArrow"]]];
+        [cell setAccessoryView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow-up"]]];
     } else {
         [[cell detailTextLabel] setText:nil];
-        [cell setAccessoryView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"downArrow"]]];
+        [cell setAccessoryView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow-down"]]];
     }
     return cell;
 }

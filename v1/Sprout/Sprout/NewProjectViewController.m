@@ -10,6 +10,8 @@
 
 #import "NewProjectViewController.h"
 #import "UIUtils.h"
+#import "CameraViewController.h"
+#import "AppDelegate.h"
 
 @implementation NewProjectViewController
 
@@ -29,7 +31,7 @@
 - (UITabBarItem*)tabBarItem
 {
     return [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"New Project", @"New Project")
-                                         image:[UIImage imageNamed:@"Plus-grey"]
+                                         image:[UIImage imageNamed:@"plus-grey"]
                                            tag:2];
 }
 

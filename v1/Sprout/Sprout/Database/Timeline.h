@@ -1,26 +1,23 @@
 //
-//  Timeline.h
+//  Timeline+CoreDataClass.h
 //  Sprout
 //
-//  Created by Jeff Morris on 10/10/16.
+//  Created by Jeff Morris on 10/22/16.
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
-#import "ServerRecord.h"
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
 @class Project;
 
-@interface Timeline : ServerRecord
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, retain) NSString *serverURL;
-@property (nonatomic, retain) NSNumber *order;
-@property (nonatomic, retain) NSString *localURL;
-@property (nonatomic, retain) Project *project;
-
-+ (Timeline*)createNewTimelineWithServerURL:(NSString*)serverURL
-                                 forProject:(Project*)project
-                   withManagedObjectContext:(NSManagedObjectContext*)managedObjectContext;
+@interface Timeline : NSManagedObject
 
 @end
+
+NS_ASSUME_NONNULL_END
+
+#import "Timeline+CoreDataProperties.h"
+#import "Timeline+Extras.h"

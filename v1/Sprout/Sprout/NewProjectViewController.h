@@ -8,13 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "SDWebImage/UIImageView+WebCache.h"
-#import "AppDelegate.h"
-#import "CameraViewController.h"
 
-@interface NewProjectViewController : UIViewController<UITextFieldDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>{
+@interface NewProjectViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
     UIScrollView *scroller;
     UITextField *fieldTitle;
     UITextView *fieldDesc;
     UIView *textViewsept, *remindView;
 }
+
 @end

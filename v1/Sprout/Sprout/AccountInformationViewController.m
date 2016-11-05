@@ -2,162 +2,139 @@
 //  AccountInformationViewController.m
 //  Sprout
 //
-//  Created by LLDM 0038 on 19/07/2016.
+//  Created by Jeff Morris on 10/10/2016
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
-// TODO - Rewrite entire class...
-
 #import "AccountInformationViewController.h"
-#import "UIUtils.h"
+#import "AccountSignInViewController.h"
+#import "AccountSignUpViewController.h"
+#import "SignInWebService.h"
+
+@interface AccountInformationViewController () <UITextFieldDelegate>
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIScrollView *loggedOutView;
+@property (weak, nonatomic) IBOutlet UIView *mainView;
+@property (weak, nonatomic) IBOutlet UIButton *signInBtn;
+@property (weak, nonatomic) IBOutlet UIButton *signOutBtn;
+@property (weak, nonatomic) IBOutlet UIButton *signUpBtn;
+@property (weak, nonatomic) IBOutlet UILabel *orLbl;
+@property (weak, nonatomic) IBOutlet UILabel *detailLbl;
+
+- (IBAction)signOutButtonTapped:(id)sender;
+- (IBAction)signInButtonTapped:(id)sender;
+- (IBAction)signUpButtonTapped:(id)sender;
+
+@end
 
 @implementation AccountInformationViewController
-- (void)viewDidLoad{
+
+# pragma mark Private
+
+- (void)editState
+{
+    [self displayUnderConstructionAlert];
+}
+
+- (IBAction)signOutButtonTapped:(id)sender
+{
+    // Place spinner on screen
+    [self showFullScreenSpinner:YES];
+    
+    // All looks good, so lets call the web service...
+    [SignInWebService signOutUserWithEmail:[CurrentUser emailAddress]
+                              withCallback:
+     ^(NSError *error, SproutWebService *service) {
+         [self showFullScreenSpinner:NO];
+         [CurrentUser setUser:nil];
+         [[self navigationController] popViewControllerAnimated:YES];
+     }];
+}
+
+- (IBAction)signInButtonTapped:(id)sender
+{
+    AccountSignInViewController *vc = [[AccountSignInViewController alloc] initWithNibName:@"AccountSignInViewController" bundle:nil];
+    [[self navigationController] pushViewController:vc animated:YES];
+}
+
+- (IBAction)signUpButtonTapped:(id)sender
+{
+    AccountSignUpViewController *vc = [[AccountSignUpViewController alloc] initWithNibName:@"AccountSignUpViewController" bundle:nil];
+    [[self navigationController] pushViewController:vc animated:YES];
+}
+
+# pragma mark UIViewController
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    [self setController];
+    [self setTitle:NSLocalizedString(@"Account Info", @"Account Info")];
 }
-- (void)setController{
-    self.view.backgroundColor = [UIColor whiteColor];
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[self tableView] setFrame:[[self view] bounds]];
     
-    [self setNavigationBar];
+    [[self loggedOutView] setFrame:[[self tableView] bounds]];
+    [[self loggedOutView] setAlwaysBounceVertical:YES];
     
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"user"]){
-        [self setLayoutForAlreadySignedIn];
-    }else{
-        [self setLayoutForDefault];
+    [[self mainView] setFrame:[[self view] bounds]];
+    
+    [self roundCornersForView:[self signOutBtn]];
+    [self roundCornersForView:[self signInBtn]];
+    [self roundCornersForView:[self signUpBtn]];
+
+    if ([CurrentUser isLoggedIn]) {
+        [[self loggedOutView] setHidden:YES];
+        [[self tableView] reloadData];
+        [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button-pencil"]
+                                                                                      style:UIBarButtonItemStylePlain
+                                                                                     target:self
+                                                                                     action:@selector(editState)]];
+    } else {
+        [[self loggedOutView] setHidden:NO];
+        [[self navigationItem] setRightBarButtonItem:nil];
     }
 }
-- (void)setLayoutForAlreadySignedIn{
-    [self addRightBarButton];
-    [self addSeparatorForFields];
-    [self addLabelsForFields];
-    [self addInfoLabelsForFields];
+
+# pragma mark UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tv numberOfRowsInSection:(NSInteger)section
+{
+    return 3;
 }
-- (void)addSeparatorForFields{
-    CGFloat y = 20;
-    for (y = 60; y < 181; y += 60) {
-        UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(10, y, self.view.frame.size.width-10, 2)];
-        separator.backgroundColor = [UIUtils colorMenuButtonsSeparator];
-        [self.view addSubview:separator];
+
+- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *reuseCell = @"UITableViewCellStyleValue1";
+    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:reuseCell];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseCell];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        [cell setAccessoryType:UITableViewCellAccessoryNone];
     }
-}
-- (void)addLabelsForFields{
-    CGFloat y = 15;
-    for (NSString *str in @[@"Name",@"Email",@"Gender"]) {
-        UILabel *lblNote = [[UILabel alloc] init];
-        lblNote.attributedText = [[NSAttributedString alloc]initWithString:str attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
-                                                                                            NSFontAttributeName: [UIUtils fontRegularForSize:14]}];
-        [lblNote sizeToFit];
-        lblNote.frame = CGRectMake(15, y, lblNote.frame.size.width, lblNote.frame.size.height);
-        [self.view addSubview:lblNote];
-        y += 60;
-    }
-}
-- (void)addInfoLabelsForFields{
-    CGFloat y = 33;
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    if([((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"name"] && [((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"email"]){
-        array = [[NSMutableArray alloc] initWithArray:@[[((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"name"],[((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"email"]]];
-    }else{
-        if ([((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"email"]) {
-            array = [[NSMutableArray alloc] initWithArray:@[@"",[((NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"user"]) objectForKey:@"email"]]];
+    if ([CurrentUser isLoggedIn]) {
+        switch ([indexPath row]) {
+            case 0: {
+                [[cell textLabel] setText:NSLocalizedString(@"Name", @"Name")];
+                [[cell detailTextLabel] setText:[CurrentUser fullName]];
+            } break;
+            case 1: {
+                [[cell textLabel] setText:NSLocalizedString(@"Email", @"Email")];
+                [[cell detailTextLabel] setText:[CurrentUser emailAddress]];
+            } break;
+            case 2: {
+                [[cell textLabel] setText:NSLocalizedString(@"Gender", @"Gender")];
+                [[cell detailTextLabel] setText:NSLocalizedString(@"--", @"--")];
+            } break;
         }
+    } else {
+        [[cell textLabel] setText:nil];
+        [[cell detailTextLabel] setText:nil];
     }
-    for (NSString *str in array) {
-        UILabel *lblNote = [[UILabel alloc] init];
-        lblNote.attributedText = [[NSAttributedString alloc]initWithString:str attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:128.f/255.f green:126.f/255.f blue:125.f/255.f alpha:1.f],
-                                                                                            NSFontAttributeName: [UIUtils fontRegularForSize:18]}];
-        [lblNote sizeToFit];
-        lblNote.frame = CGRectMake(10, y, lblNote.frame.size.width, lblNote.frame.size.height);
-        [self.view addSubview:lblNote];
-        y += 60;
-    }
+    return cell;
 }
-- (void)addRightBarButton{
-    UIButton *download = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 15, 20)];
-    [download setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:download];
-    self.navigationItem.rightBarButtonItem = barButton;
-}
-- (void)setLayoutForDefault{
-    UILabel *lblSignIn = [[UILabel alloc]init];
-    lblSignIn.attributedText = [[NSAttributedString alloc]initWithString:@"SIGN IN" attributes:@{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),
-                                                                                                 NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
-                                                                                                 NSFontAttributeName: [UIUtils fontRegularForSize:14]}];
-    [lblSignIn sizeToFit];
-    
-    UILabel *lblOr = [[UILabel alloc]init];
-    lblOr.attributedText = [[NSAttributedString alloc]initWithString:@"  or  " attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
-                                                                                             NSFontAttributeName: [UIUtils fontRegularForSize:14]}];
-    [lblOr sizeToFit];
-    
-    UILabel *lblSignUp = [[UILabel alloc]init];
-    lblSignUp.attributedText = [[NSAttributedString alloc]initWithString:@"SIGN UP" attributes:@{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),
-                                                                                                 NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
-                                                                                                 NSFontAttributeName: [UIUtils fontRegularForSize:14]}];
-    [lblSignUp sizeToFit];
-    
-    CGFloat totalLabelsWidth = lblSignIn.frame.size.width + lblOr.frame.size.width + lblSignUp.frame.size.width;
-    CGFloat originY = self.view.frame.size.height * 0.09;
-    
-    lblSignIn.frame = CGRectMake((self.view.frame.size.width - totalLabelsWidth) / 2, originY, lblSignIn.frame.size.width, lblSignIn.frame.size.height);
-    lblOr.frame = CGRectMake((self.view.frame.size.width - totalLabelsWidth) / 2 + lblSignIn.frame.size.width, originY, lblOr.frame.size.width, lblOr.frame.size.height);
-    lblSignUp.frame = CGRectMake((self.view.frame.size.width - totalLabelsWidth) / 2 + lblSignIn.frame.size.width + lblOr.frame.size.width, originY, lblSignUp.frame.size.width, lblSignUp.frame.size.height);
-    
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedSignUp:)];
-    [lblSignUp setUserInteractionEnabled:YES];
-    [lblSignUp addGestureRecognizer:tap];
-    tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedSignIn:)];
-    [lblSignIn setUserInteractionEnabled:YES];
-    [lblSignIn addGestureRecognizer:tap];
-    
-    [self.view addSubview:lblSignIn];
-    [self.view addSubview:lblOr];
-    [self.view addSubview:lblSignUp];
-    
-    UILabel *lblNote = [[UILabel alloc]init];
-    lblNote.numberOfLines = 0;
-    lblNote.textAlignment = NSTextAlignmentCenter;
-    lblNote.attributedText = [[NSAttributedString alloc]initWithString:@"to check and edit your account information.\nYou can do that once you're ready :)\n\n*required for sharing within community" attributes:@{NSForegroundColorAttributeName: [UIUtils colorNavigationBar],
-                                                                                                 NSFontAttributeName: [UIUtils fontRegularForSize:14]}];
-    [lblNote sizeToFit];
-    lblNote.frame = CGRectMake((self.view.frame.size.width - lblNote.frame.size.width) / 2, originY + lblOr.frame.size.height * 1.2, lblNote.frame.size.width, lblNote.frame.size.height);
-    [self.view addSubview:lblNote];
-}
-- (void)tappedSignIn:(UITapGestureRecognizer *)sender{
-    SignInViewController *signController = [[SignInViewController alloc] init];
-    signController.accountInfoController = self;
-    [self.navigationController pushViewController:signController animated:YES];
-}
-- (void)tappedSignUp:(UITapGestureRecognizer *)sender{
-    SignUpViewController *signController = [[SignUpViewController alloc] init];
-    signController.accountInfoController = self;
-    [self.navigationController pushViewController:signController animated:YES];
-}
-- (void)setNavigationBar{
-    self.navigationController.navigationBar.barTintColor = [UIUtils colorNavigationBar];
-    self.navigationController.navigationBar.backgroundColor = [UIUtils colorNavigationBar];
-    self.navigationController.navigationBar.translucent = NO;
-    
-    [self setTitleViewForNavBar];
-    [self addLeftBarButton];
-}
-- (void)addLeftBarButton{
-    UIButton *back = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
-    [back setBackgroundImage:[UIImage imageNamed:@"arrow_left"] forState:UIControlStateNormal];
-    [back addTarget:self action:@selector(backToMenu:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:back];
-    self.navigationItem.leftBarButtonItem = barButton;
-}
-- (IBAction)backToMenu:(UIButton *)sender{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-- (void)setTitleViewForNavBar{
-    UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [UIUtils attrString:@"Account Information" withFont:[UIUtils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
-    [label sizeToFit];
-    label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
-    
-    self.navigationItem.titleView = label;
-}
+
 @end

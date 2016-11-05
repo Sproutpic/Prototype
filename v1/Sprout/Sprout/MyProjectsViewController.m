@@ -2,21 +2,19 @@
 //  MyProjectsViewController.m
 //  Sprout
 //
-//  Created by LLDM 0038 on 05/07/2016.
+//  Created by Jeff Morris on 10/9/16.
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
 #import "MyProjectsViewController.h"
-#import "SettingsViewController.h"
 #import "UIUtils.h"
 #import "ProjectDetailViewController.h"
 #import "ProjectTableViewCell.h"
-#import "CoreDataAccessKit.h"
 #import "TableAdapter.h"
-#import "Project.h"
-#import "Timeline.h"
+#import "DataObjects.h"
+#import <AVFoundation/AVFoundation.h>
 
-@interface MyProjectsViewController () <UITableViewDelegate>
+@interface MyProjectsViewController () <UITableViewDelegate, ProjectTableViewCellDelegate>
 
 @property (strong, nonatomic) NSNumber *useFile;
 @property (strong, nonatomic) UITableView *tableView;
@@ -29,18 +27,28 @@
 
 # pragma mark Private
 
-- (IBAction)tappedSettingsButton:(UIButton *)sender
+- (void)pushProjectDetailsViewController:(Project *)project animated:(BOOL)animate completion:(void (^ __nullable)(void))completion
 {
-    [[self navigationController] presentViewController:[[UINavigationController alloc] initWithRootViewController:[[SettingsViewController alloc] init]]
-                                              animated:YES
-                                            completion:nil];
+    ProjectDetailViewController *pdvc = [[ProjectDetailViewController alloc] init];
+    pdvc.project = project;
+    [CATransaction begin];
+    [[self navigationController] pushViewController:pdvc animated:animate];
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+    }
+    [CATransaction commit];
 }
 
 - (ConfigureTableCellBlock)createConfigureTableCellBlock
 {
     return ^(UITableView* tableView, NSIndexPath* indexPath, NSManagedObject* managedObject) {
-        ProjectTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ProjectTableViewCell" forIndexPath:indexPath];
+        ProjectTableViewCell *cell = (ProjectTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ProjectTableViewCell"];
+        if (!cell) {
+            UIViewController *vc = [[UIViewController alloc] initWithNibName:@"ProjectTableViewCell" bundle:nil];
+            cell = (ProjectTableViewCell*)[vc view];
+        }
         [cell setProject:(Project*)managedObject];
+        [cell setProjectDelegate:self];
         return cell;
     };
 }
@@ -48,8 +56,8 @@
 - (void)createTabBarItem
 {
     if (![self tabBarItemHack]) {
-        [self setTabBarItemHack:[[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"My Project", @"My Project")
-                                                              image:[UIImage imageNamed:@"projector-grey"]
+        [self setTabBarItemHack:[[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"My Sprouts", @"My Sprouts")
+                                                              image:[UIImage imageNamed:@"tab-projector-grey"]
                                                                 tag:1]];
     }
 }
@@ -66,7 +74,13 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[self tableView] setFrame:[[self view] bounds]];
+    [[self tableView] reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[self tableView] setFrame:[[self view] bounds]];    
 }
 
 - (UITabBarItem*)tabBarItem
@@ -80,33 +94,22 @@
 - (void)setController
 {
     [super setController];
-    [self setTableView:[self createBaseTableView]];
+    [self setTableView:[self createBaseTableView:UITableViewStylePlain]];
+    [[self tableView] setDelegate:self];
     [self setTableAdapter:[[TableAdapter alloc] initForTableView:[self tableView]
                                                        forEntity:NSStringFromClass([Project class])
-                                                       predicate:nil
+                                                       predicate:[NSPredicate predicateWithFormat:@"created != nil"]
                                                             sort:[Project sortDescriptors]
                                                   sectionNameKey:nil
-                                            managedObjectContext:[[CoreDataAccessKit sharedInstance] createNewManagedObjectContext]
-                                     withConfigureTableCellBlock:
-                           ^(UITableView* tableView, NSIndexPath* indexPath, NSManagedObject* managedObject) {
-                               ProjectTableViewCell *cell = (ProjectTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ProjectTableViewCell"];
-                               if (!cell) {
-                                   UIViewController *vc = [[UIViewController alloc] initWithNibName:@"ProjectTableViewCell" bundle:nil];
-                                   cell = (ProjectTableViewCell*)[vc view];
-                               }
-                               [cell setProject:(Project*)managedObject];
-                               return cell;
-                           }]];
+                                            managedObjectContext:[[CoreDataAccessKit sharedInstance] managedObjectContext]
+                                     withConfigureTableCellBlock:[self createConfigureTableCellBlock]]];
+    [self addSproutLogoTableFooter:[self tableView]];
     [[self view] addSubview:[self tableView]];
 }
 
 - (void)addRightBarButton
 {
-    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings"]
-                                                                style:UIBarButtonItemStylePlain
-                                                               target:self
-                                                               action:@selector(tappedSettingsButton:)];
-    [[self navigationItem] setRightBarButtonItem:backBtn];
+    [self createSettingsNavButton];
 }
 
 # pragma mark UITableViewDelegate
@@ -114,16 +117,32 @@
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tv deselectRowAtIndexPath:indexPath animated:YES];
-    
-    ProjectDetailViewController *pdvc = [[ProjectDetailViewController alloc] init];
-    pdvc.project = [[[self tableAdapter] fetchedResultsController] objectAtIndexPath:indexPath];
-    pdvc.useFile = _useFile;
-    
-    [[self navigationController] pushViewController:pdvc animated:YES];
+    [self pushProjectDetailsViewController:[[[self tableAdapter] fetchedResultsController] objectAtIndexPath:indexPath] animated:YES completion:nil];
 }
 
 - (CGFloat)tableView:(UITableView *)tv heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 220.0;
 }
+
+# pragma mark ProjectTableViewCellDelegate
+
+- (void)useCameraToAddNewSproutToProject:(Project*)project
+{
+    NSIndexPath *indexPath = [[[self tableAdapter] fetchedResultsController] indexPathForObject:project];
+    if (indexPath) [[self tableView] selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+    [self pushProjectDetailsViewController:[[[self tableAdapter] fetchedResultsController] objectAtIndexPath:indexPath] animated:NO completion:^{
+        [self showCameraForNewSprout:project withCameraCallback:nil];
+    }];
+    if (indexPath) [[self tableView] deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+- (void)showProjectDetails:(Project*)project
+{
+    NSIndexPath *indexPath = [[[self tableAdapter] fetchedResultsController] indexPathForObject:project];
+    if (indexPath) [[self tableView] selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+    [self pushProjectDetailsViewController:project animated:YES completion:nil];
+    if (indexPath) [[self tableView] deselectRowAtIndexPath:indexPath animated:YES];
+}
+
 @end

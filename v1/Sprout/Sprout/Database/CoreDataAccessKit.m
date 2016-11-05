@@ -56,37 +56,46 @@ static CoreDataAccessKit *shared = nil;
 // If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
 - (NSManagedObjectContext*)managedObjectContext
 {
-    if (_managedObjectContext != nil) {
+    @synchronized(self) {
+        if (_managedObjectContext != nil) {
+            return _managedObjectContext;
+        }
+        NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+        if (coordinator != nil) {
+            NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+            [moc setPersistentStoreCoordinator:coordinator];
+            [moc setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
+            [moc setAutomaticallyMergesChangesFromParent:YES];
+            [moc setUndoManager:nil];
+            [moc setName:@"MainContext"];
+            _managedObjectContext = moc;
+        }
         return _managedObjectContext;
     }
-    @synchronized(self) {
-        _managedObjectContext = [self createNewManagedObjectContext];
-    }
-    return _managedObjectContext;
 }
 
 // Returns the managed object model for the application.
 // If the model doesn't already exist, it is created from the application's model.
 - (NSManagedObjectModel *)managedObjectModel
 {
-    if (_managedObjectModel != nil) {
-        return _managedObjectModel;
-    }
     @synchronized(self) {
+        if (_managedObjectModel != nil) {
+            return _managedObjectModel;
+        }
         NSURL *modelURL = [self modelURL];
         _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+        return _managedObjectModel;
     }
-    return _managedObjectModel;
 }
 
 // Returns the persistent store coordinator for the application.
 // If the coordinator doesn't already exist, it is created and the application's store added to it.
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
 {
-    if (_persistentStoreCoordinator != nil) {
-        return _persistentStoreCoordinator;
-    }
     @synchronized(self) {
+        if (_persistentStoreCoordinator != nil) {
+            return _persistentStoreCoordinator;
+        }
         NSURL *storeURL = [self storeURL];
         NSError *error = nil;
         _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
@@ -99,8 +108,8 @@ static CoreDataAccessKit *shared = nil;
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
+        return _persistentStoreCoordinator;
     }
-    return _persistentStoreCoordinator;
 }
 
 // Returns the URL to the application's Documents directory.
@@ -110,19 +119,105 @@ static CoreDataAccessKit *shared = nil;
 }
 
 // Create a new NSManagedObjectContext
-- (NSManagedObjectContext *)createNewManagedObjectContext
+- (NSManagedObjectContext *)createNewManagedObjectContextwithName:(NSString*)name andConcurrency:(NSManagedObjectContextConcurrencyType)concurrency
 {
-    NSManagedObjectContext *moc = nil;
     @synchronized(self) {
+        NSManagedObjectContext *moc = nil;
         NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
         if (coordinator != nil) {
-            moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-            [moc setPersistentStoreCoordinator:coordinator];
+            moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:concurrency];
             [moc setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
+            [moc setParentContext:[self managedObjectContext]];
             [moc setUndoManager:nil];
+            if (name) [moc setName:name];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(mergeChangesWithParent:)
+                                                         name:NSManagedObjectContextDidSaveNotification
+                                                       object:moc];
         }
+        return moc;
     }
-    return moc;
+}
+
+- (NSArray*)findObjects:(NSString*)entityType forPredicate:(NSPredicate*)predicate withSort:(NSArray*)sortDescriptors inMOC:(NSManagedObjectContext*)moc
+{
+    if (!moc) {
+        NSLog(@"Dev Error: Fetching all objects with out a NSManagedObjectContext instance!");
+        return nil;
+    }
+    if (!entityType) {
+        NSLog(@"Dev Error: No entity name to fetch!");
+        return nil;
+    }
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:entityType inManagedObjectContext:moc]];
+    [request setPredicate:predicate];
+    if (sortDescriptors) [request setSortDescriptors:sortDescriptors];
+    NSError *error = nil;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (error != nil) {
+        NSLog(@"NSManagedObject - Find Objects Error: %@",[error description]);
+    }
+    return ([results count]>0) ? results : @[];
+}
+
+- (NSManagedObject*)findAnObject:(NSString*)entityType
+                    forPredicate:(NSPredicate*)predicate
+                        withSort:(NSArray*)sortDescriptors
+                           inMOC:(NSManagedObjectContext*)moc
+{
+    NSArray *objs = [self findObjects:entityType forPredicate:predicate withSort:sortDescriptors inMOC:moc];
+    if ([objs count]>0) {
+        return [objs firstObject];
+    }
+    return nil;
+}
+
+- (void)mergeChangesWithParent:(NSNotification *)notification
+{
+    NSLog(@"--[ NOTIFATION START ]-----------------------------------------------------");
+    if ([[notification object] isKindOfClass:[NSManagedObjectContext class]]) {
+        NSManagedObjectContext *moc = (NSManagedObjectContext*)[notification object];
+        NSManagedObjectContext *parent = moc.parentContext;
+        [moc performBlockAndWait:^{
+            NSError *error = nil;
+            NSLog(@"--[ %@ ]----------------------------------------------------------",moc.name);
+            if ([moc hasChanges]) {
+                if (![parent save:&error]) {
+                    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                    abort();
+                }
+                NSLog(@"NSManagedObjectContext Name: %@ - Saved",[moc name]);
+            } else {
+                NSLog(@"NSManagedObjectContext Name: %@ - No changes",[moc name]);
+            }
+            NSLog(@"---------------------------------------------------------------------------");
+        }];
+        [parent performBlockAndWait:^{
+            NSError *error = nil;
+            NSLog(@"--[ %@ ]----------------------------------------------------------",parent.name);
+            if ([parent hasChanges]) {
+                if (![parent save:&error]) {
+                    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                    abort();
+                }
+                NSLog(@"NSManagedObjectContext Name: %@ - Saved",[parent name]);
+            } else {
+                NSLog(@"NSManagedObjectContext Name: %@ - No changes",[parent name]);
+            }
+            NSLog(@"---------------------------------------------------------------------------");
+        }];
+    }
+    NSLog(@"--[ NOTIFATION END ]-------------------------------------------------------");
+    NSLog(@" ");
+}
+
+- (void)mergeChanges:(NSNotification *)notification
+{
+    // Merge changes into the main context on the main thread
+    [[self managedObjectContext] performSelectorOnMainThread:@selector(mergeChangesFromContextDidSaveNotification:)
+                                                  withObject:notification
+                                               waitUntilDone:YES];
 }
 
 @end

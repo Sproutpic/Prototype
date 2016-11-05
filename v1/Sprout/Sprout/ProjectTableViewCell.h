@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ProjectTableViewCellDelegate.h"
 
 @class Project;
 
@@ -17,5 +18,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 
 @property (weak, nonatomic) Project *project;
+@property (weak, nonatomic) id<ProjectTableViewCellDelegate> projectDelegate;
 
 @end

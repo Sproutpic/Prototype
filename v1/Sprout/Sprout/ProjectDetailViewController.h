@@ -2,22 +2,17 @@
 //  ProjectDetailViewController.h
 //  Sprout
 //
-//  Created by LLDM 0038 on 29/07/2016.
+//  Created by Jeff Morris on 10/9/16.
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "BaseViewController.h"
+#import "ProjectTableViewCellDelegate.h"
 
 @class Project;
 
-@interface ProjectDetailViewController : UIViewController<UICollectionViewDelegate, UICollectionViewDataSource>{
-    UIScrollView *scroller;
-    BOOL forCreate;
-    UIImageView *sprout, *play;
-}
+@interface ProjectDetailViewController : BaseViewController <ProjectTableViewCellDelegate>
 
 @property (strong,nonatomic) Project *project;
-@property (strong,nonatomic) UICollectionView *timelineCollection;
-@property (strong,nonatomic) NSNumber *useFile;
 
 @end

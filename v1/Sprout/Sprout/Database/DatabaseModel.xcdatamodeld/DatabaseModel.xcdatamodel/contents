@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="16A323" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Project" representedClassName=".Project" parentEntity="ServerRecord" syncable="YES">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="16B2555" minimumToolsVersion="Xcode 8.0" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="Project" representedClassName=".Project" syncable="YES">
+        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="frontCameraEnabled" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="lastModified" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="lastSync" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="playing" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="remindEnabled" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="repeatEndDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="repeatFrequency" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="repeatFrequency" optional="YES" attributeType="Integer 64" defaultValueString="1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="repeatNextDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="serverId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="slideTime" optional="YES" attributeType="Float" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="sproutSocial" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="subtitle" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="transitionStyle" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="videoLastModified" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="videoURL" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="timelines" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Timeline" inverseName="project" inverseEntity="Timeline" syncable="YES"/>
     </entity>
-    <entity name="ServerRecord" representedClassName=".ServerRecord" syncable="YES">
+    <entity name="Timeline" representedClassName=".Timeline" syncable="YES">
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="lastModified" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastSync" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="serverId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-    </entity>
-    <entity name="Timeline" representedClassName=".Timeline" parentEntity="ServerRecord" syncable="YES">
+        <attribute name="localThumbnailURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="order" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="serverId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="serverURL" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="timelines" inverseEntity="Project" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Project" positionX="-63" positionY="-18" width="128" height="150"/>
-        <element name="ServerRecord" positionX="-45" positionY="99" width="128" height="90"/>
-        <element name="Timeline" positionX="-54" positionY="63" width="128" height="105"/>
+        <element name="Project" positionX="-477" positionY="-117" width="128" height="298"/>
+        <element name="Timeline" positionX="-126" positionY="-117" width="128" height="180"/>
     </elements>
 </model>

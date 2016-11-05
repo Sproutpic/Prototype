@@ -9,8 +9,8 @@
 #import "ProjectTableViewCell.h"
 #import "UIUtils.h"
 #import "SDWebImage/UIImageView+WebCache.h"
-#import "Project.h"
-#import "Timeline.h"
+#import "TimelineCollectionViewCell.h"
+#import "DataObjects.h"
 
 @implementation ProjectTableViewCell
 
@@ -21,6 +21,7 @@
     _project = project;
     [[self titleLabel] setText:[project title]];
     [[self descriptionLabel] setText:[project subtitle]];
+    [[self collectionView] invalidateIntrinsicContentSize];
     [[self collectionView] reloadData];
 }
 
@@ -31,11 +32,9 @@
     [super awakeFromNib];
     [[self titleLabel] setTextColor:[UIUtils colorNavigationBar]];
     [[self descriptionLabel] setTextColor:[UIColor grayColor]];
-    [[self collectionView] registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"UICollectionViewCell"];
-//    UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
-//    [flow setItemSize:CGSizeMake(128, 128)];
-//    [flow setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-//    [[self collectionView] setCollectionViewLayout:flow];
+    [[self collectionView] registerClass:[TimelineCollectionViewCell class]
+              forCellWithReuseIdentifier:@"TimelineCollectionViewCell"];
+    [[self collectionView] setBackgroundColor:[UIColor clearColor]];
     [[self collectionView] setDelegate:self];
     [[self collectionView] setDataSource:self];
 }
@@ -45,39 +44,42 @@
     [super setSelected:selected animated:animated];
 }
 
+- (void)prepareForReuse
+{
+    [[self titleLabel] setText:nil];
+    [[self descriptionLabel] setText:nil];
+    [[self collectionView] setContentOffset:CGPointMake(-8, 0) animated:NO];
+}
+
 # pragma mark UICollectionViewDelegate
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([indexPath row]==0) {
+        [[self projectDelegate] useCameraToAddNewSproutToProject:[self project]];
+    } else if ([[self projectDelegate] respondsToSelector:@selector(showProjectDetails:)]) {
+        [[self projectDelegate] showProjectDetails:[self project]];
+    }
+}
 
 # pragma mark UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)cv numberOfItemsInSection:(NSInteger)section
 {
-    return ([self project]) ? [[[[self project] timelines] allObjects] count] : 0;
+    return (([self project]) ? [[Project timelinesArraySorted:[self project]] count] : 0) + 1;
 }
 
-// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"UICollectionViewCell" forIndexPath:indexPath];
-
+    TimelineCollectionViewCell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"TimelineCollectionViewCell" forIndexPath:indexPath];
     if (!cell) {
-        cell = [[UICollectionViewCell alloc] init];
+        cell = [[TimelineCollectionViewCell alloc] init];
     }
-
-    if ([self project]) {
-        Timeline *timeline = [[[[self project] timelines] allObjects] objectAtIndex:[indexPath row]];
-        NSString *imgURL = [timeline serverURL];
-//        NSString *imgURL = [[[self project] objectForKey:@"projectThumbnails"] objectAtIndex:[indexPath row]];
-        UIImageView *iv = [[UIImageView alloc] init];
-        [iv setContentMode:UIViewContentModeScaleAspectFill];
-        [iv setFrame:CGRectMake(1, 1, 126, 126)];
-        [iv setClipsToBounds:YES];
-        [iv sd_setImageWithURL:[NSURL URLWithString:imgURL]
-              placeholderImage:nil];
-        [[cell contentView] addSubview:iv];
-        [cell setBackgroundColor:[UIColor blackColor]];
+    Timeline *timeline = nil;
+    if ([self project] && [indexPath row]>0) {
+        timeline = [[Project timelinesArraySorted:[self project]] objectAtIndex:[indexPath row]-1];
     }
-    
+    [cell setTimeline:timeline withDisplayType:TimelineCellStateNormal];
     return cell;
 }
 

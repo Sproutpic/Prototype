@@ -2,14 +2,14 @@
 //  AccountInformationViewController.h
 //  Sprout
 //
-//  Created by LLDM 0038 on 19/07/2016.
+//  Created by Jeff Morris on 10/10/2016
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "SignUpViewController.h"
-#import "SignInViewController.h"
+#import "BaseViewController.h"
 
-@interface AccountInformationViewController : UIViewController{
+@interface AccountInformationViewController : BaseViewController {
+    
 }
+
 @end

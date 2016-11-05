@@ -2,7 +2,7 @@
 //  AboutViewController.h
 //  Sprout
 //
-//  Created by LLDM 0038 on 27/07/2016.
+//  Created by Jeff Morris on 10/10/2016
 //  Copyright © 2016 sprout. All rights reserved.
 //
 

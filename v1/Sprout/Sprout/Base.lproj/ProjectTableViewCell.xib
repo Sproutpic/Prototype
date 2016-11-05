@@ -12,11 +12,11 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="224" id="isc-1h-raA" customClass="ProjectTableViewCell">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProjectTableViewCell" rowHeight="224" id="isc-1h-raA" customClass="ProjectTableViewCell">
             <rect key="frame" x="0.0" y="0.0" width="375" height="220"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="isc-1h-raA" id="bMT-TI-hw5">
-                <frame key="frameInset" width="375" height="219"/>
+                <frame key="frameInset" width="375" height="219.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zJ7-36-Nuj">
@@ -26,11 +26,11 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow_right" id="Cbs-PR-qam">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow-right" id="Cbs-PR-qam">
                         <frame key="frameInset" minY="8" width="11" height="19" maxX="8"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                     </imageView>
-                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" misplaced="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" id="eJE-Cv-6hK">
+                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" misplaced="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" id="eJE-Cv-6hK">
                         <frame key="frameInset" minY="35" height="128"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -57,11 +57,11 @@
                 <outlet property="descriptionLabel" destination="tz9-rK-xFt" id="AXE-xm-JFP"/>
                 <outlet property="titleLabel" destination="zJ7-36-Nuj" id="QN7-1l-mUd"/>
             </connections>
-            <point key="canvasLocation" x="-577" y="-167"/>
+            <point key="canvasLocation" x="-861" y="-208"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="arrow_right" width="11" height="19"/>
+        <image name="arrow-right" width="11" height="19"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

@@ -2,330 +2,461 @@
 //  ProjectDetailViewController.m
 //  Sprout
 //
-//  Created by LLDM 0038 on 29/07/2016.
+//  Created by Jeff Morris on 10/9/16.
 //  Copyright © 2016 sprout. All rights reserved.
 //
 
-// TODO - Rewrite entire class...
-
 #import "ProjectDetailViewController.h"
-#import "CameraViewController.h"
-#import "UIUtils.h"
+#import "TableAdapter.h"
 #import "SDWebImage/UIImageView+WebCache.h"
-#import "EditProjectDetailsViewController.h"
-#import "Project.h"
-#import "Timeline.h"
+#import "UIImage+animatedGIF.h"
+#import "UIUtils.h"
+#import "DataObjects.h"
+
+#import "TextFieldTableViewCell.h"
+#import "SocialMediaButtonsTableViewCell.h"
+#import "TimelineTableViewCell.h"
+#import "SliderTableViewCell.h"
+#import "SwitchTableViewCell.h"
+#import "SproutDisplayTableViewCell.h"
+#import "ButtonTableViewCell.h"
+#import "SelectTableViewController.h"
+#import "DateSelectorViewController.h"
+
+#define DATE_FORMAT_TIME NSLocalizedString(@"h:mm a", @"h:mm a")
+#define DATE_FORMAT_SHORT_DATE NSLocalizedString(@"MM/dd/yy h:mma", @"MM/dd/yy h:mma")
+
+@interface ProjectDetailViewController () <SelectTableViewControllerDelegate, DateSelectorViewControllerDelegate>
+
+@property (strong, nonatomic) UITableView *tableView;
+@property (strong, nonatomic) NSArray *rows;
+@property (strong, nonatomic) NSManagedObjectContext *moc;
+@property (strong, nonatomic) NSDateFormatter *dateFormatter;
+
+@end
+
+typedef enum ProjectRowOrder {
+    PO_StaticLabel = 0,
+    PO_Title,
+    PO_Sprout,
+    PO_Description,
+    PO_Timeline,
+    PO_FrontFaceCamereSwitch,
+    PO_DurationSlider,
+    PO_RemindSwitch,
+    PO_RemindOnLabel,
+    PO_RemindRepeat,
+    PO_CreateDate,
+    PO_LastUpdate,
+    PO_SocialButtons,
+    PO_DeleteButton
+} ProjectRowOrder;
+
+typedef enum RowDataOrder {
+    RD_POType = 0,
+    RD_Title,
+    RD_CellName,
+    RD_CellNib,
+    RD_CellHeight
+} RowDataOrder;
 
 @implementation ProjectDetailViewController
 
+# pragma mark Private
+
+- (void)configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
+{
+    NSArray *rowData = [self rowDataAtIndex:[indexPath row]];
+    switch ([[rowData objectAtIndex:RD_POType] integerValue]) {
+        case PO_StaticLabel: {
+            [[cell textLabel] setText:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            [cell setAccessoryView:nil];
+        } break;
+        case PO_Title: {
+            TextFieldTableViewCell *tCell = (TextFieldTableViewCell*)cell;
+            [[tCell textfield] setPlaceholder:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
+            [[tCell textfield] setText:[[self project] title]];
+            [[tCell textfield] setClearButtonMode:UITextFieldViewModeWhileEditing];
+            [[tCell textview] setHidden:YES];
+            [tCell setTextFieldCallback:^(UITextField *textfield){
+                if (textfield) {
+                    [[self project] setTitle:[[textfield text] copy]];
+                    [[self project] setLastModified:[NSDate date]];
+                    [[self project] save];
+                }
+            }];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+        case PO_Sprout: {
+            SproutDisplayTableViewCell *tCell = (SproutDisplayTableViewCell*)cell;
+            [tCell setProject:[self project]];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+        case PO_Description: {
+            TextFieldTableViewCell *tCell = (TextFieldTableViewCell*)cell;
+            [[tCell textview] setPlaceholder:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
+            [[tCell textview] setText:[[self project] subtitle]];
+            [[tCell textfield] setHidden:YES];
+            [tCell setTextViewCallback:^(UITextView *textview){
+                if (textview) {
+                    [[self project] setSubtitle:[[textview text] copy]];
+                    [[self project] setLastModified:[NSDate date]];
+                    [[self project] save];
+                }
+            }];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+        case PO_Timeline: {
+            TimelineTableViewCell *tCell = (TimelineTableViewCell*)cell;
+            [tCell setEditState:YES];
+            [tCell setProject:[self project]];
+            [tCell setProjectDelegate:self];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+        case PO_DurationSlider: {
+            SliderTableViewCell *tCell = (SliderTableViewCell*)cell;
+            NSString *title = [NSString stringWithFormat:
+                               NSLocalizedString(@"Duration between photos is %0.1f seconds",
+                                                 @"Duration between photos is %0.1f seconds"),[[[self project] slideTime] floatValue]];
+            [[tCell sliderTitle] setText:title];
+            [[tCell slider] setMinimumValue:0.1];
+            [[tCell slider] setMaximumValue:3.0];
+            [[tCell minLbl] setText:[NSString stringWithFormat:@"%0.1f",[[tCell slider] minimumValue]]];
+            [[tCell maxLbl] setText:[NSString stringWithFormat:@"%0.1f",[[tCell slider] maximumValue]]];
+            [[tCell slider] setValue:[[[self project] slideTime] floatValue]];
+            [tCell setSliderCallback:^(UISlider *slider, UITableViewCell *cell){
+                if (slider) {
+                    [[self project] setSlideTime:@([slider value])];
+                    [[self project] setLastModified:[NSDate date]];
+                    [[self project] save];
+                    SliderTableViewCell *tCell = (SliderTableViewCell*)cell;
+                    NSString *title = [NSString stringWithFormat:
+                                       NSLocalizedString(@"Duration between photos is %0.1f seconds",
+                                                         @"Duration between photos is %0.1f seconds"),[[[self project] slideTime] floatValue]];
+                    [[tCell sliderTitle] setText:title];
+                }
+            }];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+        case PO_RemindSwitch: {
+            SwitchTableViewCell *tCell = (SwitchTableViewCell*)cell;
+            [[tCell textLabel] setText:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
+            [[tCell switchView] setOn:[[[self project] remindEnabled] boolValue]];
+            [tCell setSwitchCallback:^(UISwitch *switchView){
+                if (switchView) {
+                    [[self project] setRemindEnabled:@([switchView isOn])];
+                    [[self project] setLastModified:[NSDate date]];
+                    [[self project] save];
+                    [[self tableView] performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
+                }
+            }];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+        case PO_FrontFaceCamereSwitch: {
+            SwitchTableViewCell *tCell = (SwitchTableViewCell*)cell;
+            [[tCell textLabel] setText:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
+            [[tCell switchView] setOn:[[[self project] frontCameraEnabled] boolValue]];
+            [tCell setSwitchCallback:^(UISwitch *switchView){
+                if (switchView) {
+                    [[self project] setFrontCameraEnabled:@([switchView isOn])];
+                    [[self project] setLastModified:[NSDate date]];
+                    [[self project] save];
+                }
+            }];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+        case PO_RemindOnLabel: {
+            [[cell textLabel] setText:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
+            [[cell textLabel] setTextColor:([[[self project] remindEnabled] boolValue])?[UIColor blackColor]:[UIColor lightGrayColor]];
+            NSString *description = nil;
+            if ([[self project] repeatNextDate]) {
+                [[self dateFormatter] setDateFormat:DATE_FORMAT_TIME];
+                description = [[self dateFormatter] stringFromDate:[[self project] repeatNextDate]];
+            }
+            description = ([[[self project] remindEnabled] boolValue])?description:NSLocalizedString(@"--", @"--");
+            [[cell detailTextLabel] setText:description];
+            [cell setSelectionStyle:([[[self project] remindEnabled] boolValue])?UITableViewCellSelectionStyleGray:UITableViewCellSelectionStyleNone];
+            [cell setAccessoryView:([[[self project] remindEnabled] boolValue])?[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow-right"]]:nil];
+        } break;
+        case PO_RemindRepeat: {
+            [[cell textLabel] setText:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
+            [[cell textLabel] setTextColor:([[[self project] remindEnabled] boolValue])?[UIColor blackColor]:[UIColor lightGrayColor]];
+            NSString *description = nil;
+            if ([[[self project] repeatFrequency] intValue]>=0 && [[[self project] repeatFrequency] intValue]<RF_Count) {
+                description = [REPEAT_FREQUENCY_STRS objectAtIndex:[[[self project] repeatFrequency] intValue]];
+            }
+            description = ([[[self project] remindEnabled] boolValue])?description:NSLocalizedString(@"--", @"--");
+            [[cell detailTextLabel] setText:description];
+            [cell setSelectionStyle:([[[self project] remindEnabled] boolValue])?UITableViewCellSelectionStyleGray:UITableViewCellSelectionStyleNone];
+            [cell setAccessoryView:([[[self project] remindEnabled] boolValue])?[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow-right"]]:nil];
+        } break;
+        case PO_CreateDate: {
+            [[cell textLabel] setText:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
+            [[cell textLabel] setTextColor:[UIColor blackColor]];
+            NSString *description = NSLocalizedString(@"Never", @"Never");
+            if ([[self project] created]) {
+                [[self dateFormatter] setDateFormat:DATE_FORMAT_SHORT_DATE];
+                description = [[self dateFormatter] stringFromDate:[[self project] created]];
+            }
+            [[cell detailTextLabel] setText:description];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            [cell setAccessoryView:nil];
+        } break;
+        case PO_LastUpdate: {
+            [[cell textLabel] setText:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
+            NSString *description = NSLocalizedString(@"Never", @"Never");
+            if ([[self project] lastModified]) {
+                [[self dateFormatter] setDateFormat:DATE_FORMAT_SHORT_DATE];
+                description = [[self dateFormatter] stringFromDate:[[self project] lastModified]];
+            }
+            [[cell detailTextLabel] setText:description];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            [cell setAccessoryView:nil];
+        } break;
+        case PO_SocialButtons: {
+            SocialMediaButtonsTableViewCell *tCell = (SocialMediaButtonsTableViewCell*)cell;
+            [tCell setProject:[self project]];
+            [tCell setSocialMediaCallBack:^(SocialMediaType mediaType, Project *project){
+                if (project) {
+                    switch (mediaType) {
+                        case SocialMediaFacebook: {
+                            [self displayUnderConstructionAlert];
+                        } break;
+                        case SocialMediaTwitter: {
+                            [self displayUnderConstructionAlert];
+                        } break;
+                        case SocialMediaSprout: {
+                            [self displayUnderConstructionAlert];
+                        } break;
+                    }
+                }
+            }];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+        case PO_DeleteButton: {
+            ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
+            [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
+            [[tCell button] addTarget:self action:@selector(tappedDeleteButton:) forControlEvents:UIControlEventTouchUpInside];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+        default: {
+            [[cell textLabel] setText:@"Unknown"];
+        } break;
+    }
+}
+
+- (IBAction)tappedDeleteButton:(UIButton *)sender
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Sprout Project", @"Delete Sprout Project")
+                                                                   message:NSLocalizedString(@"Are you sure you want to delete this entire sprout project?", @"Are you sure you want to delete this entire sprout project?")
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Delete Project", @"Delete Project")
+                                              style:UIAlertActionStyleDestructive
+                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                [[self project] deleteAndSave];
+                                                [[self navigationController] popViewControllerAnimated:YES];
+                                            }]];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                              style:UIAlertActionStyleCancel
+                                            handler:nil]];
+    [[self navigationController] presentViewController:alert animated:YES completion:nil];
+}
+
+- (NSArray*)rowDataAtIndex:(NSInteger)row
+{
+    return [[self rows] objectAtIndex:row];
+}
+
+- (void)setProject:(Project *)project
+{
+    if (project) {
+        [self setMoc:[[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"EditProject"
+                                                                                andConcurrency:NSMainQueueConcurrencyType]];
+        _project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:NSStringFromClass([Project class])
+                                                                 forPredicate:[NSPredicate predicateWithFormat:@"self = %@",project]
+                                                                     withSort:nil
+                                                                        inMOC:[self moc]];
+    } else {
+        _project = nil;
+        [self setMoc:nil];
+    }
+}
+
+# pragma mark UIViewController
+
 - (void)viewDidLoad
 {
+    // Row Data: [ RD_POType(Int), RD_Title(String), RD_CellName(String), RD_CellNib(String), RD_CellHeight(Int) ]
+    [self setRows:
+     @[
+       @[@(PO_Title),@"Project Title",@"TextFieldTableViewCell",@"TextFieldTableViewCell",@(54)],
+       @[@(PO_Sprout),@"Sprout Movie",@"SproutDisplayTableViewCell",@"SproutDisplayTableViewCell",@(225)],
+       @[@(PO_Description),@"Description",@"TextFieldTableViewCell",@"TextFieldTableViewCell",@(128)],
+       @[@(PO_Timeline),@"Timeline",@"TimelineTableViewCell",@"TimelineTableViewCell",@(110)],
+       @[@(PO_FrontFaceCamereSwitch),@"Use Front Facing Camera",@"SwitchTableViewCell",@"SwitchTableViewCell",@(44)],
+       @[@(PO_DurationSlider),@"Duration Slider",@"SliderTableViewCell",@"SliderTableViewCell",@(88)],
+       @[@(PO_RemindSwitch),@"Remind Me",@"SwitchTableViewCell",@"SwitchTableViewCell",@(44)],
+       @[@(PO_RemindOnLabel),@"Remind On",@"UITableViewCellStyleValue1",@"",@(44)],
+       @[@(PO_RemindRepeat),@"Repeat",@"UITableViewCellStyleValue1",@"",@(44)],
+       @[@(PO_CreateDate),@"Created",@"UITableViewCellStyleValue1",@"",@(44)],
+       //@[@(PO_LastUpdate),@"Last Updated",@"UITableViewCellStyleValue1",@"",@(44)],
+       @[@(PO_SocialButtons),@"Socail Media",@"SocialMediaButtonsTableViewCell",@"SocialMediaButtonsTableViewCell",@(54)],
+       @[@(PO_DeleteButton),@"Delete Sprout",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)]
+       ]];
     [super viewDidLoad];
-    [self setController];
+    [self setTitle:NSLocalizedString(@"Project Details", @"Project Details")];
+    
+    if (![self dateFormatter]) {
+        NSDateFormatter *df = [[NSDateFormatter alloc] init];
+        [df setDateFormat:DATE_FORMAT_SHORT_DATE];
+        [self setDateFormatter:df];
+    }
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[[self project] managedObjectContext] refreshAllObjects];
+    [[self tableView] reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[self tableView] setFrame:[[self view] bounds]];
+    if ([[self project] isDeleted]) {
+        [[self navigationController] popViewControllerAnimated:YES];
+    }
+}
+
+# pragma mark BaseViewControllerDelegate
 
 - (void)setController
 {
-    [[self view] setBackgroundColor:[UIColor whiteColor]];
-    [self setNavigationBar];
-    forCreate = YES;
-    [self setupLayout];
+    [super setController];
+    [self setTableView:[self createBaseTableView:UITableViewStylePlain]];
+    [[self tableView] setKeyboardDismissMode:UIScrollViewKeyboardDismissModeOnDrag];
+    [[self tableView] setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [self addSproutLogoTableFooter:[self tableView]];
+    [[self view] addSubview:[self tableView]];
 }
 
-- (void)setupLayout{
-    scroller = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 64)];
-     [self.view addSubview:scroller];
-    if (forCreate) {
-        [self setupLayoutForCreate];
-    }else{
-        [self setupLayoutForEdit];
+# pragma mark UITableViewDelegate
+
+- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tv deselectRowAtIndexPath:indexPath animated:YES];
+
+    NSArray *rowData = [self rowDataAtIndex:[indexPath row]];
+    switch ([[rowData objectAtIndex:RD_POType] integerValue]) {
+        case PO_RemindOnLabel: {
+            if ([[[self project] remindEnabled] boolValue]) {
+                DateSelectorViewController *vc = [[DateSelectorViewController alloc] initWithNibName:@"DateSelectorViewController" bundle:nil];
+                [vc setDateDelegate:self];
+                [vc setTag:[[rowData objectAtIndex:RD_POType] integerValue]];
+                [vc setTitle:NSLocalizedString(@"Repeat On", @"Repeat On")];
+                [CATransaction begin];
+                [[self navigationController] pushViewController:vc animated:YES];
+                [CATransaction setCompletionBlock:^{
+                    [[vc datePicker] setDatePickerMode:UIDatePickerModeTime];
+                    [[vc datePicker] setMinuteInterval:5];
+                    if ([[self project] repeatNextDate]) {
+                        [[vc datePicker] setDate:[[self project] repeatNextDate] animated:YES];
+                    }
+                }];
+                [CATransaction commit];
+            }
+        } break;
+        case PO_RemindRepeat: {
+            if ([[[self project] remindEnabled] boolValue]) {
+                SelectTableViewController *vc = [[SelectTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+                [vc setSelectDelegate:self];
+                [vc setTag:[[rowData objectAtIndex:RD_POType] integerValue]];
+                [vc setTitle:NSLocalizedString(@"Repeat", @"Repeat")];
+                // Row Data: [ SelectRD_Title(String), SelectRD_Subtitle(String), SelectRD_Selected(Bool) ]
+                NSMutableArray *rowData = [@[] mutableCopy];
+                for (NSString *str in REPEAT_FREQUENCY_STRS) {
+                    NSInteger freq = [[[self project] repeatFrequency] integerValue];
+                    [rowData addObject:@[str, @"", @((freq==[REPEAT_FREQUENCY_STRS indexOfObject:str]))]];
+                }
+                [vc setRows:rowData];
+                [[self navigationController] pushViewController:vc animated:YES];
+            }
+        } break;
     }
 }
 
-- (void)setupLayoutForCreate{
-    for (UIView *view in scroller.subviews) {
-        [view removeFromSuperview];
-    }
-    
-    UIButton *btnCreate = [[UIButton alloc] initWithFrame:CGRectMake(0, scroller.frame.size.height - 44, self.view.frame.size.width, 44)];
-    btnCreate.backgroundColor = [UIUtils colorNavigationBar];
-    [btnCreate setAttributedTitle:[[NSAttributedString alloc] initWithString:@"CREATE SPROUT >>" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:17],
-                                                                                                            NSForegroundColorAttributeName: [UIColor whiteColor]}] forState:UIControlStateNormal];
-    [scroller addSubview:btnCreate];
-    UILabel *lblTitle = [[UILabel alloc] init];
-    lblTitle.text = [[[self project] title] uppercaseString];
-    lblTitle.textColor = [UIUtils colorNavigationBar];
-    lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [UIUtils fontRegularForSize:18];
-    [lblTitle sizeToFit];
-    lblTitle.frame = CGRectMake(0, 28, self.view.frame.size.width, lblTitle.frame.size.height);
-    [scroller addSubview:lblTitle];
-    
-    NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
-    paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
-    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, lblTitle.frame.size.height + 40, self.view.frame.size.width - 30, 100)];
-    descLabel.numberOfLines = 0;
-    descLabel.attributedText = [[NSAttributedString alloc]initWithString:[_project subtitle] attributes:@{NSParagraphStyleAttributeName: paraStyle,
-                                                                                                                               NSFontAttributeName: [UIUtils fontRegularForSize:16],
-                                                                                                                               NSForegroundColorAttributeName: [UIColor grayColor]}];
-    CGRect rect = [descLabel .attributedText boundingRectWithSize:CGSizeMake(self.view.frame.size.width - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
-    descLabel.frame = CGRectMake(15, lblTitle.frame.size.height + 40, descLabel.frame.size.width, rect.size.height);
-    [scroller addSubview:descLabel];
-    
-    lblTitle = [[UILabel alloc] init];
-    lblTitle.text = @"PROJECT TIMELINE" ;
-    lblTitle.textColor = [UIUtils colorNavigationBar];
-    lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [UIUtils fontRegularForSize:18];
-    [lblTitle sizeToFit];
-    lblTitle.frame = CGRectMake(0, descLabel.frame.origin.y + descLabel.frame.size.height + 28, self.view.frame.size.width, lblTitle.frame.size.height);
-    [scroller addSubview:lblTitle];
-    
-    UIImageView *btnExpand = [[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width - 40, lblTitle.frame.origin.y, 20, 20)];
-    btnExpand.image = [UIImage imageNamed:@"Out"];
-    [btnExpand addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandAction:)]];
-    btnExpand.userInteractionEnabled = YES;
-    [scroller addSubview:btnExpand];
-    
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    _timelineCollection = [[UICollectionView alloc] initWithFrame:CGRectMake((self.view.frame.size.width * 0.01), lblTitle.frame.origin.y + lblTitle.frame.size.height + 15, self.view.frame.size.width - (self.view.frame.size.width * 0.02), self.view.frame.size.height - (123 + lblTitle.frame.origin.y + lblTitle.frame.size.height)) collectionViewLayout:layout];
-    _timelineCollection.delegate = self;
-    _timelineCollection.dataSource = self;
-    [_timelineCollection registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
-    _timelineCollection.backgroundColor = [UIColor whiteColor];
-    [_timelineCollection sizeToFit];
-    [scroller addSubview:_timelineCollection];
-    scroller.contentSize = CGSizeMake(scroller.frame.size.width, scroller.subviews.lastObject.frame.origin.y + scroller.subviews.lastObject.frame.size.height);
+- (CGFloat)tableView:(UITableView *)tv heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [[[self rowDataAtIndex:[indexPath row]] objectAtIndex:RD_CellHeight] floatValue];
 }
-- (void)setupLayoutForEdit{
-    for (UIView *view in scroller.subviews) {
-        [view removeFromSuperview];
-    }
-    UILabel *lblTitle = [[UILabel alloc] init];
-    lblTitle.text = ((NSString *)[_project title]).uppercaseString ;
-    lblTitle.textColor = [UIUtils colorNavigationBar];
-    lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [UIUtils fontRegularForSize:18];
-    [lblTitle sizeToFit];
-    lblTitle.frame = CGRectMake(0, 28, self.view.frame.size.width, lblTitle.frame.size.height);
-    [scroller addSubview:lblTitle];
-    
-    NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
-    paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
-    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, lblTitle.frame.size.height + 40, self.view.frame.size.width - 30, 100)];
-    descLabel.numberOfLines = 0;
-    descLabel.attributedText = [[NSAttributedString alloc]initWithString:[_project subtitle] attributes:@{NSParagraphStyleAttributeName: paraStyle,
-                                                                                                                               NSFontAttributeName: [UIUtils fontRegularForSize:16],
-                                                                                                                               NSForegroundColorAttributeName: [UIColor grayColor]}];
-    CGRect rect = [descLabel .attributedText boundingRectWithSize:CGSizeMake(self.view.frame.size.width - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
-    descLabel.frame = CGRectMake(15, lblTitle.frame.size.height + 40, descLabel.frame.size.width, rect.size.height);
-    [scroller addSubview:descLabel];
-    
-    lblTitle = [[UILabel alloc] init];
-    lblTitle.text = @"PROJECT TIMELINE" ;
-    lblTitle.textColor = [UIUtils colorNavigationBar];
-    lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [UIUtils fontRegularForSize:18];
-    [lblTitle sizeToFit];
-    lblTitle.frame = CGRectMake(0, descLabel.frame.origin.y + descLabel.frame.size.height + 28, self.view.frame.size.width, lblTitle.frame.size.height);
-    [scroller addSubview:lblTitle];
-    
-    UIImageView *btnExpand = [[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width - 40, lblTitle.frame.origin.y, 20, 20)];
-    btnExpand.image = [UIImage imageNamed:@"In"];
-    [btnExpand addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandAction:)]];
-    btnExpand.userInteractionEnabled = YES;
-    [scroller addSubview:btnExpand];
-    
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    _timelineCollection = [[UICollectionView alloc] initWithFrame:CGRectMake((self.view.frame.size.width * 0.01), lblTitle.frame.origin.y + lblTitle.frame.size.height + 15, self.view.frame.size.width - (self.view.frame.size.width * 0.02), self.view.frame.size.height - (123 + lblTitle.frame.origin.y + lblTitle.frame.size.height)) collectionViewLayout:layout];
-    _timelineCollection.delegate = self;
-    _timelineCollection.dataSource = self;
-    [_timelineCollection registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
-    [_timelineCollection sizeToFit];
-    _timelineCollection.frame = CGRectMake(_timelineCollection.frame.origin.x, _timelineCollection.frame.origin.y + 6, _timelineCollection.frame.size.width, _timelineCollection.frame.size.height);
-    _timelineCollection.backgroundColor = [UIColor whiteColor];
-    [scroller addSubview:_timelineCollection];
-    
-    lblTitle = [[UILabel alloc] init];
-    lblTitle.text = @"PROJECT SPROUT" ;
-    lblTitle.textColor = [UIUtils colorNavigationBar];
-    lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [UIUtils fontRegularForSize:18];
-    [lblTitle sizeToFit];
-    lblTitle.frame = CGRectMake(0, _timelineCollection.frame.origin.y + _timelineCollection.frame.size.height - 15, self.view.frame.size.width, lblTitle.frame.size.height);
-    [scroller addSubview:lblTitle];
-    
-    sprout = [[UIImageView alloc] initWithFrame:CGRectMake(0, lblTitle.frame.origin.y + lblTitle.frame.size.height + 10, scroller.frame.size.width, self.view.frame.size.width * 0.6)];
-    if ([_useFile boolValue]) {
-        sprout.image = [UIImage imageWithContentsOfFile:[[[[_project timelines] allObjects] objectAtIndex:0] localURL]];
-    } else {
-        [sprout sd_setImageWithURL:[NSURL URLWithString:[[[[_project timelines] allObjects] objectAtIndex:0] serverURL]]];
-    }
-    play = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width * 0.405, self.view.frame.size.width * 0.205, self.view.frame.size.width * 0.19, self.view.frame.size.width * 0.19)];
-    play.image = [UIImage imageNamed:@"play-button"];
-    [sprout addSubview:play];
-    [scroller addSubview:sprout];
-    
-    lblTitle = [[UILabel alloc] init];
-    lblTitle.text = @"SHARE YOUR SPROUT WITH FRIENDS" ;
-    lblTitle.textColor = [UIUtils colorNavigationBar];
-    lblTitle.textAlignment = NSTextAlignmentCenter;
-    lblTitle.font = [UIUtils fontRegularForSize:15];
-    [lblTitle sizeToFit];
-    lblTitle.frame = CGRectMake(0, sprout.frame.origin.y + sprout.frame.size.height + 20, self.view.frame.size.width, lblTitle.frame.size.height);
-    [scroller addSubview:lblTitle];
-    
-    CGFloat lastY = 0;
-    for (int i = 0; i < 5; i++) {
-        UIImageView *imageIcon = [[UIImageView alloc] initWithFrame:CGRectMake(i * (self.view.frame.size.width / 5), lblTitle.frame.origin.y + lblTitle.frame.size.height + 13, self.view.frame.size.width / 5, self.view.frame.size.width * 0.11)];
-        lastY = imageIcon.frame.origin.y + imageIcon.frame.size.height;
-        imageIcon.contentMode = UIViewContentModeScaleAspectFit;
-        imageIcon.userInteractionEnabled = YES;
-        imageIcon.tag = i;
-        [imageIcon addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapIcon:)]];
-        switch (i) {
-            case 0:
-                imageIcon.image = [UIImage imageNamed:@"Facebook"];
-                break;
-            case 1:
-                imageIcon.image = [UIImage imageNamed:@"inst"];
-                break;
-            case 2:
-                imageIcon.image = [UIImage imageNamed:@"youtube"];
-                break;
-            case 3:
-                imageIcon.image = [UIImage imageNamed:@"Twit"];
-                break;
-            case 4:
-                imageIcon.image = [UIImage imageNamed:@"logo-on"];
-                break;
-            default:
-                break;
+
+# pragma mark UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tv numberOfRowsInSection:(NSInteger)section
+{
+    return [[self rows] count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *reuseCell = [[self rowDataAtIndex:[indexPath row]] objectAtIndex:RD_CellName];
+    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:reuseCell];
+    if (!cell) {
+        if ([[[self rowDataAtIndex:[indexPath row]] objectAtIndex:RD_CellNib] length]>0) {
+            UIViewController *vc = [[UIViewController alloc] initWithNibName:reuseCell bundle:nil];
+            cell = (UITableViewCell*)[vc view];
+        } else if ([reuseCell isEqualToString:@"UITableViewCellStyleDefault"]){
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseCell];
+        } else if ([reuseCell isEqualToString:@"UITableViewCellStyleValue1"]){
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseCell];
+        } else if ([reuseCell isEqualToString:@"UITableViewCellStyleValue2"]){
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:reuseCell];
+        } else if ([reuseCell isEqualToString:@"UITableViewCellStyleSubtitle"]){
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseCell];
         }
-        [scroller addSubview:imageIcon];
     }
-    
-    
-    
-    UIButton *btnCreate = [[UIButton alloc] initWithFrame:CGRectMake(0, lastY + 30, self.view.frame.size.width, 44)];
-    btnCreate.backgroundColor = [UIUtils colorNavigationBar];
-    [btnCreate setAttributedTitle:[[NSAttributedString alloc] initWithString:@"EDIT SPROUT >>" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:17],
-                                                                                                            NSForegroundColorAttributeName: [UIColor whiteColor]}] forState:UIControlStateNormal];
-    [btnCreate addTarget:self action:@selector(editProject:) forControlEvents:UIControlEventTouchUpInside];
-    [scroller addSubview:btnCreate];
-    scroller.contentSize = CGSizeMake(scroller.frame.size.width, scroller.subviews.lastObject.frame.origin.y + scroller.subviews.lastObject.frame.size.height);
-}
-- (void)tapIcon:(UITapGestureRecognizer *)sender{
-    ((UIImageView *)sender.view).image = sender.view.tag == 0 ? ([((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"Facebook"]] ? [UIImage imageNamed:@"Facebook-on"] : [UIImage imageNamed:@"Facebook"]) : (((UIImageView *)sender.view).image = sender.view.tag == 1 ? ([((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"Inst-on"]] ? [UIImage imageNamed:@"inst"] : [UIImage imageNamed:@"Inst-on"]) : ((((UIImageView *)sender.view).image = sender.view.tag == 2 ? ([((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"Youtube-on"]] ? [UIImage imageNamed:@"youtube"] : [UIImage imageNamed:@"Youtube-on"]) : ((((UIImageView *)sender.view).image = sender.view.tag == 3 ? ([((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"Twit-on"]] ? [UIImage imageNamed:@"Twit"] : [UIImage imageNamed:@"Twit-on"]) : ([((UIImageView *)sender.view).image isEqual:[UIImage imageNamed:@"logo"]] ? [UIImage imageNamed:@"logo-on"] : [UIImage imageNamed:@"logo"]))))));
-}
-- (void)expandAction:(UITapGestureRecognizer *)sender{
-    if (forCreate) {
-        [self setupLayoutForEdit];
-    }else{
-        [self setupLayoutForCreate];
-    }
-    forCreate = forCreate ? NO : YES;
-}
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return [[_project timelines] allObjects].count + 1;
-}
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(self.view.frame.size.width * 0.2375, self.view.frame.size.width * 0.2375);
-}
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-    
-    return self.view.frame.size.width * 0.01;
-}
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-    return self.view.frame.size.width * 0.01;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
-    for (UIView *view in cell.contentView.subviews) {
-        [view removeFromSuperview];
-    }
-    if (indexPath.row == [[_project timelines] allObjects].count) {
-        cell.contentView.backgroundColor = [UIUtils colorNavigationBar];
-        UILabel *lblCell = [[UILabel alloc] initWithFrame:CGRectMake(0, cell.contentView.frame.size.height / 5 * 4, cell.contentView.frame.size.width, cell.contentView.frame.size.height / 5)];
-        lblCell.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.5];
-        lblCell.text = @"ADD PHOTO";
-        lblCell.textColor = [UIColor whiteColor];
-        lblCell.textAlignment = NSTextAlignmentCenter;
-        lblCell.font = [UIUtils fontRegularForSize:cell.contentView.frame.size.height / 8.5];
-        [cell.contentView addSubview:lblCell];
-        UIImageView *plus = [[UIImageView alloc] initWithFrame:CGRectMake(cell.contentView.frame.size.height * 0.325, cell.contentView.frame.size.height * 0.25, cell.contentView.frame.size.height * 0.35, cell.contentView.frame.size.height * 0.35)];
-        plus.image = [UIImage imageNamed:@"plus"];
-        [cell.contentView addSubview:plus];
-    }else{
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.contentView.frame];
-        if ([_useFile boolValue]) {
-            imageView.image = [UIImage imageWithContentsOfFile:[[[[_project timelines] allObjects] objectAtIndex:indexPath.row] localURL]];
-        } else {
-            [imageView sd_setImageWithURL:[NSURL URLWithString:[[[[_project timelines] allObjects] objectAtIndex:indexPath.row] serverURL]]];
-        }
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
-        imageView.clipsToBounds = YES;
-        [cell.contentView addSubview:imageView];
-        UILabel *lblCell = [[UILabel alloc] initWithFrame:CGRectMake(0, cell.contentView.frame.size.height / 5 * 4, cell.contentView.frame.size.width, cell.contentView.frame.size.height / 5)];
-        lblCell.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.5];
-        lblCell.font = [UIUtils fontRegularForSize:cell.contentView.frame.size.height / 8.5];
-        [cell.contentView addSubview:lblCell];
-        lblCell = [[UILabel alloc] initWithFrame:CGRectMake(0, cell.contentView.frame.size.height / 5 * 4, cell.contentView.frame.size.width - cell.contentView.frame.size.height / 13, cell.contentView.frame.size.height / 5)];
-        lblCell.text = @"05 JAN 16";
-        lblCell.textColor = [UIColor whiteColor];
-        lblCell.textAlignment = NSTextAlignmentRight;
-        lblCell.font = [UIUtils fontRegularForSize:cell.contentView.frame.size.height / 8.5];
-        [cell.contentView addSubview:lblCell];
-    }
+    [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row == ((NSArray *)[[_project timelines] allObjects]).count) {
-        [self.navigationController pushViewController:[[CameraViewController alloc]init] animated:YES];
+
+# pragma mark ProjectTableViewCellDelegate
+
+- (void)useCameraToAddNewSproutToProject:(Project*)project
+{
+    [self showCameraForNewSprout:project withCameraCallback:nil];
+}
+
+# pragma mark SelectTableViewControllerDelegate
+
+- (void)selectionMade:(NSArray*)rows forIndex:(NSInteger)index withTag:(NSInteger)tag
+{
+    switch (tag) {
+        case PO_RemindOnLabel: {
+            //[[self project] setRepeatFrequency:@(index)];
+        } break;
+        case PO_RemindRepeat: {
+            [[self project] setRepeatFrequency:@(index)];
+        } break;
     }
+    [[self project] setLastModified:[NSDate date]];
+    [[self project] save];
+    [[self navigationController] popViewControllerAnimated:YES];
 }
-- (void)addCreateButton{
-    UIButton *btnCreate = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 108, self.view.frame.size.width, 44)];
-    btnCreate.backgroundColor = [UIUtils colorNavigationBar];
-    [btnCreate setAttributedTitle:[[NSAttributedString alloc] initWithString:@"CREATE SPROUT >>" attributes:@{NSFontAttributeName: [UIUtils fontRegularForSize:17],
-                                                                                                               NSForegroundColorAttributeName: [UIColor whiteColor]}] forState:UIControlStateNormal];
-    [self.view addSubview:btnCreate];
+
+# pragma mark DateSelectorViewControllerDelegate
+
+- (void)dateChanged:(UIDatePicker*)datePicker withTag:(NSInteger)tag
+{
+    switch (tag) {
+        case PO_RemindOnLabel: {
+            [[self project] setRepeatNextDate:[datePicker date]];
+        } break;
+    }
+    [[self project] setLastModified:[NSDate date]];
+    [[self project] save];
 }
-- (void)setNavigationBar{
-    [self setTitleViewForNavBar];
-//    [self addLeftBarButton];
-    [self addRightBarButton];
-}
-- (void)addLeftBarButton{
-    UIButton *back = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
-    [back setBackgroundImage:[UIImage imageNamed:@"arrow_left"] forState:UIControlStateNormal];
-    [back addTarget:self action:@selector(backToMenu:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:back];
-    self.navigationItem.leftBarButtonItem = barButton;
-}
-- (void)addRightBarButton{
-    UIButton *download = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
-    [download setBackgroundImage:[UIImage imageNamed:@"Pen"] forState:UIControlStateNormal];
-    [download addTarget:self action:@selector(editProject:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithCustomView:download];
-    self.navigationItem.rightBarButtonItem = barButton;
-}
-- (IBAction)editProject:(UIButton *)sender{
-    EditProjectDetailsViewController *editScreen = [[EditProjectDetailsViewController alloc] init];
-    editScreen.project = _project;
-    editScreen.useFile = _useFile;
-    [self.navigationController pushViewController:editScreen animated:YES];
-}
-- (IBAction)backToMenu:(UIButton *)sender{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-- (void)setTitleViewForNavBar{
-    UILabel *label = [[UILabel alloc] init];
-    label.attributedText = [UIUtils attrString:@"Project Details" withFont:[UIUtils fontForNavBarTitle] color:[UIColor whiteColor] andCharSpacing:[NSNumber numberWithInt:0]];
-    [label sizeToFit];
-    label.frame = CGRectMake(0, 0, label.frame.size.width, label.frame.size.height);
-    
-    self.navigationItem.titleView = label;
-}
+
+
 @end

@@ -21,7 +21,7 @@
                                               inManagedObjectContext:[self managedObjectContect]];
     [fetchRequest setEntity:entity];
     // Set the batch size to a suitable number.
-    [fetchRequest setFetchBatchSize:20];
+    [fetchRequest setFetchBatchSize:10];
     // Set the predicate
     [fetchRequest setPredicate:[self predicate]];    
     // Edit the sort key as appropriate.
@@ -65,7 +65,6 @@
         [self setManagedObjectContect:managedObjectContect];
         [self setConfigureTableCellBlock:configureTableCellBlock];
         [self createFetchResultsController];
-//        [[self tableView] reloadData];
     }
     return self;
 }
@@ -111,24 +110,26 @@
     [[self tableView] beginUpdates];
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
+- (void)controller:(NSFetchedResultsController *)controller
+  didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex
+     forChangeType:(NSFetchedResultsChangeType)type
 {
     switch (type) {
         case NSFetchedResultsChangeInsert:
             [[self tableView] insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
-            
         case NSFetchedResultsChangeDelete:
             [[self tableView]deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
-            
         default: break;
     }
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+- (void)controller:(NSFetchedResultsController *)controller
+   didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath
+     forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     UITableView *tv = [self tableView];
@@ -138,17 +139,14 @@
         case NSFetchedResultsChangeInsert:
             [tv insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
-            
         case NSFetchedResultsChangeDelete:
             [tv deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
-            
         case NSFetchedResultsChangeUpdate:
             if (_configureTableCellBlock) {
-                _configureTableCellBlock(tv,indexPath,[[self fetchedResultsController] objectAtIndexPath:indexPath]);
+                _configureTableCellBlock(tv,indexPath,anObject);
             }
             break;
-            
         case NSFetchedResultsChangeMove:
             [tv deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [tv insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]withRowAnimation:UITableViewRowAnimationFade];

@@ -29,14 +29,17 @@
 
 - (void)pushProjectDetailsViewController:(Project *)project animated:(BOOL)animate completion:(void (^ __nullable)(void))completion
 {
-    ProjectDetailViewController *pdvc = [[ProjectDetailViewController alloc] init];
-    pdvc.project = project;
-    [CATransaction begin];
-    [[self navigationController] pushViewController:pdvc animated:animate];
-    if (completion) {
-        [CATransaction setCompletionBlock:completion];
+    if (project) {
+        [UIUtils hapticFeedback];
+        ProjectDetailViewController *pdvc = [[ProjectDetailViewController alloc] init];
+        pdvc.project = project;
+        [CATransaction begin];
+        [[self navigationController] pushViewController:pdvc animated:animate];
+        if (completion) {
+            [CATransaction setCompletionBlock:completion];
+        }
+        [CATransaction commit];
     }
-    [CATransaction commit];
 }
 
 - (ConfigureTableCellBlock)createConfigureTableCellBlock

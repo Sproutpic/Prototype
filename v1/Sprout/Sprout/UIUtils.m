@@ -7,8 +7,21 @@
 //
 
 #import "UIUtils.h"
+#import <AudioToolbox/AudioServices.h>
 
 @implementation UIUtils
+    
++ (void)vibrate;
+{
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+}
+
++ (void)hapticFeedback;
+{
+    if (NSStringFromClass([UISelectionFeedbackGenerator class])!=nil) {
+        [[[UISelectionFeedbackGenerator alloc] init] selectionChanged];
+    }
+}
 
 + (UIColor *)colorNavigationBar
 {

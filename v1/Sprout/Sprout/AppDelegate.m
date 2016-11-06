@@ -13,6 +13,9 @@
 #import "SelectNewProjectViewController.h"
 #import "SettingsViewController.h"
 #import "UIUtils.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import <TwitterKit/TwitterKit.h>
 
 @implementation AppDelegate
 
@@ -61,6 +64,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Fabric with:@[[Crashlytics class],[Answers class],[Twitter class]]];
     [self configureGlobalTheme];
     [self createDemoData];
     [self setMainWithControllers];

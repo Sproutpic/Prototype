@@ -11,6 +11,7 @@
 #import "SignInWebService.h"
 #import "AccountSignInViewController.h"
 #import "JVFloatLabeledTextField.h"
+#import "UIUtils.h"
 
 @interface AccountSignUpViewController () <UITextFieldDelegate>
 
@@ -38,12 +39,13 @@
 
 - (IBAction)termsButtonTapped:(id)sender
 {
+    [UIUtils hapticFeedback];
     if ([[self termsBtn] tag]==0) {
         [[self termsBtn] setTag:1];
-        [[self termsBtn] setImage:[UIImage imageNamed:@"button-check-on"] forState:UIControlStateNormal];
+        [[self termsBtn] setImage:[UIImage imageNamed:@"check-on"] forState:UIControlStateNormal];
     } else {
         [[self termsBtn] setTag:0];
-        [[self termsBtn] setImage:[UIImage imageNamed:@"button-check-off"] forState:UIControlStateNormal];
+        [[self termsBtn] setImage:[UIImage imageNamed:@"check-off"] forState:UIControlStateNormal];
     }
 }
 
@@ -52,25 +54,27 @@
     NSString *fullName = [[[self fullNameTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
     NSString *email = [[[self emailAddressTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
     NSString *password = [[[self passwordTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
-    
+ 
+    [UIUtils hapticFeedback];
+
     // Verify the email address
     if (fullName==nil || [fullName length]<=0) {
-        [self displayMessageWithBody:NSLocalizedString(@"Enter your full name to Sign Up",
-                                                       @"Enter your full name to Sign Up")];
+        [self displayMessageWithBody:NSLocalizedString(@"You must enter your full name to Sign Up",
+                                                       @"You must enter your full name to Sign Up")];
         return;
     }
     
     // Verify the email address
     if (email==nil || [email length]<=0) {
-        [self displayMessageWithBody:NSLocalizedString(@"Enter your email address to Sign Up",
-                                                       @"Enter your email address to Sign Up")];
+        [self displayMessageWithBody:NSLocalizedString(@"You must enter your email address to Sign Up",
+                                                       @"You must enter your email address to Sign Up")];
         return;
     }
     
     // Verify that the new password is atleast 8 characters long
     if (password==nil || [password length]<=7) {
-        [self displayMessageWithBody:NSLocalizedString(@"Enter a password that is 8 characters or longer. We also recommend that you use a combination of uppercase, lowercase, and number characters.",
-                                                       @"Enter a password that is 8 characters or longer. We also recommend that you use a combination of uppercase, lowercase, and number characters.")];
+        [self displayMessageWithBody:NSLocalizedString(@"You must enter a password that is 8 characters or longer. We also recommend that you use a combination of uppercase, lowercase, and number characters.",
+                                                       @"You must enter a password that is 8 characters or longer. We also recommend that you use a combination of uppercase, lowercase, and number characters.")];
         return;
     }
     
@@ -107,6 +111,8 @@
 
 - (IBAction)signInButtonTapped:(id)sender
 {
+    [UIUtils hapticFeedback];
+
     AccountSignInViewController *vc = [[AccountSignInViewController alloc] initWithNibName:@"AccountSignInViewController" bundle:nil];
     NSMutableArray *controllers = [[NSMutableArray alloc] initWithArray:[[self navigationController] viewControllers]] ;
     [controllers removeLastObject];

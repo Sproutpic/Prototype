@@ -10,6 +10,7 @@
 #import "NSString+WhiteSpacing.h"
 #import "ChangePasswordWebService.h"
 #import "JVFloatLabeledTextField.h"
+#import "UIUtils.h"
 
 @interface AccountChangePasswordViewController () <UITextFieldDelegate>
 
@@ -37,6 +38,8 @@
     NSString *passwordNew = [[[self passwordNewTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
     NSString *passwordRepeat = [[[self passwordRepeatTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
     
+    [UIUtils hapticFeedback];
+
     // Verify all 3 fields have data entered
     if (currentPwd==nil || passwordNew==nil || passwordRepeat==nil ||
         [currentPwd length]<=0 || [passwordNew length]<=0 || [passwordRepeat length]<=0) {

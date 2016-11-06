@@ -7,8 +7,20 @@
 //
 
 #import "CurrentUser.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 @implementation CurrentUser
+    
+# pragma mark Private
+
++ (void)logUser
+{
+    //[CrashlyticsKit setUserIdentifier:@"12345"];
+    [CrashlyticsKit setUserEmail:[CurrentUser emailAddress]];
+    [CrashlyticsKit setUserName:[CurrentUser fullName]];
+}
+
 
 # pragma mark CurrentUser
 
@@ -24,6 +36,7 @@
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"user"];
     } else {
         [[NSUserDefaults standardUserDefaults] setObject:user forKey:@"user"];
+        [CurrentUser logUser];
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
 }

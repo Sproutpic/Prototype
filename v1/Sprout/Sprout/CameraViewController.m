@@ -115,6 +115,7 @@
 
 - (IBAction)switchCameraButtonTapped:(UIButton *)sender
 {
+    [UIUtils hapticFeedback];
     switch ([[self imgPicker] cameraDevice]) {
         case UIImagePickerControllerCameraDeviceFront: {
             [[self imgPicker] setCameraDevice:UIImagePickerControllerCameraDeviceRear];
@@ -129,6 +130,7 @@
 
 - (IBAction)tappedCloseButton:(UIButton *)sender
 {
+    [UIUtils hapticFeedback];
     [[self navigationController] dismissViewControllerAnimated:YES completion:^{
         if (_cameraCallBack) _cameraCallBack([self project]);
     }];
@@ -136,6 +138,7 @@
 
 - (IBAction)onAction:(UIButton *)sender
 {
+    [UIUtils hapticFeedback];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_FLASH_ON_BOOL];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_FLASH_OFF_BOOL];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_FLASH_AUTO_BOOL];
@@ -144,6 +147,7 @@
 
 - (IBAction)offAction:(UIButton *)sender
 {
+    [UIUtils hapticFeedback];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_FLASH_ON_BOOL];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_FLASH_OFF_BOOL];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_FLASH_AUTO_BOOL];
@@ -152,6 +156,7 @@
 
 - (IBAction)autoAction:(UIButton *)sender
 {
+    [UIUtils hapticFeedback];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_FLASH_ON_BOOL];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_FLASH_OFF_BOOL];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_FLASH_AUTO_BOOL];
@@ -296,15 +301,7 @@
     
     [self configureFlashButtons];
     
-//    [[self pickerView] setFrame:
-//     CGRectMake(0, (self.view.frame.size.height-[self pickerView].bounds.size.height-[self shutterBtn].frame.size.height)/2,
-//                [self pickerView].bounds.size.width, [self pickerView].bounds.size.height)];
     [[self view] insertSubview:[self pickerView] belowSubview:[self shutterView]];
-//    CGRect frame = [[self pickerView] frame];
-//    frame.size.width = self.view.bounds.size.width;
-//    frame.size.height = self.view.bounds.size.width;
-//    [[self pickerView] setFrame:frame];
-
 }
 
 - (void)setNavigationBar

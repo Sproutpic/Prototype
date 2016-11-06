@@ -22,6 +22,7 @@
 
 - (void)doneButtonTapped:(id)sender
 {
+    [UIUtils hapticFeedback];
     [[self navigationController] dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -93,6 +94,7 @@
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tv deselectRowAtIndexPath:indexPath animated:YES];
+    [UIUtils hapticFeedback];
     NSArray *dataRow = [self rowDataAtIndex:indexPath.row];
     UIViewController *vc = nil;
     if ([[dataRow objectAtIndex:3] boolValue]) {

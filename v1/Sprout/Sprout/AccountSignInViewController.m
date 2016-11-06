@@ -10,6 +10,7 @@
 #import "NSString+WhiteSpacing.h"
 #import "SignInWebService.h"
 #import "JVFloatLabeledTextField.h"
+#import "UIUtils.h"
 
 @interface AccountSignInViewController () <UITextFieldDelegate>
 
@@ -35,6 +36,8 @@
     NSString *email = [[[self emailAddressTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
     NSString *password = [[[self passwordTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
     
+    [UIUtils hapticFeedback];
+
     // Verify the email address
     if (email==nil || [email length]<=0) {
         [self displayMessageWithBody:NSLocalizedString(@"Enter your email address to Sign In",
@@ -75,6 +78,8 @@
 {
     NSString *email = [[[self emailAddressTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
     
+    [UIUtils hapticFeedback];
+
     // Verify all 3 fields have data entered
     if (email==nil || [email length]<=0) {
         [self displayMessageWithBody:NSLocalizedString(@"Enter your email address to restore password",

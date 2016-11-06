@@ -19,7 +19,10 @@
 #define DEFAULT_IMAGE_NAME      @"logo-white"
 #define DEFAULT_BTN_IMAGE_NAME  @"button-play"
 
-@interface SproutView ()
+#define KVO_PROJECT_SLIDE_TIME  @"slideTime"
+#define KVO_PROJECT_TIMELINES   @"timelines"
+
+@interface SproutView () <CAAnimationDelegate>
 
 @property (strong, nonatomic) UIImageView *imageView;
 @property (strong, nonatomic) UIButton *playButton;
@@ -32,6 +35,11 @@
 
 - (void)playSprout
 {
+    [self playSproutView];
+}
+
+- (void)playSproutGIF
+{
     if ([[[self project] playing] boolValue]) {
         NSMutableArray *imagesArray = [[NSMutableArray alloc] init];
         NSArray *timelines = [Project timelinesArraySorted:[self project]];
@@ -39,8 +47,6 @@
             UIImage *timelineImage = [Timeline imageThumbnail:timeline];
             if (timelineImage) {
                 [imagesArray addObject:timelineImage];
-            } else {
-                NSLog(@"MEOW");
             }
         }
         NSUInteger kFrameCount = [imagesArray count];
@@ -94,6 +100,73 @@
     }
 }
 
+- (UIImage*)sproutFirstImage
+{
+    UIImage *img = nil;
+    NSArray *timelines = [Project timelinesArraySorted:[self project]];
+    if (timelines && [timelines count]>0) {
+        Timeline *timeline = [timelines objectAtIndex:0];
+        img = [Timeline imageThumbnail:timeline];
+        [[self imageView] setContentMode:UIViewContentModeScaleAspectFill];
+    }
+    if (!img) {
+        [[self imageView] setContentMode:UIViewContentModeCenter];
+        img = [UIImage imageNamed:DEFAULT_IMAGE_NAME];
+    }
+    return img;
+}
+
+- (void)playSproutView
+{
+    if ([[[self project] playing] boolValue]) {
+        NSMutableArray *imagesArray = [[NSMutableArray alloc] init];
+        NSArray *timelines = [Project timelinesArraySorted:[self project]];
+        for (Timeline *timeline in timelines) {
+            UIImage *timelineImage = [Timeline imageThumbnail:timeline];
+            if (timelineImage) {
+                [imagesArray addObject:timelineImage];
+            }
+            [[self imageView] setContentMode:UIViewContentModeScaleAspectFill];
+        }
+        if ([imagesArray count]<=0) {
+            [imagesArray addObject:[self sproutFirstImage]];
+        }
+        [[self imageView] setAnimationImages:imagesArray];
+        [[self imageView] setAnimationDuration:[[[self project] slideTime] floatValue]*[imagesArray count]];
+        [[self imageView] startAnimating];
+        
+        [[self playButton] setImage:nil forState:UIControlStateNormal];
+    } else {
+        [[self imageView] stopAnimating];
+        [[self imageView] setImage:[self sproutFirstImage]];
+        [[self playButton] setImage:[UIImage imageNamed:DEFAULT_BTN_IMAGE_NAME] forState:UIControlStateNormal];
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:KVO_PROJECT_SLIDE_TIME]) {
+        if ([[[self project] playing] boolValue]) {
+            [[self imageView] stopAnimating];
+            NSArray *timelines = [Project timelinesArraySorted:[self project]];
+            [[self imageView] setAnimationDuration:[[[self project] slideTime] floatValue]*[timelines count]];
+            [[self imageView] startAnimating];
+        }
+    } else if ([keyPath isEqualToString:KVO_PROJECT_TIMELINES]) {
+        if ([[[self project] playing] boolValue]) {
+            [self playSproutView];
+        }
+    }
+}
+
+- (void)dealloc
+{
+    if (_project) {
+        [_project removeObserver:self forKeyPath:KVO_PROJECT_SLIDE_TIME];
+        [_project removeObserver:self forKeyPath:KVO_PROJECT_TIMELINES];
+    }
+}
+
 # pragma mark Public
 
 - (IBAction)playButtonTapped:(id)sender
@@ -105,8 +178,23 @@
 
 - (void)setProject:(Project *)project
 {
+    if (_project) {
+        [_project removeObserver:self forKeyPath:KVO_PROJECT_SLIDE_TIME];
+        [_project removeObserver:self forKeyPath:KVO_PROJECT_TIMELINES];
+    }
     _project = project;
     [self layoutSubviews];
+    if (_project) {
+        [_project addObserver:self
+                   forKeyPath:KVO_PROJECT_SLIDE_TIME
+                      options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld
+                      context:NULL];
+        
+        [_project addObserver:self
+                   forKeyPath:KVO_PROJECT_TIMELINES
+                      options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld
+                      context:NULL];
+    }
 }
 
 # pragma mark UIView
@@ -116,7 +204,7 @@
     if ([self imageView]==nil) {
         UIImageView *iv = [[UIImageView alloc] initWithFrame:[self bounds]];
         [iv setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
-        [iv setContentMode:UIViewContentModeCenter];
+        [iv setContentMode:UIViewContentModeScaleAspectFill];
         [iv setClipsToBounds:YES];
         [iv setBackgroundColor:[[UIColor lightGrayColor] colorWithAlphaComponent:0.25]];
         [self setImageView:iv];

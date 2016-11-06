@@ -7,6 +7,7 @@
 //
 
 #import "SelectTableViewController.h"
+#import "UIUtils.h"
 
 @implementation SelectTableViewController
 
@@ -15,6 +16,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [UIUtils hapticFeedback];
     if ([self selectDelegate]) {
         [[self selectDelegate] selectionMade:[self rows] forIndex:[indexPath row] withTag:[self tag]];
     }

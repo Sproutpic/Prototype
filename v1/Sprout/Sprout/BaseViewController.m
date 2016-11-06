@@ -33,6 +33,7 @@
 
 - (IBAction)tappedSettingsButton:(UIButton *)sender
 {
+    [UIUtils hapticFeedback];
     [[self navigationController] presentViewController:[[UINavigationController alloc] initWithRootViewController:[[SettingsViewController alloc] init]]
                                               animated:YES
                                             completion:nil];
@@ -163,7 +164,11 @@
 - (void)displayMessageWithTitle:(NSString*)title andBody:(NSString*)message
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK") style:UIAlertActionStyleDefault handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                [UIUtils hapticFeedback];
+                                            }]];
     [[self navigationController] presentViewController:alert animated:YES completion:nil];
 }
 
@@ -174,6 +179,7 @@
 
 - (void)displayUnderConstructionAlert
 {
+    [UIUtils hapticFeedback];
     [self displayMessageWithTitle:NSLocalizedString(@"Next Version", @"Next Version")
                           andBody:NSLocalizedString(@"Under Construction! We'll update this in a future release.",
                                                     @"Under Construction! We'll update this in a future release.")];
@@ -262,7 +268,6 @@
     UIImageView *tableFooter = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo-green"]];
     [tableFooter setFrame:CGRectMake(0, 0, [[self view] bounds].size.width, 100)];
     [tableFooter setContentMode:UIViewContentModeCenter];
-    [tableFooter setAlpha:0.5];
     [tableView setTableFooterView:tableFooter];
 }
 

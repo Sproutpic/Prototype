@@ -7,6 +7,7 @@
 //
 
 #import "FAQViewController.h"
+#import "UIUtils.h"
 
 @interface FAQViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -63,6 +64,7 @@
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tv deselectRowAtIndexPath:indexPath animated:YES];
+    [UIUtils hapticFeedback];
     NSMutableArray *dataRow = (NSMutableArray*)[self rowDataAtIndex:[indexPath row]];
     [dataRow replaceObjectAtIndex:0 withObject:@(![[dataRow objectAtIndex:0] boolValue])];
     [tv reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];

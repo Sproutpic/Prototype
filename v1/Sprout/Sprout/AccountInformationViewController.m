@@ -10,6 +10,7 @@
 #import "AccountSignInViewController.h"
 #import "AccountSignUpViewController.h"
 #import "SignInWebService.h"
+#import "UIUtils.h"
 
 @interface AccountInformationViewController () <UITextFieldDelegate>
 
@@ -42,6 +43,8 @@
     // Place spinner on screen
     [self showFullScreenSpinner:YES];
     
+    [UIUtils hapticFeedback];
+    
     // All looks good, so lets call the web service...
     [SignInWebService signOutUserWithEmail:[CurrentUser emailAddress]
                               withCallback:
@@ -54,12 +57,14 @@
 
 - (IBAction)signInButtonTapped:(id)sender
 {
+    [UIUtils hapticFeedback];
     AccountSignInViewController *vc = [[AccountSignInViewController alloc] initWithNibName:@"AccountSignInViewController" bundle:nil];
     [[self navigationController] pushViewController:vc animated:YES];
 }
 
 - (IBAction)signUpButtonTapped:(id)sender
 {
+    [UIUtils hapticFeedback];
     AccountSignUpViewController *vc = [[AccountSignUpViewController alloc] initWithNibName:@"AccountSignUpViewController" bundle:nil];
     [[self navigationController] pushViewController:vc animated:YES];
 }

@@ -78,18 +78,22 @@
 
 - (void)deleteTimeline:(Timeline *)timeline
 {
+    [UIUtils hapticFeedback];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Sprout Photo", @"Delete Sprout Photo")
                                                                    message:NSLocalizedString(@"Are you sure you want to delete this sprout photo from your project?", @"Are you sure you want to delete this sprout photo from your project?")
                                                             preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Delete Photo", @"Delete Photo")
                                               style:UIAlertActionStyleDestructive
                                             handler:^(UIAlertAction * _Nonnull action) {
+                                                [UIUtils hapticFeedback];
                                                 [timeline deleteAndSave];
                                                 [[self collectionView] reloadData];
                                             }]];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                               style:UIAlertActionStyleCancel
-                                            handler:nil]];
+                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                [UIUtils hapticFeedback];
+                                            }]];
     UIViewController *vc = [[[UIApplication sharedApplication] keyWindow] rootViewController];
     [vc presentViewController:alert animated:YES completion:nil];
 }

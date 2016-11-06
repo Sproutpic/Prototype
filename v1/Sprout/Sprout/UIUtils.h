@@ -10,6 +10,9 @@
 #import <UIKit/UIKit.h>
 
 @interface UIUtils : NSObject
+    
++ (void)vibrate;
++ (void)hapticFeedback;
 
 + (UIColor*)colorNavigationBar;
 + (UIColor*)colorMenuButtonsSeparator;

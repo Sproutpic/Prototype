@@ -8,7 +8,7 @@
 
 #import "SproutWebService.h"
 #import <UIKit/UIKit.h>
-#import "AFNetworking.h"
+//#import "AFNetworking.h"
 
 static NSInteger serviceCallCount = 0;
 
@@ -53,18 +53,18 @@ static NSInteger serviceCallCount = 0;
     }
     
     // Actually make the service call...
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager setResponseSerializer:[AFJSONResponseSerializer serializer]];
-    [[manager requestSerializer] setCachePolicy:NSURLRequestReloadIgnoringCacheData];
-    [manager GET:[self url]
-      parameters:[self parameters]
-         success:^(AFHTTPRequestOperation *operation, id responseObject) {
-             [self completedSuccess:responseObject];
-             [self showStatusBarSpinner:NO];
-         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-             [self completedFailure:error];
-             [self showStatusBarSpinner:NO];
-         }];
+//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    [manager setResponseSerializer:[AFJSONResponseSerializer serializer]];
+//    [[manager requestSerializer] setCachePolicy:NSURLRequestReloadIgnoringCacheData];
+//    [manager GET:[self url]
+//      parameters:[self parameters]
+//         success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//             [self completedSuccess:responseObject];
+//             [self showStatusBarSpinner:NO];
+//         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//             [self completedFailure:error];
+//             [self showStatusBarSpinner:NO];
+//         }];
 }
 
 - (NSString*)encode64String:(NSString*)value

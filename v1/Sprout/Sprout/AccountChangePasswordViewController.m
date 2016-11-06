@@ -8,7 +8,7 @@
 
 #import "AccountChangePasswordViewController.h"
 #import "NSString+WhiteSpacing.h"
-#import "ChangePasswordWebService.h"
+#import "AccountWebService.h"
 #import "JVFloatLabeledTextField.h"
 #import "UIUtils.h"
 
@@ -66,10 +66,10 @@
     [self showFullScreenSpinner:YES];
     
     // All looks good, so lets call the web service...
-    [ChangePasswordWebService changePasswordForEmail:[CurrentUser emailAddress]
-                                     currentPassword:currentPwd
-                                         newPassword:passwordNew
-                                        withCallback:
+    [AccountWebService changePasswordForEmail:[CurrentUser emailAddress]
+                              currentPassword:currentPwd
+                                  newPassword:passwordNew
+                                 withCallback:
      ^(NSError *error, SproutWebService *service) {
          [self showFullScreenSpinner:NO];
          if (error) {

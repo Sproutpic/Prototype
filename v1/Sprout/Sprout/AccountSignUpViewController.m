@@ -8,7 +8,7 @@
 
 #import "AccountSignUpViewController.h"
 #import "NSString+WhiteSpacing.h"
-#import "SignInWebService.h"
+#import "AccountWebService.h"
 #import "AccountSignInViewController.h"
 #import "JVFloatLabeledTextField.h"
 #import "UIUtils.h"
@@ -90,17 +90,16 @@
     [self showFullScreenSpinner:YES];
     
     // All looks good, so lets call the web service...
-    [SignInWebService signUpUserWithName:fullName
-                               withEmail:email
-                            withPassword:password
-                            withCallback:
+    [AccountWebService signUpUserWithName:fullName
+                                withEmail:email
+                             withPassword:password
+                             withCallback:
      ^(NSError *error, SproutWebService *service) {
          [self showFullScreenSpinner:NO];
          if (error) {
              [self displayMessageWithTitle:NSLocalizedString(@"Problem", @"Problem")
                                    andBody:[error localizedDescription]];
          } else {
-             [CurrentUser setUser:@{ @"name" : fullName, @"email" : email }];
              [[self navigationController] popToRootViewControllerAnimated:YES];
              [self displayMessageWithTitle:NSLocalizedString(@"Success", @"Success")
                                    andBody:NSLocalizedString(@"You have Signed Up for a new account",

@@ -29,6 +29,7 @@ typedef void (^ SproutServiceCallBack)(NSError *error, SproutWebService* service
 
 @property (strong, nonatomic) NSString *url;
 @property (strong, nonatomic) NSDictionary *parameters;
+@property (strong, nonatomic) NSString *serviceTag;
 
 - (void)start;
 

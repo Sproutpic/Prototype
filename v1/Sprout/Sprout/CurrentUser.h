@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+#define CURRENT_USER_USER_KEY   @"CURRENT_USER_USER_KEY"
+#define CURRENT_USER_NAME_KEY   @"CURRENT_USER_NAME_KEY"
+#define CURRENT_USER_EMAIL_KEY  @"CURRENT_USER_EMAIL_KEY"
+
 @interface CurrentUser : NSObject
 
 + (BOOL)isLoggedIn;

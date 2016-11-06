@@ -21,21 +21,20 @@
     [CrashlyticsKit setUserName:[CurrentUser fullName]];
 }
 
-
 # pragma mark CurrentUser
 
 + (BOOL)isLoggedIn
 {
-    NSDictionary *user = [[NSUserDefaults standardUserDefaults] objectForKey:@"user"];
+    NSDictionary *user = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY];
     return (user) ? YES : NO;
 }
 
 + (void)setUser:(NSDictionary*)user
 {
     if (user==nil) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"user"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:CURRENT_USER_USER_KEY];
     } else {
-        [[NSUserDefaults standardUserDefaults] setObject:user forKey:@"user"];
+        [[NSUserDefaults standardUserDefaults] setObject:user forKey:CURRENT_USER_USER_KEY];
         [CurrentUser logUser];
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -43,13 +42,13 @@
 
 + (NSString*)fullName
 {
-    NSString *name = [[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"name"];
+    NSString *name = [[[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY] objectForKey:CURRENT_USER_NAME_KEY];
     return (!name) ? @"" : name;
 }
 
 + (NSString*)emailAddress
 {
-    NSString *email = [[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] objectForKey:@"email"];
+    NSString *email = [[[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY] objectForKey:CURRENT_USER_EMAIL_KEY];
     return (!email) ? @"" : email;
 }
 

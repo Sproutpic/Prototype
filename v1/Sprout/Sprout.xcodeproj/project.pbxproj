@@ -43,9 +43,8 @@
 		E749C0EB1DB4293E0068C3F1 /* AccountChangePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0EA1DB4293E0068C3F1 /* AccountChangePasswordViewController.m */; };
 		E749C0EE1DB44D450068C3F1 /* NSString+WhiteSpacing.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0ED1DB44D450068C3F1 /* NSString+WhiteSpacing.m */; };
 		E749C0F11DB44DF10068C3F1 /* SproutWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0F01DB44DF10068C3F1 /* SproutWebService.m */; };
-		E749C0F41DB4530D0068C3F1 /* ChangePasswordWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0F31DB4530D0068C3F1 /* ChangePasswordWebService.m */; };
 		E749C0F71DB45B420068C3F1 /* CurrentUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0F61DB45B420068C3F1 /* CurrentUser.m */; };
-		E749C0FA1DB462980068C3F1 /* SignInWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0F91DB462980068C3F1 /* SignInWebService.m */; };
+		E749C0FA1DB462980068C3F1 /* AccountWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0F91DB462980068C3F1 /* AccountWebService.m */; };
 		E749C0FF1DB49B880068C3F1 /* ProjectWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0FE1DB49B880068C3F1 /* ProjectWebService.m */; };
 		E762D1BA1DB9F4BD00988104 /* TextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E762D1B91DB9F4BD00988104 /* TextFieldTableViewCell.m */; };
 		E762D1BD1DB9F4CC00988104 /* TextFieldTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E762D1BB1DB9F4CC00988104 /* TextFieldTableViewCell.xib */; };
@@ -142,12 +141,10 @@
 		E749C0ED1DB44D450068C3F1 /* NSString+WhiteSpacing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+WhiteSpacing.m"; sourceTree = "<group>"; };
 		E749C0EF1DB44DF10068C3F1 /* SproutWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SproutWebService.h; sourceTree = "<group>"; };
 		E749C0F01DB44DF10068C3F1 /* SproutWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SproutWebService.m; sourceTree = "<group>"; };
-		E749C0F21DB4530D0068C3F1 /* ChangePasswordWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangePasswordWebService.h; sourceTree = "<group>"; };
-		E749C0F31DB4530D0068C3F1 /* ChangePasswordWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePasswordWebService.m; sourceTree = "<group>"; };
 		E749C0F51DB45B420068C3F1 /* CurrentUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentUser.h; sourceTree = "<group>"; };
 		E749C0F61DB45B420068C3F1 /* CurrentUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentUser.m; sourceTree = "<group>"; };
-		E749C0F81DB462980068C3F1 /* SignInWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignInWebService.h; sourceTree = "<group>"; };
-		E749C0F91DB462980068C3F1 /* SignInWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignInWebService.m; sourceTree = "<group>"; };
+		E749C0F81DB462980068C3F1 /* AccountWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountWebService.h; sourceTree = "<group>"; };
+		E749C0F91DB462980068C3F1 /* AccountWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountWebService.m; sourceTree = "<group>"; };
 		E749C0FD1DB49B880068C3F1 /* ProjectWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectWebService.h; sourceTree = "<group>"; };
 		E749C0FE1DB49B880068C3F1 /* ProjectWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectWebService.m; sourceTree = "<group>"; };
 		E762D1B81DB9F4BD00988104 /* TextFieldTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldTableViewCell.h; sourceTree = "<group>"; };
@@ -255,10 +252,8 @@
 			children = (
 				E749C0EF1DB44DF10068C3F1 /* SproutWebService.h */,
 				E749C0F01DB44DF10068C3F1 /* SproutWebService.m */,
-				E749C0F21DB4530D0068C3F1 /* ChangePasswordWebService.h */,
-				E749C0F31DB4530D0068C3F1 /* ChangePasswordWebService.m */,
-				E749C0F81DB462980068C3F1 /* SignInWebService.h */,
-				E749C0F91DB462980068C3F1 /* SignInWebService.m */,
+				E749C0F81DB462980068C3F1 /* AccountWebService.h */,
+				E749C0F91DB462980068C3F1 /* AccountWebService.m */,
 				E749C0FD1DB49B880068C3F1 /* ProjectWebService.h */,
 				E749C0FE1DB49B880068C3F1 /* ProjectWebService.m */,
 			);
@@ -700,7 +695,7 @@
 				E70CB3F11DAB57D9003F4AA0 /* ProjectTableViewCell.m in Sources */,
 				E70144E81DC0D9E200E115BF /* SproutView.m in Sources */,
 				E70700341DBE37F3009E8D7D /* Timeline+Extras.m in Sources */,
-				E749C0FA1DB462980068C3F1 /* SignInWebService.m in Sources */,
+				E749C0FA1DB462980068C3F1 /* AccountWebService.m in Sources */,
 				E749C0F11DB44DF10068C3F1 /* SproutWebService.m in Sources */,
 				E7C61BA91DBB02A4008A86C0 /* SwitchTableViewCell.m in Sources */,
 				E7C61BA31DBAFF48008A86C0 /* SliderTableViewCell.m in Sources */,
@@ -719,7 +714,6 @@
 				E78E3DD01DB41C7C00C4C815 /* AccountSignUpViewController.m in Sources */,
 				E762D1BA1DB9F4BD00988104 /* TextFieldTableViewCell.m in Sources */,
 				E7F92BD41DC227E10050E5AD /* DataObjects.m in Sources */,
-				E749C0F41DB4530D0068C3F1 /* ChangePasswordWebService.m in Sources */,
 				E70700301DBE37F3009E8D7D /* Project+CoreDataProperties.m in Sources */,
 				E76FBA9A1DAE01D400BA46F0 /* CoreDataAccessKit.m in Sources */,
 				5AA3753C1D2CFBEF001993E0 /* FAQViewController.m in Sources */,

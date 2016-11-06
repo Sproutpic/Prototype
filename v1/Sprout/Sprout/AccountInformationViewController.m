@@ -9,7 +9,7 @@
 #import "AccountInformationViewController.h"
 #import "AccountSignInViewController.h"
 #import "AccountSignUpViewController.h"
-#import "SignInWebService.h"
+#import "AccountWebService.h"
 #import "UIUtils.h"
 
 @interface AccountInformationViewController () <UITextFieldDelegate>
@@ -46,11 +46,10 @@
     [UIUtils hapticFeedback];
     
     // All looks good, so lets call the web service...
-    [SignInWebService signOutUserWithEmail:[CurrentUser emailAddress]
-                              withCallback:
+    [AccountWebService signOutUserWithEmail:[CurrentUser emailAddress]
+                               withCallback:
      ^(NSError *error, SproutWebService *service) {
          [self showFullScreenSpinner:NO];
-         [CurrentUser setUser:nil];
          [[self navigationController] popViewControllerAnimated:YES];
      }];
 }

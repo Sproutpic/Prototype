@@ -9,6 +9,9 @@
 #import "ProjectWebService.h"
 #import "DataObjects.h"
 
+#define SERVICE_TAG_UPLOAD_SPROUT   @"SERVICE_TAG_UPLOAD_SPROUT"
+#define SERVICE_TAG_UPDATE_SPROUT   @"SERVICE_TAG_UPDATE_SPROUT"
+
 @implementation ProjectWebService
 
 # pragma mark ProjectWebService
@@ -29,6 +32,7 @@
                               @"startDt" : [project created],
                               @"endDt" : [project created]
                               }];
+    [service setServiceTag:SERVICE_TAG_UPLOAD_SPROUT];
     [service start];
     return service;
 }
@@ -51,8 +55,31 @@
                               @"startDt" : [project created],
                               @"endDt" : [project created]
                               }];
+    [service setServiceTag:SERVICE_TAG_UPDATE_SPROUT];
     [service start];
     return service;
+}
+
+# pragma mark SproutWebServiceDelegate
+
+- (void)completedSuccess:(id)responseObject
+{
+    NSLog(@"Response - %@",responseObject);
+    
+    if ([[self serviceTag] isEqualToString:SERVICE_TAG_UPLOAD_SPROUT]) {
+        
+    } else if ([[self serviceTag] isEqualToString:SERVICE_TAG_UPDATE_SPROUT]) {
+        
+    }
+    
+    [super completedSuccess:responseObject];
+}
+
+- (void)completedFailure:(NSError*)error
+{
+    NSLog(@"Error - %@",error);
+    
+    [super completedFailure:error];
 }
 
 @end

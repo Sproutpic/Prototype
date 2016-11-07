@@ -16,6 +16,11 @@
 
 # pragma mark Private
 
+- (void)blankCollectionViewTapped
+{
+    if ([self projectDelegate]) [[self projectDelegate] showProjectDetails:[self project]];
+}
+
 - (void)setProject:(Project *)project
 {
     _project = project;
@@ -23,6 +28,22 @@
     [[self descriptionLabel] setText:[project subtitle]];
     [[self collectionView] invalidateIntrinsicContentSize];
     [[self collectionView] reloadData];
+}
+
+- (void)setProjectDelegate:(id<ProjectTableViewCellDelegate>)projectDelegate
+{
+    _projectDelegate = projectDelegate;
+    if ([[self collectionView] backgroundView]) {
+        NSArray *gestures = [[self collectionView] gestureRecognizers];
+        for (UIGestureRecognizer *gest in gestures) {
+            [[[self collectionView] backgroundView] removeGestureRecognizer:gest];
+        }
+    }
+    if (_projectDelegate) {
+        [[self collectionView] setBackgroundView:[[UIView alloc] init]];
+        [[[self collectionView] backgroundView] addGestureRecognizer:
+         [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(blankCollectionViewTapped)]];
+    }
 }
 
 # pragma mark UITableViewCell
@@ -56,9 +77,9 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([indexPath row]==0) {
-        [[self projectDelegate] useCameraToAddNewSproutToProject:[self project]];
+        if ([self projectDelegate]) [[self projectDelegate] useCameraToAddNewSproutToProject:[self project]];
     } else if ([[self projectDelegate] respondsToSelector:@selector(showProjectDetails:)]) {
-        [[self projectDelegate] showProjectDetails:[self project]];
+        if ([self projectDelegate]) [[self projectDelegate] showProjectDetails:[self project]];
     }
 }
 

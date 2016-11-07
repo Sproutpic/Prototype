@@ -43,7 +43,10 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <nil key="textColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="c9J-9j-2ri"/>
+                            </connections>
                         </textField>
                         <view alpha="0.25" contentMode="scaleToFill" id="uGb-B0-CcZ">
                             <rect key="frame" x="16" y="68" width="343" height="40"/>
@@ -56,6 +59,9 @@
                             <nil key="textColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="EPz-UP-Iq0"/>
+                            </connections>
                         </textField>
                         <view alpha="0.25" contentMode="scaleToFill" id="YKh-hB-xay">
                             <rect key="frame" x="16" y="116" width="343" height="40"/>
@@ -68,6 +74,9 @@
                             <nil key="textColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" secureTextEntry="YES"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="vmO-Yg-2XH"/>
+                            </connections>
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="u0B-LM-3N9">
                             <rect key="frame" x="16" y="164" width="24" height="44"/>
@@ -114,6 +123,7 @@
             <connections>
                 <outlet property="delegate" destination="-1" id="pwc-BR-m0f"/>
             </connections>
+            <point key="canvasLocation" x="-48" y="-50"/>
         </view>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
     </objects>

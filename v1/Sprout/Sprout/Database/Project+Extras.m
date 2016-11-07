@@ -10,16 +10,6 @@
 
 @implementation Project (Extras)
 
-# pragma mark NSManagedObject
-
-- (void)awakeFromInsert
-{
-    [super awakeFromInsert];
-    NSDate *now = [NSDate date];
-    [self setCreated:now];
-    [self setLastModified:now];
-}
-
 # pragma mark Project
 
 + (Project*)createNewProject:(NSString*)title
@@ -48,11 +38,6 @@
              [NSSortDescriptor sortDescriptorWithKey:@"subtitle" ascending:YES],
              [NSSortDescriptor sortDescriptorWithKey:@"lastModified" ascending:NO]
              ];
-}
-
-- (NSArray*)sortedTimelines
-{
-    return [[self timelines] allObjects];
 }
 
 + (NSArray*)timelinesArraySorted:(Project*)project

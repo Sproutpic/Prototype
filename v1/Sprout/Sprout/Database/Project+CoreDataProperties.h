@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, copy) NSString *title;
 @property (nullable, nonatomic, copy) NSString *subtitle;
+@property (nullable, nonatomic, copy) NSString *notificationUUID;
 @property (nullable, nonatomic, copy) NSNumber *serverId;
 @property (nullable, nonatomic, copy) NSNumber *frontCameraEnabled;
 @property (nullable, nonatomic, copy) NSNumber *remindEnabled;
@@ -27,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSNumber *slideTime;
 @property (nullable, nonatomic, copy) NSNumber *playing;
 @property (nullable, nonatomic, copy) NSNumber *sproutSocial;
-
 
 @property (nullable, nonatomic, copy) NSString *videoURL;
 @property (nullable, nonatomic, copy) NSDate *videoLastModified;

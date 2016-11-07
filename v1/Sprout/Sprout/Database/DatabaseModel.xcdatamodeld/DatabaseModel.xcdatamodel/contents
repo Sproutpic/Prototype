@@ -5,6 +5,7 @@
         <attribute name="frontCameraEnabled" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="lastModified" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastSync" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="notificationUUID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="playing" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="remindEnabled" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="repeatFrequency" optional="YES" attributeType="Integer 64" defaultValueString="1" usesScalarValueType="YES" syncable="YES"/>
@@ -31,7 +32,7 @@
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="timelines" inverseEntity="Project" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Project" positionX="-477" positionY="-117" width="128" height="298"/>
+        <element name="Project" positionX="-477" positionY="-117" width="128" height="315"/>
         <element name="Timeline" positionX="-126" positionY="-117" width="128" height="180"/>
     </elements>
 </model>

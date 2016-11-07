@@ -21,7 +21,7 @@
 		5A85A3101D2BBF0600B4CD02 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A85A30F1D2BBF0600B4CD02 /* SettingsViewController.m */; };
 		5AA3753C1D2CFBEF001993E0 /* FAQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA3753B1D2CFBEF001993E0 /* FAQViewController.m */; };
 		5AD140331D50673D004C301B /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD140321D50673D004C301B /* CameraViewController.m */; };
-		9EF581F26D0C87B4A3C98D86 /* libPods-Sprout.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C65B268D7AC9D3A6E9317DEB /* libPods-Sprout.a */; };
+		B0446FD54F4EE217CE0339B5 /* Pods_Sprout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1C7A893189FC6DF0EFEF47A /* Pods_Sprout.framework */; };
 		E70144E81DC0D9E200E115BF /* SproutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E70144E71DC0D9E200E115BF /* SproutView.m */; };
 		E707002F1DBE37F3009E8D7D /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = E70700241DBE37F3009E8D7D /* Project.m */; };
 		E70700301DBE37F3009E8D7D /* Project+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = E70700261DBE37F3009E8D7D /* Project+CoreDataProperties.m */; };
@@ -36,6 +36,8 @@
 		E70CB3EA1DAB2E7D003F4AA0 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E70CB3E91DAB2E7D003F4AA0 /* BaseViewController.m */; };
 		E70CB3ED1DAB5688003F4AA0 /* ProjectTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E70CB3EB1DAB5688003F4AA0 /* ProjectTableViewCell.xib */; };
 		E70CB3F11DAB57D9003F4AA0 /* ProjectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E70CB3F01DAB57D9003F4AA0 /* ProjectTableViewCell.m */; };
+		E746D4771DD03696009C1BDD /* JDMLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = E746D4741DD03696009C1BDD /* JDMLocalNotification.m */; };
+		E746D4781DD03696009C1BDD /* n_default.wav in Resources */ = {isa = PBXBuildFile; fileRef = E746D4761DD03696009C1BDD /* n_default.wav */; };
 		E749AA041DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E749AA021DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib */; };
 		E749AA071DBA05E1007DC7D8 /* SocialMediaButtonsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E749AA061DBA05E1007DC7D8 /* SocialMediaButtonsTableViewCell.m */; };
 		E749AA0A1DBA063C007DC7D8 /* AccountInformationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E749AA081DBA063C007DC7D8 /* AccountInformationViewController.xib */; };
@@ -106,7 +108,7 @@
 		5AD140321D50673D004C301B /* CameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraViewController.m; sourceTree = "<group>"; };
 		6CA0A3EEABEA0FFCFFD3B905 /* Pods-Sprout.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sprout.release.xcconfig"; path = "Pods/Target Support Files/Pods-Sprout/Pods-Sprout.release.xcconfig"; sourceTree = "<group>"; };
 		C1BC0B7DBCB1E0E87B0D6C4D /* Pods-Sprout.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sprout.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Sprout/Pods-Sprout.debug.xcconfig"; sourceTree = "<group>"; };
-		C65B268D7AC9D3A6E9317DEB /* libPods-Sprout.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Sprout.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1C7A893189FC6DF0EFEF47A /* Pods_Sprout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Sprout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E70144E61DC0D9E200E115BF /* SproutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SproutView.h; sourceTree = "<group>"; };
 		E70144E71DC0D9E200E115BF /* SproutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SproutView.m; sourceTree = "<group>"; };
 		E70700231DBE37F3009E8D7D /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Project.h; path = Database/Project.h; sourceTree = "<group>"; };
@@ -130,6 +132,9 @@
 		E70CB3EC1DAB5688003F4AA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ProjectTableViewCell.xib; sourceTree = "<group>"; };
 		E70CB3EF1DAB57D9003F4AA0 /* ProjectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectTableViewCell.h; sourceTree = "<group>"; };
 		E70CB3F01DAB57D9003F4AA0 /* ProjectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectTableViewCell.m; sourceTree = "<group>"; };
+		E746D4731DD03696009C1BDD /* JDMLocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDMLocalNotification.h; sourceTree = "<group>"; };
+		E746D4741DD03696009C1BDD /* JDMLocalNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JDMLocalNotification.m; sourceTree = "<group>"; };
+		E746D4761DD03696009C1BDD /* n_default.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = n_default.wav; sourceTree = "<group>"; };
 		E749AA031DBA05D0007DC7D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SocialMediaButtonsTableViewCell.xib; sourceTree = "<group>"; };
 		E749AA051DBA05E1007DC7D8 /* SocialMediaButtonsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialMediaButtonsTableViewCell.h; sourceTree = "<group>"; };
 		E749AA061DBA05E1007DC7D8 /* SocialMediaButtonsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialMediaButtonsTableViewCell.m; sourceTree = "<group>"; };
@@ -205,7 +210,7 @@
 				E708E6161DCEBBB300E9D626 /* UIKit.framework in Frameworks */,
 				E708E6141DCEBBAD00E9D626 /* Foundation.framework in Frameworks */,
 				E708E6121DCEBB9600E9D626 /* CoreData.framework in Frameworks */,
-				9EF581F26D0C87B4A3C98D86 /* libPods-Sprout.a in Frameworks */,
+				B0446FD54F4EE217CE0339B5 /* Pods_Sprout.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,6 +458,24 @@
 			name = "Model Objects";
 			sourceTree = "<group>";
 		};
+		E746D4721DD03696009C1BDD /* JDMLocalNotification */ = {
+			isa = PBXGroup;
+			children = (
+				E746D4731DD03696009C1BDD /* JDMLocalNotification.h */,
+				E746D4741DD03696009C1BDD /* JDMLocalNotification.m */,
+				E746D4751DD03696009C1BDD /* Sounds */,
+			);
+			path = JDMLocalNotification;
+			sourceTree = "<group>";
+		};
+		E746D4751DD03696009C1BDD /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				E746D4761DD03696009C1BDD /* n_default.wav */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		E76FBA901DADED7E00BA46F0 /* Adapters */ = {
 			isa = PBXGroup;
 			children = (
@@ -465,6 +488,7 @@
 		E78E3DD51DB427D100C4C815 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				E746D4721DD03696009C1BDD /* JDMLocalNotification */,
 				5A5F3D5F1D599FBC00AC6767 /* UIImage+Animated */,
 			);
 			name = Libraries;
@@ -530,7 +554,7 @@
 				E708E6151DCEBBB300E9D626 /* UIKit.framework */,
 				E708E6131DCEBBAD00E9D626 /* Foundation.framework */,
 				E708E6111DCEBB9600E9D626 /* CoreData.framework */,
-				C65B268D7AC9D3A6E9317DEB /* libPods-Sprout.a */,
+				D1C7A893189FC6DF0EFEF47A /* Pods_Sprout.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -599,6 +623,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A85A2D21D2BB65F00B4CD02 /* LaunchScreen.storyboard in Resources */,
+				E746D4781DD03696009C1BDD /* n_default.wav in Resources */,
 				E749AA0D1DBA0655007DC7D8 /* AccountChangePasswordViewController.xib in Resources */,
 				E762D1BD1DB9F4CC00988104 /* TextFieldTableViewCell.xib in Resources */,
 				E7A6BFE41DBB23230067C409 /* SproutDisplayTableViewCell.xib in Resources */,
@@ -696,6 +721,7 @@
 				E70144E81DC0D9E200E115BF /* SproutView.m in Sources */,
 				E70700341DBE37F3009E8D7D /* Timeline+Extras.m in Sources */,
 				E749C0FA1DB462980068C3F1 /* AccountWebService.m in Sources */,
+				E746D4771DD03696009C1BDD /* JDMLocalNotification.m in Sources */,
 				E749C0F11DB44DF10068C3F1 /* SproutWebService.m in Sources */,
 				E7C61BA91DBB02A4008A86C0 /* SwitchTableViewCell.m in Sources */,
 				E7C61BA31DBAFF48008A86C0 /* SliderTableViewCell.m in Sources */,

@@ -17,6 +17,7 @@
 
 @dynamic title;
 @dynamic subtitle;
+@dynamic notificationUUID;
 @dynamic serverId;
 @dynamic frontCameraEnabled;
 @dynamic remindEnabled;

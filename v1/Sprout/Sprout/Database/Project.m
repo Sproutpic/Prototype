@@ -11,4 +11,14 @@
 
 @implementation Project
 
+# pragma mark NSManagedObject
+
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    NSDate *now = [NSDate date];
+    [self setCreated:now];
+    [self setLastModified:now];
+}
+
 @end

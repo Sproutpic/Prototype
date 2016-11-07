@@ -56,6 +56,7 @@
     NSString *password = [[[self passwordTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
  
     [UIUtils hapticFeedback];
+    [self becomeFirstResponder];
 
     // Verify the email address
     if (fullName==nil || [fullName length]<=0) {
@@ -110,6 +111,7 @@
 
 - (IBAction)signInButtonTapped:(id)sender
 {
+    [self becomeFirstResponder];
     [UIUtils hapticFeedback];
 
     AccountSignInViewController *vc = [[AccountSignInViewController alloc] initWithNibName:@"AccountSignInViewController" bundle:nil];

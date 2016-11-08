@@ -69,7 +69,7 @@ static OnboardingManager *shared = nil;
                                                           [[UIApplication sharedApplication] registerForRemoteNotifications];
                                                           [[[OnboardingManager sharedInstance] onboardingVC] moveNextPage];
                                                       }],
-           [OnboardingContentViewController contentWithTitle:NSLocalizedString(@"Lets Get Start!",@"Lets Get Start!")
+           [OnboardingContentViewController contentWithTitle:NSLocalizedString(@"Lets Get Started!",@"Lets Get Started!")
                                                         body:NSLocalizedString(@"You are all ready to go. Are you ready to create a new SproutPic Project?",@"You are all ready to go. Are you ready to create a new SproutPic Project?")
                                                        image:[UIImage imageNamed:@"onboarding-finished"]
                                                   buttonText:(alreadyShown) ? NSLocalizedString(@"Get Started",@"Get Started") :NSLocalizedString(@"Create My First Sprout", @"Create My First Sprout")

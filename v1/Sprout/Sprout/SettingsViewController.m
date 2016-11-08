@@ -8,6 +8,7 @@
 
 #import "SettingsViewController.h"
 #import "UIUtils.h"
+#import "OnboardingManager.h"
 
 @interface SettingsViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -51,7 +52,8 @@
        @[@(NO),@"About Sproutpic",@"AboutViewController",@(NO)],
        @[@(NO),@"FAQ",@"FAQViewController",@(NO)],
        @[@(NO),@"Account Information",@"AccountInformationViewController",@(YES)],
-       @[@(YES),@"Change Password",@"AccountChangePasswordViewController",@(YES)]
+       @[@(YES),@"Change Password",@"AccountChangePasswordViewController",@(YES)],
+       @[@(NO),@"Welcome Intro",@"OnboardingManager",@(NO)],
        ]];
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"Settings", @"Settings")];
@@ -96,14 +98,18 @@
     [tv deselectRowAtIndexPath:indexPath animated:YES];
     [UIUtils hapticFeedback];
     NSArray *dataRow = [self rowDataAtIndex:indexPath.row];
-    UIViewController *vc = nil;
-    if ([[dataRow objectAtIndex:3] boolValue]) {
-        vc = [[NSClassFromString([dataRow objectAtIndex:2]) alloc] initWithNibName:[dataRow objectAtIndex:2] bundle:nil];
+    if ([[dataRow objectAtIndex:2] isEqualToString:@"OnboardingManager"]) {
+        [OnboardingManager showOnboardingOn:[self navigationController] forceShow:YES];
     } else {
-        vc = [[NSClassFromString([dataRow objectAtIndex:2]) alloc] init];
-    }
-    if (vc) {
-        [[self navigationController] pushViewController:vc animated:YES];
+        UIViewController *vc = nil;
+        if ([[dataRow objectAtIndex:3] boolValue]) {
+            vc = [[NSClassFromString([dataRow objectAtIndex:2]) alloc] initWithNibName:[dataRow objectAtIndex:2] bundle:nil];
+        } else {
+            vc = [[NSClassFromString([dataRow objectAtIndex:2]) alloc] init];
+        }
+        if (vc) {
+            [[self navigationController] pushViewController:vc animated:YES];
+        }
     }
 }
 

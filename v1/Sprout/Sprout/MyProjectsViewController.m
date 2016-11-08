@@ -13,6 +13,7 @@
 #import "TableAdapter.h"
 #import "DataObjects.h"
 #import <AVFoundation/AVFoundation.h>
+#import "OnboardingManager.h"
 
 @interface MyProjectsViewController () <UITableViewDelegate, ProjectTableViewCellDelegate>
 
@@ -83,7 +84,9 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[self tableView] setFrame:[[self view] bounds]];    
+    [[self tableView] setFrame:[[self view] bounds]];
+    
+    [OnboardingManager showOnboardingOn:[self navigationController] forceShow:NO];
 }
 
 - (UITabBarItem*)tabBarItem

@@ -11,7 +11,6 @@
 #import "MyProjectsViewController.h"
 #import "CommunityViewController.h"
 #import "SelectNewProjectViewController.h"
-#import "SettingsViewController.h"
 #import "UIUtils.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -26,10 +25,10 @@
     // Create the Tab Controller and all its ViewControllers
     UITabBarController *tabController = [[UITabBarController alloc] init];
     [tabController setViewControllers:
-     @[[[UINavigationController alloc] initWithRootViewController:[[MyProjectsViewController alloc] init]],
+     @[
+       [[UINavigationController alloc] initWithRootViewController:[[MyProjectsViewController alloc] init]],
        [[UINavigationController alloc] initWithRootViewController:[[SelectNewProjectViewController alloc] initWithNibName:@"SelectNewProjectViewController" bundle:nil]],
        [[UINavigationController alloc] initWithRootViewController:[[CommunityViewController alloc] init]],
-       //[[UINavigationController alloc] initWithRootViewController:[[SettingsViewController alloc] init]]
        ]];
     [tabController setSelectedViewController:[[tabController viewControllers] objectAtIndex:0]];
 

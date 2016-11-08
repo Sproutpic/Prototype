@@ -69,8 +69,8 @@
     if ([self project] && [indexPath row]>0) {
         timeline = [[Project timelinesArraySorted:[self project]] objectAtIndex:[indexPath row]-1];
     }
+    [cell setTimeline:timeline withDisplayType:([self editState]) ? TimelineCellStateEdit : TimelineCellStateNormalAndDate];
     [cell setTimelineDelegate:self];
-    [cell setTimeline:timeline withDisplayType:([self editState])?TimelineCellStateEdit:TimelineCellStateNormalAndDate];
     return cell;
 }
 

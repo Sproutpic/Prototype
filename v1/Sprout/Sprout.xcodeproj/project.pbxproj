@@ -36,6 +36,7 @@
 		E70CB3EA1DAB2E7D003F4AA0 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E70CB3E91DAB2E7D003F4AA0 /* BaseViewController.m */; };
 		E70CB3ED1DAB5688003F4AA0 /* ProjectTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E70CB3EB1DAB5688003F4AA0 /* ProjectTableViewCell.xib */; };
 		E70CB3F11DAB57D9003F4AA0 /* ProjectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E70CB3F01DAB57D9003F4AA0 /* ProjectTableViewCell.m */; };
+		E72B91341DD119030050C7C8 /* OnboardingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E72B91331DD119030050C7C8 /* OnboardingManager.m */; };
 		E746D4771DD03696009C1BDD /* JDMLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = E746D4741DD03696009C1BDD /* JDMLocalNotification.m */; };
 		E746D4781DD03696009C1BDD /* n_default.wav in Resources */ = {isa = PBXBuildFile; fileRef = E746D4761DD03696009C1BDD /* n_default.wav */; };
 		E749AA041DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E749AA021DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib */; };
@@ -132,6 +133,8 @@
 		E70CB3EC1DAB5688003F4AA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ProjectTableViewCell.xib; sourceTree = "<group>"; };
 		E70CB3EF1DAB57D9003F4AA0 /* ProjectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectTableViewCell.h; sourceTree = "<group>"; };
 		E70CB3F01DAB57D9003F4AA0 /* ProjectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectTableViewCell.m; sourceTree = "<group>"; };
+		E72B91321DD119030050C7C8 /* OnboardingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnboardingManager.h; sourceTree = "<group>"; };
+		E72B91331DD119030050C7C8 /* OnboardingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnboardingManager.m; sourceTree = "<group>"; };
 		E746D4731DD03696009C1BDD /* JDMLocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDMLocalNotification.h; sourceTree = "<group>"; };
 		E746D4741DD03696009C1BDD /* JDMLocalNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JDMLocalNotification.m; sourceTree = "<group>"; };
 		E746D4761DD03696009C1BDD /* n_default.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = n_default.wav; sourceTree = "<group>"; };
@@ -297,6 +300,7 @@
 			children = (
 				5A85A2CE1D2BB65F00B4CD02 /* Assets.xcassets */,
 				E7DBE6271DACAE110052064E /* App Delegate */,
+				E72B91311DD118E40050C7C8 /* Onboarding */,
 				E70CB3F21DAB5AF9003F4AA0 /* Database */,
 				E76FBA901DADED7E00BA46F0 /* Adapters */,
 				5A85A3051D2BB8FA00B4CD02 /* ViewControllers */,
@@ -458,6 +462,15 @@
 			name = "Model Objects";
 			sourceTree = "<group>";
 		};
+		E72B91311DD118E40050C7C8 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				E72B91321DD119030050C7C8 /* OnboardingManager.h */,
+				E72B91331DD119030050C7C8 /* OnboardingManager.m */,
+			);
+			name = Onboarding;
+			sourceTree = "<group>";
+		};
 		E746D4721DD03696009C1BDD /* JDMLocalNotification */ = {
 			isa = PBXGroup;
 			children = (
@@ -589,7 +602,7 @@
 		5A85A2BB1D2BB65F00B4CD02 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = sprout;
 				TargetAttributes = {
 					5A85A2C21D2BB65F00B4CD02 = {
@@ -753,6 +766,7 @@
 				E749C0EB1DB4293E0068C3F1 /* AccountChangePasswordViewController.m in Sources */,
 				5A245E1C1D488E7F006A6F52 /* AboutViewController.m in Sources */,
 				E76FBA931DADEDCA00BA46F0 /* TableAdapter.m in Sources */,
+				E72B91341DD119030050C7C8 /* OnboardingManager.m in Sources */,
 				E70700331DBE37F3009E8D7D /* Timeline+CoreDataProperties.m in Sources */,
 				5A5F3D621D599FD300AC6767 /* UIImage+animatedGIF.m in Sources */,
 				E7A6BFED1DBB26950067C409 /* ButtonTableViewCell.m in Sources */,
@@ -897,6 +911,7 @@
 		5A85A2EA1D2BB66000B4CD02 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -946,6 +961,7 @@
 		5A85A2EB1D2BB66000B4CD02 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -990,7 +1006,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C1BC0B7DBCB1E0E87B0D6C4D /* Pods-Sprout.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1017,7 +1033,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6CA0A3EEABEA0FFCFFD3B905 /* Pods-Sprout.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

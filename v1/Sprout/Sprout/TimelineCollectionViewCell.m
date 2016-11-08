@@ -131,7 +131,7 @@
         } else {
             [[self imageView] setContentMode:UIViewContentModeCenter];
         }
-        [[self imageView] setImage:[Timeline imageOrTempImage:[self timeline]]];
+        [[self imageView] setImage:[[self timeline] imageOrTempImage]];
         [[self dateLbl] setText:[[self dateFormatter] stringFromDate:[[self timeline] created]]];
         switch ([self state]) {
             case TimelineCellStateNormal: {

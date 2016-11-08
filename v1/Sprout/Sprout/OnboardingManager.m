@@ -53,7 +53,7 @@ static OnboardingManager *shared = nil;
            [OnboardingContentViewController contentWithTitle:NSLocalizedString(@"Camera Access",@"Camera Access")
                                                         body:NSLocalizedString(@"SproutPic uses your camera to take pictures and show your progress over time.",@"proutPic uses your camera to take pictures and show your progress over time.")
                                                        image:[UIImage imageNamed:@"button-selfie"]
-                                                  buttonText:NSLocalizedString(@"Grant Camera Access",@"Grant Camera Access")
+                                                  buttonText:(alreadyShown) ? NSLocalizedString(@"Next",@"Next") : NSLocalizedString(@"Grant Camera Access",@"Grant Camera Access")
                                                       action:^{
                                                           [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
                                                               [[[OnboardingManager sharedInstance] onboardingVC] moveNextPage];
@@ -62,7 +62,7 @@ static OnboardingManager *shared = nil;
            [OnboardingContentViewController contentWithTitle:NSLocalizedString(@"Push Notifications",@"Push Notifications")
                                                         body:NSLocalizedString(@"SproutPic uses notifications to remind you when it's time to take another picture.",@"SproutPic uses notifications to remind you when it's time to take another picture.")
                                                        image:[UIImage imageNamed:@"onboarding-notification"]
-                                                  buttonText:NSLocalizedString(@"Grant Notification Access",@"Grant Notification Access")
+                                                  buttonText:(alreadyShown) ? NSLocalizedString(@"Next",@"Next") : NSLocalizedString(@"Grant Notification Access",@"Grant Notification Access")
                                                       action:^{
                                                           [[UIApplication sharedApplication] registerUserNotificationSettings:
                                                            [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound categories:nil]];
@@ -72,7 +72,7 @@ static OnboardingManager *shared = nil;
            [OnboardingContentViewController contentWithTitle:NSLocalizedString(@"Lets Get Start!",@"Lets Get Start!")
                                                         body:NSLocalizedString(@"You are all ready to go. Are you ready to create a new SproutPic Project?",@"You are all ready to go. Are you ready to create a new SproutPic Project?")
                                                        image:[UIImage imageNamed:@"onboarding-finished"]
-                                                  buttonText:(alreadyShown)?NSLocalizedString(@"Get Started", @"Get Started"):NSLocalizedString(@"Create My First Sprout", @"Create My First Sprout")
+                                                  buttonText:(alreadyShown) ? NSLocalizedString(@"Get Started",@"Get Started") :NSLocalizedString(@"Create My First Sprout", @"Create My First Sprout")
                                                       action:^{
                                                           [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_ONBOARDING_SHOWN];
                                                           [[NSUserDefaults standardUserDefaults] synchronize];

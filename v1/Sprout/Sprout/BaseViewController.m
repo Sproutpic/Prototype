@@ -166,9 +166,7 @@
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
                                               style:UIAlertActionStyleDefault
-                                            handler:^(UIAlertAction * _Nonnull action) {
-                                                [UIUtils hapticFeedback];
-                                            }]];
+                                            handler:nil]];
     [[self navigationController] presentViewController:alert animated:YES completion:nil];
 }
 

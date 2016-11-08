@@ -7,6 +7,7 @@
 //
 
 #import <CoreData/CoreData.h>
+#import "DataObjects.h"
 
 @implementation NSManagedObject (Extras)
 

@@ -23,12 +23,10 @@
 		5AD140331D50673D004C301B /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD140321D50673D004C301B /* CameraViewController.m */; };
 		B0446FD54F4EE217CE0339B5 /* Pods_Sprout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1C7A893189FC6DF0EFEF47A /* Pods_Sprout.framework */; };
 		E70144E81DC0D9E200E115BF /* SproutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E70144E71DC0D9E200E115BF /* SproutView.m */; };
-		E707002F1DBE37F3009E8D7D /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = E70700241DBE37F3009E8D7D /* Project.m */; };
+		E707002F1DBE37F3009E8D7D /* Project+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = E70700241DBE37F3009E8D7D /* Project+CoreDataClass.m */; };
 		E70700301DBE37F3009E8D7D /* Project+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = E70700261DBE37F3009E8D7D /* Project+CoreDataProperties.m */; };
-		E70700311DBE37F3009E8D7D /* Project+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = E70700281DBE37F3009E8D7D /* Project+Extras.m */; };
-		E70700321DBE37F3009E8D7D /* Timeline.m in Sources */ = {isa = PBXBuildFile; fileRef = E707002A1DBE37F3009E8D7D /* Timeline.m */; };
+		E70700321DBE37F3009E8D7D /* Timeline+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = E707002A1DBE37F3009E8D7D /* Timeline+CoreDataClass.m */; };
 		E70700331DBE37F3009E8D7D /* Timeline+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = E707002C1DBE37F3009E8D7D /* Timeline+CoreDataProperties.m */; };
-		E70700341DBE37F3009E8D7D /* Timeline+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = E707002E1DBE37F3009E8D7D /* Timeline+Extras.m */; };
 		E708E6121DCEBB9600E9D626 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E708E6111DCEBB9600E9D626 /* CoreData.framework */; };
 		E708E6141DCEBBAD00E9D626 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E708E6131DCEBBAD00E9D626 /* Foundation.framework */; };
 		E708E6161DCEBBB300E9D626 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E708E6151DCEBBB300E9D626 /* UIKit.framework */; };
@@ -112,18 +110,14 @@
 		D1C7A893189FC6DF0EFEF47A /* Pods_Sprout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Sprout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E70144E61DC0D9E200E115BF /* SproutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SproutView.h; sourceTree = "<group>"; };
 		E70144E71DC0D9E200E115BF /* SproutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SproutView.m; sourceTree = "<group>"; };
-		E70700231DBE37F3009E8D7D /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Project.h; path = Database/Project.h; sourceTree = "<group>"; };
-		E70700241DBE37F3009E8D7D /* Project.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Project.m; path = Database/Project.m; sourceTree = "<group>"; };
+		E70700231DBE37F3009E8D7D /* Project+CoreDataClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Project+CoreDataClass.h"; path = "Database/Project+CoreDataClass.h"; sourceTree = "<group>"; };
+		E70700241DBE37F3009E8D7D /* Project+CoreDataClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Project+CoreDataClass.m"; path = "Database/Project+CoreDataClass.m"; sourceTree = "<group>"; };
 		E70700251DBE37F3009E8D7D /* Project+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Project+CoreDataProperties.h"; path = "Database/Project+CoreDataProperties.h"; sourceTree = "<group>"; };
 		E70700261DBE37F3009E8D7D /* Project+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Project+CoreDataProperties.m"; path = "Database/Project+CoreDataProperties.m"; sourceTree = "<group>"; };
-		E70700271DBE37F3009E8D7D /* Project+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Project+Extras.h"; path = "Database/Project+Extras.h"; sourceTree = "<group>"; };
-		E70700281DBE37F3009E8D7D /* Project+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Project+Extras.m"; path = "Database/Project+Extras.m"; sourceTree = "<group>"; };
-		E70700291DBE37F3009E8D7D /* Timeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timeline.h; path = Database/Timeline.h; sourceTree = "<group>"; };
-		E707002A1DBE37F3009E8D7D /* Timeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Timeline.m; path = Database/Timeline.m; sourceTree = "<group>"; };
+		E70700291DBE37F3009E8D7D /* Timeline+CoreDataClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Timeline+CoreDataClass.h"; path = "Database/Timeline+CoreDataClass.h"; sourceTree = "<group>"; };
+		E707002A1DBE37F3009E8D7D /* Timeline+CoreDataClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Timeline+CoreDataClass.m"; path = "Database/Timeline+CoreDataClass.m"; sourceTree = "<group>"; };
 		E707002B1DBE37F3009E8D7D /* Timeline+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Timeline+CoreDataProperties.h"; path = "Database/Timeline+CoreDataProperties.h"; sourceTree = "<group>"; };
 		E707002C1DBE37F3009E8D7D /* Timeline+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Timeline+CoreDataProperties.m"; path = "Database/Timeline+CoreDataProperties.m"; sourceTree = "<group>"; };
-		E707002D1DBE37F3009E8D7D /* Timeline+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Timeline+Extras.h"; path = "Database/Timeline+Extras.h"; sourceTree = "<group>"; };
-		E707002E1DBE37F3009E8D7D /* Timeline+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Timeline+Extras.m"; path = "Database/Timeline+Extras.m"; sourceTree = "<group>"; };
 		E708E6111DCEBB9600E9D626 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		E708E6131DCEBBAD00E9D626 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E708E6151DCEBBB300E9D626 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -194,7 +188,7 @@
 		E7D561501DBF241300647BBB /* TimelineCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelineCollectionViewCell.h; sourceTree = "<group>"; };
 		E7D561511DBF241300647BBB /* TimelineCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimelineCollectionViewCell.m; sourceTree = "<group>"; };
 		E7D561531DBF35B800647BBB /* TimelineCollectionViewCellDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimelineCollectionViewCellDelegate.h; sourceTree = "<group>"; };
-		E7DBE6291DACAE730052064E /* DatabaseModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DatabaseModel.xcdatamodel; sourceTree = "<group>"; };
+		E7DBE6291DACAE730052064E /* DatabaseModel.xcdatamodel */ = {isa = PBXFileReference; explicitFileType = wrapper.xcdatamodel; path = DatabaseModel.xcdatamodel; sourceTree = "<group>"; };
 		E7EC35061DC5708A004703D1 /* SelectTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTableViewController.h; sourceTree = "<group>"; };
 		E7EC35071DC5708A004703D1 /* SelectTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTableViewController.m; sourceTree = "<group>"; };
 		E7EC35091DC584A0004703D1 /* DateSelectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateSelectorViewController.h; sourceTree = "<group>"; };
@@ -446,18 +440,14 @@
 				E76FBA991DAE01D400BA46F0 /* CoreDataAccessKit.m */,
 				E7A77DB01DBC5FC20096F24C /* DataObjects.h */,
 				E7F92BD31DC227E10050E5AD /* DataObjects.m */,
-				E70700231DBE37F3009E8D7D /* Project.h */,
-				E70700241DBE37F3009E8D7D /* Project.m */,
+				E70700231DBE37F3009E8D7D /* Project+CoreDataClass.h */,
+				E70700241DBE37F3009E8D7D /* Project+CoreDataClass.m */,
 				E70700251DBE37F3009E8D7D /* Project+CoreDataProperties.h */,
 				E70700261DBE37F3009E8D7D /* Project+CoreDataProperties.m */,
-				E70700271DBE37F3009E8D7D /* Project+Extras.h */,
-				E70700281DBE37F3009E8D7D /* Project+Extras.m */,
-				E70700291DBE37F3009E8D7D /* Timeline.h */,
-				E707002A1DBE37F3009E8D7D /* Timeline.m */,
+				E70700291DBE37F3009E8D7D /* Timeline+CoreDataClass.h */,
+				E707002A1DBE37F3009E8D7D /* Timeline+CoreDataClass.m */,
 				E707002B1DBE37F3009E8D7D /* Timeline+CoreDataProperties.h */,
 				E707002C1DBE37F3009E8D7D /* Timeline+CoreDataProperties.m */,
-				E707002D1DBE37F3009E8D7D /* Timeline+Extras.h */,
-				E707002E1DBE37F3009E8D7D /* Timeline+Extras.m */,
 			);
 			name = "Model Objects";
 			sourceTree = "<group>";
@@ -727,12 +717,11 @@
 				5A85A2FB1D2BB85300B4CD02 /* CommunityViewController.m in Sources */,
 				E7ABE1F01DB410020056224D /* AccountSignInViewController.m in Sources */,
 				E7C72A081DB88DE100128D32 /* SelectNewProjectViewController.m in Sources */,
-				E707002F1DBE37F3009E8D7D /* Project.m in Sources */,
+				E707002F1DBE37F3009E8D7D /* Project+CoreDataClass.m in Sources */,
 				E7A6BFE71DBB233A0067C409 /* SproutDisplayTableViewCell.m in Sources */,
 				E70CB3EA1DAB2E7D003F4AA0 /* BaseViewController.m in Sources */,
 				E70CB3F11DAB57D9003F4AA0 /* ProjectTableViewCell.m in Sources */,
 				E70144E81DC0D9E200E115BF /* SproutView.m in Sources */,
-				E70700341DBE37F3009E8D7D /* Timeline+Extras.m in Sources */,
 				E749C0FA1DB462980068C3F1 /* AccountWebService.m in Sources */,
 				E746D4771DD03696009C1BDD /* JDMLocalNotification.m in Sources */,
 				E749C0F11DB44DF10068C3F1 /* SproutWebService.m in Sources */,
@@ -748,7 +737,6 @@
 				E749C0FF1DB49B880068C3F1 /* ProjectWebService.m in Sources */,
 				E79687FB1DB40A8F009F7AB9 /* AppDelegate+DemoData.m in Sources */,
 				E7EC35081DC5708A004703D1 /* SelectTableViewController.m in Sources */,
-				E70700311DBE37F3009E8D7D /* Project+Extras.m in Sources */,
 				E749C0EE1DB44D450068C3F1 /* NSString+WhiteSpacing.m in Sources */,
 				E78E3DD01DB41C7C00C4C815 /* AccountSignUpViewController.m in Sources */,
 				E762D1BA1DB9F4BD00988104 /* TextFieldTableViewCell.m in Sources */,
@@ -759,7 +747,7 @@
 				5A85A3011D2BB88900B4CD02 /* MyProjectsViewController.m in Sources */,
 				5AD140331D50673D004C301B /* CameraViewController.m in Sources */,
 				5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */,
-				E70700321DBE37F3009E8D7D /* Timeline.m in Sources */,
+				E70700321DBE37F3009E8D7D /* Timeline+CoreDataClass.m in Sources */,
 				E7EC350B1DC584A0004703D1 /* DateSelectorViewController.m in Sources */,
 				5A2180951D3E015C0057F298 /* AccountInformationViewController.m in Sources */,
 				E7DBE62A1DACAE730052064E /* DatabaseModel.xcdatamodeld in Sources */,

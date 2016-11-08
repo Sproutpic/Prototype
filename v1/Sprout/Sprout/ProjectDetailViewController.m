@@ -146,6 +146,7 @@ typedef enum RowDataOrder {
             [tCell setSwitchCallback:^(UISwitch *switchView){
                 if (switchView) {
                     [[self project] setRemindEnabled:@([switchView isOn])];
+                    [[self project] updateScheduledNotification];
                     [[self project] setLastModified:[NSDate date]];
                     [[self project] save];
                     [[self tableView] performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
@@ -227,7 +228,31 @@ typedef enum RowDataOrder {
                             [self displayUnderConstructionAlert];
                         } break;
                         case SocialMediaSprout: {
-                            [self displayUnderConstructionAlert];
+                            UIAlertController *alert = nil;
+                            alert = [UIAlertController alertControllerWithTitle:
+                                     NSLocalizedString(@"Sprout Privacy",
+                                                       @"Sprout Privacy")
+                                                                        message:
+                                     NSLocalizedString(@"Sprouts can either be public or private. If you want to share this Sprout with others, you must make it public. Do you want this Sprout to be Public or Private?",
+                                                       @"Sprouts can either be public or private. If you want to share this Sprout with others, you must make it public. Do you want this Sprout to be Public or Private?")
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+                            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Private", @"Private")
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:
+                                              ^(UIAlertAction * _Nonnull action) {
+                                                  [[self project] setSproutSocial:@(NO)];
+                                                  [[self project] save];
+                                                  [[self tableView] reloadData];
+                                              }]];
+                            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Public", @"Public")
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:
+                                              ^(UIAlertAction * _Nonnull action) {
+                                                  [[self project] setSproutSocial:@(YES)];
+                                                  [[self project] save];
+                                                  [[self tableView] reloadData];
+                                              }]];
+                            [[self navigationController] presentViewController:alert animated:YES completion:nil];
                         } break;
                     }
                 }
@@ -292,7 +317,7 @@ typedef enum RowDataOrder {
      @[
        @[@(PO_Title),@"Project Title",@"TextFieldTableViewCell",@"TextFieldTableViewCell",@(54)],
        @[@(PO_Sprout),@"Sprout Movie",@"SproutDisplayTableViewCell",@"SproutDisplayTableViewCell",@(225)],
-       @[@(PO_Description),@"Description",@"TextFieldTableViewCell",@"TextFieldTableViewCell",@(128)],
+       @[@(PO_Description),@"Description",@"TextFieldTableViewCell",@"TextFieldTableViewCell",@(100)],
        @[@(PO_Timeline),@"Timeline",@"TimelineTableViewCell",@"TimelineTableViewCell",@(110)],
        @[@(PO_FrontFaceCamereSwitch),@"Use Front Facing Camera",@"SwitchTableViewCell",@"SwitchTableViewCell",@(44)],
        @[@(PO_DurationSlider),@"Duration Slider",@"SliderTableViewCell",@"SliderTableViewCell",@(88)],
@@ -355,7 +380,6 @@ typedef enum RowDataOrder {
                 DateSelectorViewController *vc = [[DateSelectorViewController alloc] initWithNibName:@"DateSelectorViewController" bundle:nil];
                 [vc setDateDelegate:self];
                 [vc setTag:[[rowData objectAtIndex:RD_POType] integerValue]];
-                [vc setTitle:NSLocalizedString(@"Repeat On", @"Repeat On")];
                 [CATransaction begin];
                 [[self navigationController] pushViewController:vc animated:YES];
                 [CATransaction setCompletionBlock:^{
@@ -366,6 +390,7 @@ typedef enum RowDataOrder {
                     }
                 }];
                 [CATransaction commit];
+                [vc setTitle:NSLocalizedString(@"Repeat On", @"Repeat On")];
             }
         } break;
         case PO_RemindRepeat: {
@@ -438,6 +463,14 @@ typedef enum RowDataOrder {
         } break;
         case PO_RemindRepeat: {
             [[self project] setRepeatFrequency:@(index)];
+            NSCalendar *cal = [NSCalendar currentCalendar];
+            NSDate *yesterday = [cal dateByAddingUnit:NSCalendarUnitDay value:-1 toDate:[NSDate date] options:NSCalendarMatchNextTime];
+            NSDate *curDate = [[self project] repeatNextDate];
+            NSDate *date = [cal dateBySettingHour:[cal component:NSCalendarUnitHour fromDate:curDate]
+                                           minute:[cal component:NSCalendarUnitMinute fromDate:curDate]
+                                           second:0 ofDate:yesterday options:NSCalendarWrapComponents];
+            [[self project] setRepeatNextDate:date];
+            [[self project] updateScheduledNotification];
         } break;
     }
     [[self project] setLastModified:[NSDate date]];
@@ -452,6 +485,7 @@ typedef enum RowDataOrder {
     switch (tag) {
         case PO_RemindOnLabel: {
             [[self project] setRepeatNextDate:[datePicker date]];
+            [[self project] updateScheduledNotification];
         } break;
     }
     [[self project] setLastModified:[NSDate date]];

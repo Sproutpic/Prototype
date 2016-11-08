@@ -15,6 +15,7 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <TwitterKit/TwitterKit.h>
+#import "DataObjects.h"
 
 @implementation AppDelegate
 
@@ -68,6 +69,11 @@
     [self createDemoData];
     [self setMainWithControllers];
     return YES;
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    [Project updateAllProjectNotifications];
 }
 
 @end

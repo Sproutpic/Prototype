@@ -56,7 +56,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)cv numberOfItemsInSection:(NSInteger)section
 {
-    return (([self project]) ? [[Project timelinesArraySorted:[self project]] count] : 0) + 1;
+    return (([self project]) ? [[[self project] timelinesArraySorted] count] : 0) + 1;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -67,7 +67,7 @@
     }
     Timeline *timeline = nil;
     if ([self project] && [indexPath row]>0) {
-        timeline = [[Project timelinesArraySorted:[self project]] objectAtIndex:[indexPath row]-1];
+        timeline = [[[self project] timelinesArraySorted] objectAtIndex:[indexPath row]-1];
     }
     [cell setTimeline:timeline withDisplayType:([self editState]) ? TimelineCellStateEdit : TimelineCellStateNormalAndDate];
     [cell setTimelineDelegate:self];
@@ -85,15 +85,12 @@
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Delete Photo", @"Delete Photo")
                                               style:UIAlertActionStyleDestructive
                                             handler:^(UIAlertAction * _Nonnull action) {
-                                                [UIUtils hapticFeedback];
                                                 [timeline deleteAndSave];
                                                 [[self collectionView] reloadData];
                                             }]];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                               style:UIAlertActionStyleCancel
-                                            handler:^(UIAlertAction * _Nonnull action) {
-                                                [UIUtils hapticFeedback];
-                                            }]];
+                                            handler:nil]];
     UIViewController *vc = [[[UIApplication sharedApplication] keyWindow] rootViewController];
     [vc presentViewController:alert animated:YES completion:nil];
 }

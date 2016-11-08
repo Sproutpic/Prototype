@@ -7,8 +7,7 @@
 //  This file was automatically generated and should not be edited.
 //
 
-#import "Project.h"
-
+#import "Project+CoreDataClass.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

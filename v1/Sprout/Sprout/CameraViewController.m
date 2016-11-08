@@ -210,11 +210,12 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         UIImage *img = [UIImage imageWithData:UIImagePNGRepresentation(saveImg)];
         if (img) {
-            NSString *imageName = [Timeline saveImage:img];
-            NSString *thumbnailImgName = [Timeline saveThumbnailImage:img];
+            Timeline *tl = [Timeline createNewTimelineWithServerURL:@"" forProject:[self project] withMOC:[self moc]];
+            NSString *imageName = [tl saveImage:img];
+            NSString *thumbnailImgName = [tl saveThumbnailImage:img];
             if (imageName && thumbnailImgName) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                Timeline *tl = [Timeline createNewTimelineWithServerURL:nil forProject:[self project] withMOC:[self moc]];
+//                Timeline *tl = [Timeline createNewTimelineWithServerURL:@"" forProject:[self project] withMOC:[self moc]];
                     NSDate *now = [NSDate date];
                     [tl setLocalURL:imageName];
                     [tl setLocalThumbnailURL:thumbnailImgName];
@@ -265,9 +266,10 @@
     }
     
     UIImage *img = nil;
-    NSArray *timelines = [Project timelinesArraySorted:[self project]];
+    NSArray *timelines = [[self project] timelinesArraySorted];
     if ([timelines count]>0) {
-        img = [Timeline imageThumbnail:[timelines objectAtIndex:[timelines count]-1]];
+        Timeline *timeline = [timelines objectAtIndex:[timelines count]-1];
+        img = [timeline imageThumbnail];
     }
     
     UIView *ol = [[UIView alloc] initWithFrame:[[self view] bounds]];

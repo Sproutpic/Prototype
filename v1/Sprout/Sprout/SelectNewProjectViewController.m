@@ -139,14 +139,11 @@ typedef enum NewSproutType {
         [alert setMessage:[rowData objectAtIndex:3]];
         [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                                   style:UIAlertActionStyleCancel
-                                                handler:^(UIAlertAction * _Nonnull action) {
-                                                    [UIUtils hapticFeedback];
-                                                }]];
+                                                handler:nil]];
         [alert addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:@"%@ %@",
                                                          NSLocalizedString(@"Create", @"Create"),[rowData objectAtIndex:0]]
                                                   style:UIAlertActionStyleDefault
                                                 handler:^(UIAlertAction * _Nonnull action) {
-                                                    [UIUtils hapticFeedback];
                                                     [self createProjectAndShowCamera:[indexPath row]
                                                                     forNewSproutType:NST_Selfie];
                                                 }]];

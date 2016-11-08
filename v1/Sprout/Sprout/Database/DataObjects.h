@@ -9,21 +9,21 @@
 #import <CoreData/CoreData.h>
 #import "CoreDataAccessKit.h"
 
-#import "Project.h"
+#import "Project+CoreDataClass.h"
 #import "Project+CoreDataProperties.h"
-#import "Project+Extras.h"
 
-#import "Timeline.h"
+#import "Timeline+CoreDataClass.h"
 #import "Timeline+CoreDataProperties.h"
-#import "Timeline+Extras.h"
 
-#define REPEAT_FREQUENCY_STRS @[ @"Daily", @"Weekly", @"Bi-Weekley", @"Monthly" ]
+#define REPEAT_FREQUENCY_STRS @[ @"Daily", @"Weekly", @"Bi-Weekley", @"Monthly", @"Every 5 Minutes (For Testing)", @" Every Hour (For Testing)" ]
 
 typedef enum RepeatFrequency {
     RF_Daily = 0,
-    RF_Weekly,
-    RF_BiWeekly,
-    RF_Monthly,
+    RF_Weekly = 1,
+    RF_BiWeekly = 2,
+    RF_Monthly = 3,
+    RF_Every_5_Minutes = 4,
+    RF_Every_Hour = 5,
     RF_Count
 } RepeatFrequency;
 

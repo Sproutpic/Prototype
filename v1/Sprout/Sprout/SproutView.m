@@ -42,9 +42,9 @@
 {
     if ([[[self project] playing] boolValue]) {
         NSMutableArray *imagesArray = [[NSMutableArray alloc] init];
-        NSArray *timelines = [Project timelinesArraySorted:[self project]];
+        NSArray *timelines = [[self project] timelinesArraySorted];
         for (Timeline *timeline in timelines) {
-            UIImage *timelineImage = [Timeline imageThumbnail:timeline];
+            UIImage *timelineImage = [timeline imageThumbnail];
             if (timelineImage) {
                 [imagesArray addObject:timelineImage];
             }
@@ -81,10 +81,10 @@
         [[self imageView] setImage:[UIImage animatedImageWithAnimatedGIFURL:fileURL]];
         [[self playButton] setImage:nil forState:UIControlStateNormal];
     } else {
-        NSArray *timelines = [Project timelinesArraySorted:[self project]];
+        NSArray *timelines = [[self project] timelinesArraySorted];
         if ([timelines count]>0) {
             Timeline *timeline = [timelines objectAtIndex:0];
-            UIImage *timelineImage = [Timeline imageThumbnail:timeline];
+            UIImage *timelineImage = [timeline imageThumbnail];
             if (timelineImage) {
                 [[self imageView] setContentMode:UIViewContentModeScaleAspectFill];
                 [[self imageView] setImage:timelineImage];
@@ -103,10 +103,10 @@
 - (UIImage*)sproutFirstImage
 {
     UIImage *img = nil;
-    NSArray *timelines = [Project timelinesArraySorted:[self project]];
+    NSArray *timelines = [[self project] timelinesArraySorted];
     if (timelines && [timelines count]>0) {
         Timeline *timeline = [timelines objectAtIndex:0];
-        img = [Timeline imageThumbnail:timeline];
+        img = [timeline imageThumbnail];
         [[self imageView] setContentMode:UIViewContentModeScaleAspectFill];
     }
     if (!img) {
@@ -120,9 +120,9 @@
 {
     if ([[[self project] playing] boolValue]) {
         NSMutableArray *imagesArray = [[NSMutableArray alloc] init];
-        NSArray *timelines = [Project timelinesArraySorted:[self project]];
+        NSArray *timelines = [[self project] timelinesArraySorted];
         for (Timeline *timeline in timelines) {
-            UIImage *timelineImage = [Timeline imageThumbnail:timeline];
+            UIImage *timelineImage = [timeline imageThumbnail];
             if (timelineImage) {
                 [imagesArray addObject:timelineImage];
             }
@@ -148,12 +148,14 @@
     if ([keyPath isEqualToString:KVO_PROJECT_SLIDE_TIME]) {
         if ([[[self project] playing] boolValue]) {
             [[self imageView] stopAnimating];
-            NSArray *timelines = [Project timelinesArraySorted:[self project]];
+            NSArray *timelines = [[self project] timelinesArraySorted];
             [[self imageView] setAnimationDuration:[[[self project] slideTime] floatValue]*[timelines count]];
             [[self imageView] startAnimating];
         }
     } else if ([keyPath isEqualToString:KVO_PROJECT_TIMELINES]) {
         if ([[[self project] playing] boolValue]) {
+            [self playSproutView];
+        } else if ([object isDeleted]) {
             [self playSproutView];
         }
     }

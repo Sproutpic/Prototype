@@ -15,9 +15,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Project : NSManagedObject
 
++ (Project*)createNewProject:(NSString*)title
+                    subTitle:(NSString*)subTitle
+    withManagedObjectContext:(NSManagedObjectContext*)managedObjectContext;
+
++ (NSArray*)sortDescriptors;
+
+- (NSArray*)timelinesArraySorted;
+
+- (void)updateScheduledNotification;
+
++ (void)updateAllProjectNotifications;
+
 @end
 
 NS_ASSUME_NONNULL_END
 
 #import "Project+CoreDataProperties.h"
-#import "Project+Extras.h"

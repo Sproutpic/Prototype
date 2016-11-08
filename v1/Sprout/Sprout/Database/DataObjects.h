@@ -15,7 +15,7 @@
 #import "Timeline+CoreDataClass.h"
 #import "Timeline+CoreDataProperties.h"
 
-#define REPEAT_FREQUENCY_STRS @[ @"Daily", @"Weekly", @"Bi-Weekley", @"Monthly", @"Every 5 Minutes (For Testing)", @" Every Hour (For Testing)" ]
+#define REPEAT_FREQUENCY_STRS @[ @"Daily", @"Weekly", @"Bi-Weekly", @"Monthly", @"Every 5 Minutes (For Testing)", @" Every Hour (For Testing)" ]
 
 typedef enum RepeatFrequency {
     RF_Daily = 0,

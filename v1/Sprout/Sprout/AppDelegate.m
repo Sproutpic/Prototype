@@ -16,6 +16,13 @@
 #import <Crashlytics/Crashlytics.h>
 #import <TwitterKit/TwitterKit.h>
 #import "DataObjects.h"
+#import "SproutWebService.h"
+
+@interface AppDelegate () <SproutWebServiceAuthDelegate>
+
+@property (nonatomic) UIBackgroundTaskIdentifier bgTask;
+
+@end
 
 @implementation AppDelegate
 
@@ -47,6 +54,7 @@
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [[UINavigationBar appearance] setTranslucent:NO];
     
+    // This hides the back button test.
     [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(-200, -200)
                                                          forBarMetrics:UIBarMetricsDefault];
     
@@ -68,12 +76,49 @@
     [self configureGlobalTheme];
     [self createDemoData];
     [self setMainWithControllers];
+    [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
+    [application setApplicationIconBadgeNumber:0];
     return YES;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     [Project updateAllProjectNotifications];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    self.bgTask = [application beginBackgroundTaskWithName:@"BackgroundTasks" expirationHandler:^{
+        // Clean up any unfinished task business by marking where you
+        // stopped or ending the task outright.
+        [application endBackgroundTask:self.bgTask];
+        self.bgTask = UIBackgroundTaskInvalid;
+    }];
+    
+    // Start the long-running task and return immediately.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        // Do the work associated with the task, preferably in chunks.
+        [Project updateAllProjectNotifications];
+
+        [application endBackgroundTask:self.bgTask];
+        self.bgTask = UIBackgroundTaskInvalid;
+    });
+}
+
+- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler
+{
+    [application setApplicationIconBadgeNumber:[application applicationIconBadgeNumber]+1]; // For dev testing...
+    [Project updateAllProjectNotifications];
+    completionHandler(UIBackgroundFetchResultNewData);
+}
+
+# pragma mark SproutWebServiceAuthDelegate
+
+- (void)authenticationNeeded:(void (^)(void))completion
+{
+    NSLog(@"authenticationNeeded");
+    completion();
 }
 
 @end

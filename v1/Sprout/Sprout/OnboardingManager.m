@@ -77,7 +77,6 @@ static OnboardingManager *shared = nil;
                                                           [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_ONBOARDING_SHOWN];
                                                           [[NSUserDefaults standardUserDefaults] synchronize];
                                                           [[[OnboardingManager sharedInstance] onboardingVC] dismissViewControllerAnimated:YES completion:^{
-                                                              [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
                                                               [[OnboardingManager sharedInstance] setOnboardingVC:nil];
                                                           }];
                                                       }]
@@ -85,9 +84,7 @@ static OnboardingManager *shared = nil;
         [[om onboardingVC] setShouldFadeTransitions:YES];
         [[om onboardingVC] setSwipingEnabled:NO];
         [[om onboardingVC] setPageControl:nil];
-        [vc presentViewController:[om onboardingVC] animated:YES completion:^{
-            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-        }];
+        [vc presentViewController:[om onboardingVC] animated:YES completion:nil];
     }
 }
 

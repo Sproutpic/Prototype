@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#define CURRENT_USER_USER_KEY   @"CURRENT_USER_USER_KEY"
-#define CURRENT_USER_NAME_KEY   @"CURRENT_USER_NAME_KEY"
-#define CURRENT_USER_EMAIL_KEY  @"CURRENT_USER_EMAIL_KEY"
+#define CURRENT_USER_USER_KEY       @"CURRENT_USER_USER_KEY"
+#define CURRENT_USER_NAME_KEY       @"CURRENT_USER_NAME_KEY"
+#define CURRENT_USER_EMAIL_KEY      @"CURRENT_USER_EMAIL_KEY"
+#define CURRENT_USER_ACCESS_TOKEN   @"access_token"
+#define CURRENT_USER_TOKEN_TYPE     @"token_type"
+#define CURRENT_USER_EXPIRES_IN     @"expires_in"
 
 @interface CurrentUser : NSObject
 
@@ -20,5 +23,6 @@
 
 + (NSString*)fullName;
 + (NSString*)emailAddress;
++ (NSString*)authToken;
 
 @end

@@ -9,12 +9,25 @@
 #import "SproutWebService.h"
 #import <UIKit/UIKit.h>
 #import "AFNetworking.h"
+#import "CurrentUser.h"
+#import "CoreDataAccessKit.h"
+
+#define OAUTH_AUTHORIZATION_KEY @"Authorization"
 
 static NSInteger serviceCallCount = 0;
 
 @implementation SproutWebService
 
 # pragma mark Private
+
+- (NSManagedObjectContext*)moc
+{
+    if (!_moc) {
+        _moc = [[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"ProjectWebService"
+                                                                          andConcurrency:NSPrivateQueueConcurrencyType];
+    }
+    return _moc;
+}
 
 - (void)demoSuccessCallBack
 {
@@ -40,6 +53,14 @@ static NSInteger serviceCallCount = 0;
     }
 }
 
+- (NSDictionary *)parameters
+{
+    if (!_parameters) {
+        _parameters = @{};
+    }
+    return _parameters;
+}
+
 # pragma mark SproutWebService
 
 - (void)start
@@ -54,21 +75,30 @@ static NSInteger serviceCallCount = 0;
     
     // Actually make the service call...
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager setResponseSerializer:[AFJSONResponseSerializer serializer]];
-    [[manager requestSerializer] setCachePolicy:NSURLRequestReloadIgnoringCacheData];
-    [manager POST:[self url]
-      parameters:[self parameters]
-        progress:^(NSProgress * _Nonnull downloadProgress) {
-            NSLog(@"Progress - %0.0f",[downloadProgress fractionCompleted]);
+    // Check for oauth and add authorization to header parameters
+    if ([self oauthEnabled]) {
+        NSString *token = [CurrentUser authToken];
+        if (token) {
+            [[manager requestSerializer] setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            [[manager requestSerializer] setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            [[manager requestSerializer] setValue:token forHTTPHeaderField:OAUTH_AUTHORIZATION_KEY];
         }
-         success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-             [self completedSuccess:responseObject];
-             [self showStatusBarSpinner:NO];
+    }
+    [[manager requestSerializer] setCachePolicy:NSURLRequestReloadIgnoringCacheData];
+    [manager setResponseSerializer:[AFJSONResponseSerializer serializer]];
+    [manager POST:[self url]
+       parameters:[self parameters]
+         progress:^(NSProgress * _Nonnull downloadProgress) {
+             NSLog(@"Progress - %0.0f",[downloadProgress fractionCompleted]);
          }
-         failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-             [self completedFailure:error];
-             [self showStatusBarSpinner:NO];
-         }];
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              [self completedSuccess:responseObject];
+              [self showStatusBarSpinner:NO];
+          }
+          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              [self completedFailure:error];
+              [self showStatusBarSpinner:NO];
+          }];
 }
 
 - (NSString*)encode64String:(NSString*)value
@@ -88,9 +118,106 @@ static NSInteger serviceCallCount = 0;
 
 - (void)completedFailure:(NSError*)error
 {
+    // Check for authentication errors
+    if (error) {
+        if ([error userInfo] && [[error userInfo] objectForKey:@"NSLocalizedDescription"]) {
+            NSString *local = [[error userInfo] objectForKey:@"NSLocalizedDescription"];
+            if ([local containsString:@"Request failed: unauthorized (401)"]) {
+                id<SproutWebServiceAuthDelegate> delegate = (id<SproutWebServiceAuthDelegate>)[[UIApplication sharedApplication] delegate];
+                [delegate authenticationNeeded:^{
+                    NSLog(@"Call service again...");
+                    //[self start];
+                }];
+                //return;
+            }
+        }
+    }
+    
     if ([self serviceCallBack]) {
         _serviceCallBack(error, self);
     }
+}
+
+# pragma mark Sync Helper Methods
+
+- (BOOL)isNull:(NSObject*)obj
+{
+    if (obj) {
+        if ([obj isKindOfClass:[NSString class]] && [(NSString*)obj isEqualToString:@"<null>"]) {
+            return YES;
+        } else if ([obj isKindOfClass:[NSNull class]]) {
+            return YES;
+        }
+        return NO;
+    }
+    return YES;
+}
+
+- (NSString*)stringForKey:(NSString*)key inDict:(NSDictionary*)dictionary
+{
+    if (key && dictionary) {
+        NSObject *obj = [dictionary objectForKey:key];
+        if (obj && [obj isKindOfClass:[NSString class]] && ![self isNull:obj]) {
+            return (NSString*)obj;
+        }
+    }
+    return @""; // This is the default
+}
+
+- (NSNumber*)numberForKey:(NSString*)key inDict:(NSDictionary*)dictionary
+{
+    if (key && dictionary) {
+        NSObject *obj = [dictionary objectForKey:key];
+        if (obj && [obj isKindOfClass:[NSNumber class]] && ![self isNull:obj]) {
+            return (NSNumber*)obj;
+        }
+    }
+    return @(0); // This is the default
+}
+
+- (NSDecimalNumber*)decimalForKey:(NSString*)key inDict:(NSDictionary*)dictionary
+{
+    if (key && dictionary) {
+        NSObject *obj = [dictionary objectForKey:key];
+        if (obj && [obj isKindOfClass:[NSDecimalNumber class]] && ![self isNull:obj]) {
+            return (NSDecimalNumber*)obj;
+        } else if (obj && [obj isKindOfClass:[NSNumber class]] && ![self isNull:obj]) {
+            return [NSDecimalNumber decimalNumberWithString:[(NSNumber*)obj stringValue]];
+        }
+    }
+    return [NSDecimalNumber decimalNumberWithString:@"0.0"]; // This is the default
+}
+
+- (NSNumber*)boolForKey:(NSString*)key inDict:(NSDictionary*)dictionary
+{
+    if (key && dictionary) {
+        NSObject *obj = [dictionary objectForKey:key];
+        if (obj && ![self isNull:obj]) {
+            if ([obj isKindOfClass:[NSNumber class]]) {
+                return @([(NSNumber*)obj boolValue]);
+            } else if ([obj isKindOfClass:[NSString class]]) {
+                NSString *str = (NSString*)obj;
+                if ([str caseInsensitiveCompare:@"true"]==NSOrderedSame
+                    || [str caseInsensitiveCompare:@"yes"]==NSOrderedSame
+                    || [str caseInsensitiveCompare:@"1"]==NSOrderedSame) {
+                    return @(YES);
+                }
+            }
+        }
+    }
+    return @(NO); // This is the default
+}
+
+- (NSDate*)dateForKey:(NSString*)key inDict:(NSDictionary*)dictionary
+{
+    // Ex: 2016-11-14T07:59:31.037
+    if (key && dictionary) {
+        NSObject *obj = [dictionary objectForKey:key];
+        if (obj && ![self isNull:obj]) {
+            return [NSDate date];
+        }
+    }
+    return [NSDate date]; // This is the default
 }
 
 @end

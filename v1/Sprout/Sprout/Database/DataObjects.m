@@ -30,3 +30,18 @@
 }
 
 @end
+
+@implementation NSManagedObjectContext (Extras)
+
+- (void)saveAll
+{
+    NSError *error = nil;
+    if ([self hasChanges]) {
+        if (![self save:&error]) {
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+    }
+}
+
+@end

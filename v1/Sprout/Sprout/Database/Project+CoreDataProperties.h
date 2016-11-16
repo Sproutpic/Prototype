@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSNumber *slideTime;
 @property (nullable, nonatomic, copy) NSNumber *playing;
 @property (nullable, nonatomic, copy) NSNumber *sproutSocial;
+@property (nullable, nonatomic, copy) NSNumber *useShadow;
+@property (nullable, nonatomic, copy) NSNumber *markedForDelete;
 
 @property (nullable, nonatomic, copy) NSString *videoURL;
 @property (nullable, nonatomic, copy) NSDate *videoLastModified;

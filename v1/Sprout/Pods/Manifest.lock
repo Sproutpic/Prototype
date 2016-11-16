@@ -23,6 +23,7 @@ PODS:
     - SDWebImage/Core (= 3.8.2)
   - SDWebImage/Core (3.8.2)
   - SVProgressHUD (2.0.3)
+  - SVPullToRefresh (0.4.1)
   - TPKeyboardAvoiding (1.3)
   - TwitterCore (2.5.0):
     - Fabric
@@ -37,6 +38,7 @@ DEPENDENCIES:
   - Onboard
   - SDWebImage (from `https://github.com/rs/SDWebImage.git`, branch `3.8.2`)
   - SVProgressHUD (from `https://github.com/SVProgressHUD/SVProgressHUD.git`, branch `2.0.3`)
+  - SVPullToRefresh (from `https://github.com/samvermette/SVPullToRefresh.git`, branch `0.4.1`)
   - TPKeyboardAvoiding (from `https://github.com/michaeltyson/TPKeyboardAvoiding.git`, branch `1.3`)
   - TwitterKit
 
@@ -50,6 +52,9 @@ EXTERNAL SOURCES:
   SVProgressHUD:
     :branch: 2.0.3
     :git: https://github.com/SVProgressHUD/SVProgressHUD.git
+  SVPullToRefresh:
+    :branch: 0.4.1
+    :git: https://github.com/samvermette/SVPullToRefresh.git
   TPKeyboardAvoiding:
     :branch: '1.3'
     :git: https://github.com/michaeltyson/TPKeyboardAvoiding.git
@@ -64,6 +69,9 @@ CHECKOUT OPTIONS:
   SVProgressHUD:
     :commit: c406f0ac1929b21ab444608eb4ab27035bb57a21
     :git: https://github.com/SVProgressHUD/SVProgressHUD.git
+  SVPullToRefresh:
+    :commit: de982d00218bdbfcd079456a211ddec48a1b9bdc
+    :git: https://github.com/samvermette/SVPullToRefresh.git
   TPKeyboardAvoiding:
     :commit: 76937536529d1fcd2428b9c4f4b45d47729ca0db
     :git: https://github.com/michaeltyson/TPKeyboardAvoiding.git
@@ -76,10 +84,11 @@ SPEC CHECKSUMS:
   Onboard: b6871f25ac753175b2ab9a362fb2feb26a81a311
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
+  SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   TPKeyboardAvoiding: a5138f318c06fb3e151f886e18ce4a72695d9cbe
   TwitterCore: 95c46af93112768a7983bd370d66023553601d01
   TwitterKit: dd8042698b0ff5bd3066fa919b3b2b50d8eed829
 
-PODFILE CHECKSUM: 4fc37ac1f2758ca9eea24fe417367366762c01cf
+PODFILE CHECKSUM: 8f8d58f3ec035774eee5aec9c9f20d9b3064857d
 
 COCOAPODS: 1.1.1

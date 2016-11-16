@@ -1,5 +1,5 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '8.0'
+platform :ios, '9.0'
 
 use_frameworks!
 target 'Sprout' do
@@ -12,4 +12,5 @@ target 'Sprout' do
     pod 'TPKeyboardAvoiding', :git => 'https://github.com/michaeltyson/TPKeyboardAvoiding.git', :branch => '1.3'
     pod 'SVProgressHUD', :git => 'https://github.com/SVProgressHUD/SVProgressHUD.git', :branch => '2.0.3'
     pod 'SDWebImage', :git => 'https://github.com/rs/SDWebImage.git', :branch => '3.8.2'
+    pod 'SVPullToRefresh', :git => 'https://github.com/samvermette/SVPullToRefresh.git', :branch => '0.4.1'
 end

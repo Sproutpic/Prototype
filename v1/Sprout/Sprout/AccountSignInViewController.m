@@ -40,15 +40,17 @@
 
     // Verify the email address
     if (email==nil || [email length]<=0) {
-        [self displayMessageWithBody:NSLocalizedString(@"Enter your email address to Sign In",
-                                                       @"Enter your email address to Sign In")];
+        [self displayMessageWithTitle:NSLocalizedString(@"Missing Email/Username", @"Missing Email/Username")
+                              andBody:NSLocalizedString(@"You must enter your email address to Sign In",
+                                                        @"You must enter your email address to Sign In")];
         return;
     }
     
     // Verify the password
     if (password==nil || [password length]<=0) {
-        [self displayMessageWithBody:NSLocalizedString(@"Enter your password to Sign In",
-                                                       @"Enter your password to Sign In")];
+        [self displayMessageWithTitle:NSLocalizedString(@"Missing Password", @"Missing Password")
+                              andBody:NSLocalizedString(@"You must enter your password to Sign In",
+                                                        @"You must enter your password to Sign In")];
         return;
     }
     
@@ -80,10 +82,11 @@
     
     [UIUtils hapticFeedback];
 
-    // Verify all 3 fields have data entered
+    // Verify email address was entered
     if (email==nil || [email length]<=0) {
-        [self displayMessageWithBody:NSLocalizedString(@"Enter your email address to restore password",
-                                                       @"Enter your email address to restore password")];
+        [self displayMessageWithTitle:NSLocalizedString(@"Invalid Email", @"Invalid Email")
+                              andBody:NSLocalizedString(@"Enter your email address to restore password",
+                                                        @"Enter your email address to restore password")];
         return;
     }
     

@@ -215,7 +215,6 @@
             NSString *thumbnailImgName = [tl saveThumbnailImage:img];
             if (imageName && thumbnailImgName) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-//                Timeline *tl = [Timeline createNewTimelineWithServerURL:@"" forProject:[self project] withMOC:[self moc]];
                     NSDate *now = [NSDate date];
                     [tl setLocalURL:imageName];
                     [tl setLocalThumbnailURL:thumbnailImgName];
@@ -277,6 +276,7 @@
     CGRect frame = [[self pickerView] bounds];
     frame.origin.y = (self.view.bounds.size.height-frame.size.width-[self shutterBtn].frame.size.height)/3;
     frame.size.height =  frame.size.width;
+    
     UIImageView *imgView = [[UIImageView alloc] initWithFrame:frame];
     [imgView setImage:img];
     [imgView setAlpha:0.3];
@@ -285,6 +285,7 @@
     [imgView setContentMode:UIViewContentModeScaleAspectFill];
     [imgView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [ol addSubview:imgView];
+    [imgView setHidden:![[[self project] useShadow] boolValue]];
     
     UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, imgView.frame.origin.y)];
     [topView setBackgroundColor:[UIColor blackColor]];
@@ -293,7 +294,7 @@
     UIView *btmView = [[UIView alloc] initWithFrame:CGRectMake(0, frame.origin.y+frame.size.height, frame.size.width, 500)];
     [btmView setBackgroundColor:[UIColor blackColor]];
     [ol addSubview:btmView];
-    
+
     [[self imgPicker] setCameraOverlayView:ol];
     
     [[[self shutterBtn] layer] setCornerRadius:[self shutterBtn].frame.size.height/2];

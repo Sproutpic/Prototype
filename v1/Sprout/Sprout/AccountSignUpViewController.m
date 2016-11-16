@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet JVFloatLabeledTextField *fullNameTxtField;
 @property (weak, nonatomic) IBOutlet JVFloatLabeledTextField *emailAddressTxtField;
 @property (weak, nonatomic) IBOutlet JVFloatLabeledTextField *passwordTxtField;
+@property (weak, nonatomic) IBOutlet JVFloatLabeledTextField *passwordConfirmTxtField;
 @property (weak, nonatomic) IBOutlet UIButton *termsBtn;
 @property (weak, nonatomic) IBOutlet UILabel *termsLbl;
 @property (weak, nonatomic) IBOutlet UIButton *signUpBtn;
@@ -26,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIView *textBKView1;
 @property (weak, nonatomic) IBOutlet UIView *textBKView2;
 @property (weak, nonatomic) IBOutlet UIView *textBKView3;
+@property (weak, nonatomic) IBOutlet UIView *textBKView4;
 
 - (IBAction)termsButtonTapped:(id)sender;
 - (IBAction)signUpButtonTapped:(id)sender;
@@ -54,35 +56,47 @@
     NSString *fullName = [[[self fullNameTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
     NSString *email = [[[self emailAddressTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
     NSString *password = [[[self passwordTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
+    NSString *passwordConfirm = [[[self passwordConfirmTxtField] text] stringByTrimmingLeadingAndTailingWhitespace];
  
     [UIUtils hapticFeedback];
     [self becomeFirstResponder];
 
     // Verify the email address
     if (fullName==nil || [fullName length]<=0) {
-        [self displayMessageWithBody:NSLocalizedString(@"You must enter your full name to Sign Up",
-                                                       @"You must enter your full name to Sign Up")];
+        [self displayMessageWithTitle:NSLocalizedString(@"Missing Data", @"Missing Data")
+                              andBody:NSLocalizedString(@"You must enter your full name to Sign Up",
+                                                        @"You must enter your full name to Sign Up")];
         return;
     }
     
     // Verify the email address
     if (email==nil || [email length]<=0) {
-        [self displayMessageWithBody:NSLocalizedString(@"You must enter your email address to Sign Up",
-                                                       @"You must enter your email address to Sign Up")];
+        [self displayMessageWithTitle:NSLocalizedString(@"Missing Data", @"Missing Data")
+                              andBody:NSLocalizedString(@"You must enter your email address to Sign Up",
+                                                        @"You must enter your email address to Sign Up")];
         return;
     }
     
     // Verify that the new password is atleast 8 characters long
     if (password==nil || [password length]<=7) {
-        [self displayMessageWithBody:NSLocalizedString(@"You must enter a password that is 8 characters or longer. We also recommend that you use a combination of uppercase, lowercase, and number characters.",
-                                                       @"You must enter a password that is 8 characters or longer. We also recommend that you use a combination of uppercase, lowercase, and number characters.")];
+        [self displayMessageWithTitle:NSLocalizedString(@"Password Validation", @"Password Validation")
+                              andBody:NSLocalizedString(@"You must enter a password that is 8 characters or longer. We also recommend that you use a combination of uppercase, lowercase, and number characters.",
+                                                        @"You must enter a password that is 8 characters or longer. We also recommend that you use a combination of uppercase, lowercase, and number characters.")];
         return;
+    }
+    
+    // Verify the 2 passwords match
+    if (![password isEqualToString:passwordConfirm]) {
+        [self displayMessageWithTitle:NSLocalizedString(@"Passwords Don't Match", @"Passwords Don't Match")
+                              andBody:NSLocalizedString(@"The password or confirmation password that you entered do not match",
+                                                        @"The password or confirmation password that you entered do not match")];
     }
     
     // Verify user has accepted the terms and conditions
     if ([[self termsBtn] tag]!=1) {
-        [self displayMessageWithBody:NSLocalizedString(@"You must accept the Terms and Conditions before Signing Up for an account",
-                                                       @"You must accept the Terms and Conditions before Signing Up for an account")];
+        [self displayMessageWithTitle:NSLocalizedString(@"Terms and Conditions", @"Terms and Conditions")
+                              andBody:NSLocalizedString(@"You must accept the Terms and Conditions before Signing Up for an account",
+                                                        @"You must accept the Terms and Conditions before Signing Up for an account")];
         return;
     }
 
@@ -98,13 +112,24 @@
      ^(NSError *error, SproutWebService *service) {
          [self showFullScreenSpinner:NO];
          if (error) {
-             [self displayMessageWithTitle:NSLocalizedString(@"Problem", @"Problem")
-                                   andBody:[error localizedDescription]];
+             if ([[error localizedDescription] containsString:@"Request failed: conflict (409)"]) {
+                 [self displayMessageWithTitle:NSLocalizedString(@"Email Issue", @"Email Issue")
+                                       andBody:NSLocalizedString(@"The email address is already in use. Try again with another email address.", @"The email address is already in use. Try again with another email address.")];
+             } else {
+                 [self displayMessageWithTitle:NSLocalizedString(@"Problem", @"Problem")
+                                       andBody:[error localizedDescription]];
+             }
          } else {
-             [[self navigationController] popToRootViewControllerAnimated:YES];
-             [self displayMessageWithTitle:NSLocalizedString(@"Success", @"Success")
-                                   andBody:NSLocalizedString(@"You have Signed Up for a new account",
-                                                             @"You have Signed Up for a new account")];
+             UIAlertController *alert =
+             [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Congratulations", @"Congratulations")
+                                                 message:NSLocalizedString(@"You have signed up for a new account.",
+                                                                           @"You have signed up for a new account.") preferredStyle:UIAlertControllerStyleAlert];
+             [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                         [[self navigationController] popToRootViewControllerAnimated:YES];
+                                                     }]];
+             [[self navigationController] presentViewController:alert animated:YES completion:nil];
          }
      }];
 }
@@ -139,6 +164,7 @@
     [self themeFloatTextField:[self fullNameTxtField] withBK:[self textBKView1]];
     [self themeFloatTextField:[self emailAddressTxtField] withBK:[self textBKView2]];
     [self themeFloatTextField:[self passwordTxtField] withBK:[self textBKView3]];
+    [self themeFloatTextField:[self passwordConfirmTxtField] withBK:[self textBKView4]];
 }
 
 # pragma mark UITextFieldDelegate
@@ -151,6 +177,8 @@
     } else if ([textField isEqual:[self emailAddressTxtField]]) {
         [[self passwordTxtField] becomeFirstResponder];
     } else if ([textField isEqual:[self passwordTxtField]]) {
+        [[self passwordConfirmTxtField] becomeFirstResponder];
+    } else if ([textField isEqual:[self passwordConfirmTxtField]]) {
         [self signUpButtonTapped:[self signUpBtn]];
     }
     return YES;

@@ -12,6 +12,7 @@
 #import "UIImage+animatedGIF.h"
 #import "UIUtils.h"
 #import "DataObjects.h"
+#import "ProjectWebService.h"
 
 #import "TextFieldTableViewCell.h"
 #import "SocialMediaButtonsTableViewCell.h"
@@ -43,13 +44,16 @@ typedef enum ProjectRowOrder {
     PO_Timeline,
     PO_FrontFaceCamereSwitch,
     PO_DurationSlider,
+    PO_ShowShadow,
     PO_RemindSwitch,
     PO_RemindOnLabel,
     PO_RemindRepeat,
     PO_CreateDate,
     PO_LastUpdate,
     PO_SocialButtons,
-    PO_DeleteButton
+    PO_DeleteButton,
+    PO_SyncButton,
+    PO_GetAllButton
 } ProjectRowOrder;
 
 typedef enum RowDataOrder {
@@ -167,6 +171,19 @@ typedef enum RowDataOrder {
             }];
             [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         } break;
+        case PO_ShowShadow: {
+            SwitchTableViewCell *tCell = (SwitchTableViewCell*)cell;
+            [[tCell textLabel] setText:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
+            [[tCell switchView] setOn:[[[self project] useShadow] boolValue]];
+            [tCell setSwitchCallback:^(UISwitch *switchView){
+                if (switchView) {
+                    [[self project] setUseShadow:@([switchView isOn])];
+                    [[self project] setLastModified:[NSDate date]];
+                    [[self project] save];
+                }
+            }];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
         case PO_RemindOnLabel: {
             [[cell textLabel] setText:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title])];
             [[cell textLabel] setTextColor:([[[self project] remindEnabled] boolValue])?[UIColor blackColor]:[UIColor lightGrayColor]];
@@ -265,10 +282,35 @@ typedef enum RowDataOrder {
             [[tCell button] addTarget:self action:@selector(tappedDeleteButton:) forControlEvents:UIControlEventTouchUpInside];
             [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         } break;
+            
+        case PO_SyncButton: {
+            ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
+            [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
+            [[tCell button] addTarget:self action:@selector(tappedSyncButton:) forControlEvents:UIControlEventTouchUpInside];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+            
+        case PO_GetAllButton: {
+            ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
+            [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
+            [[tCell button] addTarget:self action:@selector(tappedGetAllButton:) forControlEvents:UIControlEventTouchUpInside];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
+            
         default: {
             [[cell textLabel] setText:@"Unknown"];
         } break;
     }
+}
+
+- (IBAction)tappedGetAllButton:(UIButton *)sender
+{
+    [ProjectWebService getAllProjectsWithCallback:nil];
+}
+
+- (IBAction)tappedSyncButton:(UIButton *)sender
+{
+    [ProjectWebService syncProject:[self project] withCallback:nil];
 }
 
 - (IBAction)tappedDeleteButton:(UIButton *)sender
@@ -279,7 +321,16 @@ typedef enum RowDataOrder {
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Delete Project", @"Delete Project")
                                               style:UIAlertActionStyleDestructive
                                             handler:^(UIAlertAction * _Nonnull action) {
-                                                [[self project] deleteAndSave];
+                                                if ([[[self project] serverId] integerValue]>0) {
+                                                    [[self project] setMarkedForDelete:@(YES)];
+                                                    [[self project] save];
+                                                    [ProjectWebService deleteProjectById:[[self project] serverId]
+                                                                            withCallback:^(NSError *error, SproutWebService *service) {
+                                                                                // TODO - Handle any errors...
+                                                                            }];
+                                                } else {
+                                                    [[self project] deleteAndSave];
+                                                }
                                                 [[self navigationController] popViewControllerAnimated:YES];
                                             }]];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
@@ -321,13 +372,16 @@ typedef enum RowDataOrder {
        @[@(PO_Timeline),@"Timeline",@"TimelineTableViewCell",@"TimelineTableViewCell",@(110)],
        @[@(PO_FrontFaceCamereSwitch),@"Use Front Facing Camera",@"SwitchTableViewCell",@"SwitchTableViewCell",@(44)],
        @[@(PO_DurationSlider),@"Duration Slider",@"SliderTableViewCell",@"SliderTableViewCell",@(88)],
+       @[@(PO_ShowShadow),@"Use Shadow with Sprout",@"SwitchTableViewCell",@"SwitchTableViewCell",@(44)],
        @[@(PO_RemindSwitch),@"Remind Me",@"SwitchTableViewCell",@"SwitchTableViewCell",@(44)],
        @[@(PO_RemindOnLabel),@"Remind On",@"UITableViewCellStyleValue1",@"",@(44)],
        @[@(PO_RemindRepeat),@"Repeat",@"UITableViewCellStyleValue1",@"",@(44)],
        @[@(PO_CreateDate),@"Created",@"UITableViewCellStyleValue1",@"",@(44)],
        //@[@(PO_LastUpdate),@"Last Updated",@"UITableViewCellStyleValue1",@"",@(44)],
        @[@(PO_SocialButtons),@"Socail Media",@"SocialMediaButtonsTableViewCell",@"SocialMediaButtonsTableViewCell",@(54)],
-       @[@(PO_DeleteButton),@"Delete Sprout",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)]
+       @[@(PO_DeleteButton),@"Delete Sprout",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
+       @[@(PO_SyncButton),@"Sync Project",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
+       @[@(PO_GetAllButton),@"Get All Projects",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)]
        ]];
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"Project Details", @"Project Details")];
@@ -350,7 +404,7 @@ typedef enum RowDataOrder {
 {
     [super viewDidAppear:animated];
     [[self tableView] setFrame:[[self view] bounds]];
-    if ([[self project] isDeleted]) {
+    if ([[self project] isDeleted] || [[[self project] markedForDelete] boolValue]) {
         [[self navigationController] popViewControllerAnimated:YES];
     }
 }

@@ -12,12 +12,12 @@
 #define SERVICE_TAG_SIGN_IN             @"SERVICE_TAG_SIGN_IN"
 #define SERVICE_TAG_SIGN_UP             @"SERVICE_TAG_SIGN_UP"
 #define SERVICE_TAG_RESET_PASSWORD      @"SERVICE_TAG_RESET_PASSWORD"
-#define SERVICE_TAG_SIGN_OUT            @"SERVICE_TAG_SIGN_OUT"
 #define SERVICE_TAG_CHANGE_PASSWORD     @"SERVICE_TAG_CHANGE_PASSWORD"
 
-#define SERVICE_URL_SIGN_IN             [NSString stringWithFormat:@"%@/Login",SPROUT_API_URL]
-#define PARAM_KEY_SIGN_IN_EMAIL         @"email"
-#define PARAM_KEY_SIGN_IN_PASSWORD      @"encodedPassword"
+#define SERVICE_URL_SIGN_IN             [NSString stringWithFormat:@"%@/Token",SPROUT_URL]
+#define PARAM_KEY_SIGN_IN_USERNAME      @"username"
+#define PARAM_KEY_SIGN_IN_PASSWORD      @"password"
+#define PARAM_KEY_SIGN_IN_GRANT_TYPE    @"grant_type"
 
 #define SERVICE_URL_SIGN_UP             [NSString stringWithFormat:@"%@/Register",SPROUT_API_URL]
 #define PARAM_KEY_SIGN_UP_EMAIL         @"email"
@@ -34,8 +34,6 @@
 #define PARAM_KEY_CHANGE_PASSWORD_NEW   @"newPassword"
 #define PARAM_KEY_CHANGE_PASSWORD_CNFRM @"confirmPassword"
 
-#define SERVICE_URL_LOGOUT              [NSString stringWithFormat:@"%@/Logout",SPROUT_API_URL]
-
 @implementation AccountWebService
 
 # pragma mark AccountWebService
@@ -47,8 +45,9 @@
     AccountWebService *service = [[AccountWebService alloc] init];
     [service setServiceCallBack:callBack];
     [service setUrl:SERVICE_URL_SIGN_IN];
-    [service setParameters:@{ PARAM_KEY_SIGN_IN_EMAIL : email,
-                              PARAM_KEY_SIGN_IN_PASSWORD : [service encode64String:password] }];
+    [service setParameters:@{ PARAM_KEY_SIGN_IN_USERNAME : email,
+                              PARAM_KEY_SIGN_IN_PASSWORD : password,
+                              PARAM_KEY_SIGN_IN_GRANT_TYPE : @"password" }];
     [service setServiceTag:SERVICE_TAG_SIGN_IN];
     [service start];
     return service;
@@ -76,8 +75,8 @@
     [service setUrl:SERVICE_URL_SIGN_UP];
     [service setParameters:@{
                              PARAM_KEY_SIGN_UP_EMAIL : email,
-                             PARAM_KEY_SIGN_UP_PASSWORD : [service encode64String:password],
-                             PARAM_KEY_SIGN_UP_CONFIRM : [service encode64String:password],
+                             PARAM_KEY_SIGN_UP_PASSWORD : password,
+                             PARAM_KEY_SIGN_UP_CONFIRM : password,
                              PARAM_KEY_SIGN_UP_USERNAME : email,
                              PARAM_KEY_SIGN_UP_NAME : name
                              }];
@@ -89,13 +88,9 @@
 + (AccountWebService*)signOutUserWithEmail:(NSString*)email
                               withCallback:(SproutServiceCallBack)callBack
 {
-    AccountWebService *service = [[AccountWebService alloc] init];
-    [service setServiceCallBack:callBack];
-    [service setUrl:SERVICE_URL_LOGOUT];
-    [service setParameters:@{}];
-    [service setServiceTag:SERVICE_TAG_SIGN_OUT];
-    [service start];
-    return service;
+    [CurrentUser setUser:nil];
+    callBack(nil,nil);
+    return nil;
 }
 
 + (AccountWebService*)changePasswordForEmail:(NSString*)email
@@ -107,9 +102,10 @@
     [service setServiceCallBack:callBack];
     [service setUrl:SERVICE_URL_CHANGE_PASSWORD];
     [service setParameters:@{ @"email" : email,
-                              PARAM_KEY_CHANGE_PASSWORD_OLD : [service encode64String:passwordCurrent],
-                              PARAM_KEY_CHANGE_PASSWORD_NEW : [service encode64String:passwordNew],
-                              PARAM_KEY_CHANGE_PASSWORD_CNFRM : [service encode64String:passwordNew] }];
+                              PARAM_KEY_CHANGE_PASSWORD_OLD : passwordCurrent,
+                              PARAM_KEY_CHANGE_PASSWORD_NEW : passwordNew,
+                              PARAM_KEY_CHANGE_PASSWORD_CNFRM : passwordNew }];
+    [service setOauthEnabled:YES];
     [service setServiceTag:SERVICE_TAG_CHANGE_PASSWORD];
     [service start];
     return service;
@@ -122,13 +118,16 @@
     NSLog(@"Response - %@",responseObject);
     
     if ([[self serviceTag] isEqualToString:SERVICE_TAG_SIGN_IN]) {
-        [CurrentUser setUser:@{ CURRENT_USER_NAME_KEY : @"Demo User",
-                                CURRENT_USER_EMAIL_KEY : [[self parameters] objectForKey:PARAM_KEY_SIGN_IN_EMAIL] }];
-    } else if ([[self serviceTag] isEqualToString:SERVICE_TAG_SIGN_OUT]) {
-        [CurrentUser setUser:nil];
+        NSDictionary *response = (NSDictionary*)responseObject;
+        [CurrentUser setUser:@{ CURRENT_USER_NAME_KEY : @"Unknown",
+                                CURRENT_USER_EMAIL_KEY : [[self parameters] objectForKey:PARAM_KEY_SIGN_IN_USERNAME],
+                                CURRENT_USER_ACCESS_TOKEN : [response objectForKey:CURRENT_USER_ACCESS_TOKEN],
+                                CURRENT_USER_TOKEN_TYPE : [response objectForKey:CURRENT_USER_TOKEN_TYPE],
+                                CURRENT_USER_EXPIRES_IN : [response objectForKey:CURRENT_USER_EXPIRES_IN]
+                                }];
     } else if ([[self serviceTag] isEqualToString:SERVICE_TAG_SIGN_UP]) {
         [CurrentUser setUser:@{ CURRENT_USER_NAME_KEY : [[self parameters] objectForKey:PARAM_KEY_SIGN_UP_NAME],
-                                CURRENT_USER_EMAIL_KEY : [[self parameters] objectForKey:PARAM_KEY_SIGN_UP_EMAIL] }];
+                                CURRENT_USER_EMAIL_KEY : [[self parameters] objectForKey:PARAM_KEY_SIGN_UP_USERNAME] }];
     } else if ([[self serviceTag] isEqualToString:SERVICE_TAG_RESET_PASSWORD]) {
         // Nothing to do...
     } else if ([[self serviceTag] isEqualToString:SERVICE_TAG_CHANGE_PASSWORD]) {

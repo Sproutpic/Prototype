@@ -27,6 +27,8 @@
 @dynamic slideTime;
 @dynamic playing;
 @dynamic sproutSocial;
+@dynamic useShadow;
+@dynamic markedForDelete;
 
 @dynamic videoURL;
 @dynamic videoLastModified;

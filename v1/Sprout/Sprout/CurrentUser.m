@@ -52,4 +52,11 @@
     return (!email) ? @"" : email;
 }
 
++ (NSString*)authToken
+{
+    NSString *token = [[[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY] objectForKey:CURRENT_USER_ACCESS_TOKEN];
+    NSString *type = [[[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY] objectForKey:CURRENT_USER_TOKEN_TYPE];
+    return (!token && !type) ? @"" : [NSString stringWithFormat:@"%@ %@",type,token];
+}
+
 @end

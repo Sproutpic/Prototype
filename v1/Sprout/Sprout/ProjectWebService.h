@@ -12,12 +12,15 @@
 
 @interface ProjectWebService : SproutWebService
 
-+ (ProjectWebService*)uploadSprout:(Project*)project
-                  forUserWithEmail:(NSString*)email
-                      withCallback:(SproutServiceCallBack)callBack;
++ (ProjectWebService*)getAllProjectsWithCallback:(SproutServiceCallBack)callBack;
 
-+ (ProjectWebService*)updateSprout:(Project*)project
-                  forUserWithEmail:(NSString*)email
-                      withCallback:(SproutServiceCallBack)callBack;
++ (ProjectWebService*)getProjectById:(NSNumber*)serverId
+                        withCallback:(SproutServiceCallBack)callBack;
+
++ (ProjectWebService*)syncProject:(Project*)project
+                     withCallback:(SproutServiceCallBack)callBack;
+
++ (ProjectWebService*)deleteProjectById:(NSNumber*)serverId
+                           withCallback:(SproutServiceCallBack)callBack;
 
 @end

@@ -30,6 +30,11 @@
     [self displayUnderConstructionAlert];
 }
 
+- (IBAction)acknowledgementsButtonTapped:(id)sender
+{
+    [self displayUnderConstructionAlert];
+}
+
 - (NSArray*)rowDataAtIndex:(NSInteger)row
 {
     return [[self rows] objectAtIndex:row];
@@ -90,7 +95,7 @@
     
     // Create Table Footer
     UIView *footer = [[UIView alloc] init];
-    [footer setFrame:CGRectMake(0, 0, self.view.bounds.size.width, 88.0)];
+    [footer setFrame:CGRectMake(0, 0, self.view.bounds.size.width, 122.0)];
     
     UIButton *tBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, footer.frame.size.width, 44.0)];
     [tBtn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Terms and Conditions", @"Terms and Conditions")
@@ -110,6 +115,17 @@
                     forState:UIControlStateNormal];
     [pBtn addTarget:self action:@selector(privacyAndPolicyButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [footer addSubview:pBtn];
+    
+    UIButton *aBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 88.0, footer.frame.size.width, 44.0)];
+    [aBtn setTitle:NSLocalizedString(@"Acknowledgements", @"Acknowledgements") forState:UIControlStateNormal];
+    [aBtn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Acknowledgements", @"Acknowledgements")
+                                                             attributes:
+                              @{ NSFontAttributeName: [UIUtils fontRegularForSize:14],
+                                 NSForegroundColorAttributeName:[UIUtils colorNavigationBar]}]
+                    forState:UIControlStateNormal];
+    [aBtn addTarget:self action:@selector(acknowledgementsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [footer addSubview:aBtn];
+    
     [[self tableView] setTableFooterView:footer];
     
     [[self view] addSubview:[self tableView]];

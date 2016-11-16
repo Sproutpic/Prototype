@@ -53,7 +53,7 @@
        @[@(NO),@"FAQ",@"FAQViewController",@(NO)],
        @[@(NO),@"Account Information",@"AccountInformationViewController",@(YES)],
        @[@(YES),@"Change Password",@"AccountChangePasswordViewController",@(YES)],
-       @[@(NO),@"Welcome Intro",@"OnboardingManager",@(NO)],
+       @[@(NO),@"Welcome - Onboarding",@"OnboardingManager",@(NO)],
        ]];
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"Settings", @"Settings")];

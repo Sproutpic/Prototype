@@ -10,6 +10,7 @@
 #import "Timeline+CoreDataClass.h"
 #import "DataObjects.h"
 #import "JDMLocalNotification.h"
+#import "ProjectWebService.h"
 
 @implementation Project
 
@@ -70,7 +71,7 @@
                                                   andSound:JDM_Notification_Sound_Default
                                              andBadgeCount:NO_BADGE_UPDATE
                                                     onDate:[self repeatNextDate]
-                                            repeatInterval:NSCalendarUnitDay
+                                            repeatInterval:unit
                                               withUserInfo:nil];
     }
     return ln;
@@ -168,6 +169,12 @@
     [self setLastModified:now];
 }
 
+//- (void)didSave
+//{
+//    [super didSave];
+//    [ProjectWebService syncProject:self withCallback:nil];
+//}
+
 - (void)prepareForDeletion
 {
     if ([self notificationUUID]) {
@@ -175,5 +182,7 @@
         if (ln) [JDMLocalNotification cancelLocalNotification:ln];
     }
 }
+
+
 
 @end

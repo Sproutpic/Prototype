@@ -43,22 +43,28 @@
     // Verify all 3 fields have data entered
     if (currentPwd==nil || passwordNew==nil || passwordRepeat==nil ||
         [currentPwd length]<=0 || [passwordNew length]<=0 || [passwordRepeat length]<=0) {
+        [self displayMessageWithTitle:NSLocalizedString(@"Missing Data", @"Missing Data")
+                              andBody:NSLocalizedString(@"You must enter all the needed passwords to change your password.",
+                                                        @"You must enter all the needed passwords to change your password.")];
+
         [self displayMessageWithBody:NSLocalizedString(@"All fields are not entered",
-                                                       @"New password does not match")];
-        return;
-    }
-    
-    // Verify that the new and repeat passwords match
-    if (![passwordNew isEqualToString:passwordRepeat]) {
-        [self displayMessageWithBody:NSLocalizedString(@"New password does not match",
                                                        @"New password does not match")];
         return;
     }
     
     // Verify that the new password is atleast 8 characters long
     if ([passwordNew length]<=7) {
-        [self displayMessageWithBody:NSLocalizedString(@"New password is not 8 characters or longer",
-                                                       @"New password is not 8 characters or longer")];
+        [self displayMessageWithTitle:NSLocalizedString(@"Password Validation", @"Password Validation")
+                              andBody:NSLocalizedString(@"You must enter a password that is 8 characters or longer. We also recommend that you use a combination of uppercase, lowercase, and number characters.",
+                                                        @"You must enter a password that is 8 characters or longer. We also recommend that you use a combination of uppercase, lowercase, and number characters.")];
+        return;
+    }
+    
+    // Verify that the new and repeat passwords match
+    if (![passwordNew isEqualToString:passwordRepeat]) {
+        [self displayMessageWithTitle:NSLocalizedString(@"Passwords Don't Match", @"Passwords Don't Match")
+                              andBody:NSLocalizedString(@"The password or confirmation password that you entered do not match",
+                                                        @"The password or confirmation password that you entered do not match")];
         return;
     }
     

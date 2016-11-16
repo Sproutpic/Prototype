@@ -14,6 +14,8 @@
 #import "DataObjects.h"
 #import <AVFoundation/AVFoundation.h>
 #import "OnboardingManager.h"
+#import "UIScrollView+SVPullToRefresh.h"
+#import "ProjectWebService.h"
 
 @interface MyProjectsViewController () <UITableViewDelegate, ProjectTableViewCellDelegate>
 
@@ -73,6 +75,15 @@
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"My Sprouts", @"My Sprouts")];
     [self createTabBarItem];
+    
+    // Pull to refresh configuration
+    [[[self tableView] pullToRefreshView] setArrowColor:[UIUtils colorNavigationBar]];
+    [[[self tableView] pullToRefreshView] setTextColor:[UIUtils colorNavigationBar]];
+    [[self tableView] addPullToRefreshWithActionHandler:^{
+        [ProjectWebService getAllProjectsWithCallback:^(NSError *error, SproutWebService *service) {
+            [[[self tableView] pullToRefreshView] stopAnimating];
+        }];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -104,7 +115,7 @@
     [[self tableView] setDelegate:self];
     [self setTableAdapter:[[TableAdapter alloc] initForTableView:[self tableView]
                                                        forEntity:NSStringFromClass([Project class])
-                                                       predicate:[NSPredicate predicateWithFormat:@"created != nil"]
+                                                       predicate:[NSPredicate predicateWithFormat:@"markedForDelete = %@",@(NO)]
                                                             sort:[Project sortDescriptors]
                                                   sectionNameKey:nil
                                             managedObjectContext:[[CoreDataAccessKit sharedInstance] managedObjectContext]

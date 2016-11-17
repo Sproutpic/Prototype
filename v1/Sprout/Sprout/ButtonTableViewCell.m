@@ -12,7 +12,7 @@
 
 - (IBAction)buttonTaped:(id)sender
 {
-    
+    if ([self buttonCallBack]) self.buttonCallBack([self button]);
 }
 
 - (void)roundCornersForView:(UIView*)view

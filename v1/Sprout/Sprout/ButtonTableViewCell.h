@@ -12,6 +12,9 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *button;
 
+typedef void (^ ButtonCallBack)(UIButton *button);
+@property (strong, nonatomic) ButtonCallBack buttonCallBack;
+
 - (IBAction)buttonTaped:(id)sender;
 
 @end

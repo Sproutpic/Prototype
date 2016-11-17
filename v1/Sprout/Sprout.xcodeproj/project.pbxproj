@@ -34,6 +34,7 @@
 		E70CB3EA1DAB2E7D003F4AA0 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E70CB3E91DAB2E7D003F4AA0 /* BaseViewController.m */; };
 		E70CB3ED1DAB5688003F4AA0 /* ProjectTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E70CB3EB1DAB5688003F4AA0 /* ProjectTableViewCell.xib */; };
 		E70CB3F11DAB57D9003F4AA0 /* ProjectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E70CB3F01DAB57D9003F4AA0 /* ProjectTableViewCell.m */; };
+		E72642E01DDD38E50081CE03 /* SyncQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = E72642DF1DDD38E50081CE03 /* SyncQueue.m */; };
 		E72B91341DD119030050C7C8 /* OnboardingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E72B91331DD119030050C7C8 /* OnboardingManager.m */; };
 		E746D4771DD03696009C1BDD /* JDMLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = E746D4741DD03696009C1BDD /* JDMLocalNotification.m */; };
 		E746D4781DD03696009C1BDD /* n_default.wav in Resources */ = {isa = PBXBuildFile; fileRef = E746D4761DD03696009C1BDD /* n_default.wav */; };
@@ -86,7 +87,7 @@
 		5A245E1B1D488E7F006A6F52 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		5A5F3D601D599FD300AC6767 /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		5A5F3D611D599FD300AC6767 /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
-		5A85A2C31D2BB65F00B4CD02 /* Sprout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sprout.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A85A2C31D2BB65F00B4CD02 /* SproutPic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SproutPic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A85A2C71D2BB65F00B4CD02 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5A85A2C91D2BB65F00B4CD02 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5A85A2CA1D2BB65F00B4CD02 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -127,6 +128,8 @@
 		E70CB3EC1DAB5688003F4AA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ProjectTableViewCell.xib; sourceTree = "<group>"; };
 		E70CB3EF1DAB57D9003F4AA0 /* ProjectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectTableViewCell.h; sourceTree = "<group>"; };
 		E70CB3F01DAB57D9003F4AA0 /* ProjectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectTableViewCell.m; sourceTree = "<group>"; };
+		E72642DE1DDD38E50081CE03 /* SyncQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncQueue.h; sourceTree = "<group>"; };
+		E72642DF1DDD38E50081CE03 /* SyncQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncQueue.m; sourceTree = "<group>"; };
 		E72B91321DD119030050C7C8 /* OnboardingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnboardingManager.h; sourceTree = "<group>"; };
 		E72B91331DD119030050C7C8 /* OnboardingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnboardingManager.m; sourceTree = "<group>"; };
 		E746D4731DD03696009C1BDD /* JDMLocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDMLocalNotification.h; sourceTree = "<group>"; };
@@ -252,6 +255,8 @@
 		5A54987F1D54930A00432FE5 /* Web Services */ = {
 			isa = PBXGroup;
 			children = (
+				E72642DE1DDD38E50081CE03 /* SyncQueue.h */,
+				E72642DF1DDD38E50081CE03 /* SyncQueue.m */,
 				E749C0EF1DB44DF10068C3F1 /* SproutWebService.h */,
 				E749C0F01DB44DF10068C3F1 /* SproutWebService.m */,
 				E749C0F81DB462980068C3F1 /* AccountWebService.h */,
@@ -284,7 +289,7 @@
 		5A85A2C41D2BB65F00B4CD02 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5A85A2C31D2BB65F00B4CD02 /* Sprout.app */,
+				5A85A2C31D2BB65F00B4CD02 /* SproutPic.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -565,9 +570,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5A85A2C21D2BB65F00B4CD02 /* Sprout */ = {
+		5A85A2C21D2BB65F00B4CD02 /* SproutPic */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5A85A2EC1D2BB66000B4CD02 /* Build configuration list for PBXNativeTarget "Sprout" */;
+			buildConfigurationList = 5A85A2EC1D2BB66000B4CD02 /* Build configuration list for PBXNativeTarget "SproutPic" */;
 			buildPhases = (
 				90A0CEA8CE275798066E95A1 /* [CP] Check Pods Manifest.lock */,
 				5A85A2BF1D2BB65F00B4CD02 /* Sources */,
@@ -581,9 +586,9 @@
 			);
 			dependencies = (
 			);
-			name = Sprout;
+			name = SproutPic;
 			productName = Sprout;
-			productReference = 5A85A2C31D2BB65F00B4CD02 /* Sprout.app */;
+			productReference = 5A85A2C31D2BB65F00B4CD02 /* SproutPic.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -620,7 +625,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5A85A2C21D2BB65F00B4CD02 /* Sprout */,
+				5A85A2C21D2BB65F00B4CD02 /* SproutPic */,
 			);
 		};
 /* End PBXProject section */
@@ -727,6 +732,7 @@
 				E70CB3EA1DAB2E7D003F4AA0 /* BaseViewController.m in Sources */,
 				E70CB3F11DAB57D9003F4AA0 /* ProjectTableViewCell.m in Sources */,
 				E70144E81DC0D9E200E115BF /* SproutView.m in Sources */,
+				E72642E01DDD38E50081CE03 /* SyncQueue.m in Sources */,
 				E749C0FA1DB462980068C3F1 /* AccountWebService.m in Sources */,
 				E746D4771DD03696009C1BDD /* JDMLocalNotification.m in Sources */,
 				E749C0F11DB44DF10068C3F1 /* SproutWebService.m in Sources */,
@@ -1059,7 +1065,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5A85A2EC1D2BB66000B4CD02 /* Build configuration list for PBXNativeTarget "Sprout" */ = {
+		5A85A2EC1D2BB66000B4CD02 /* Build configuration list for PBXNativeTarget "SproutPic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5A85A2ED1D2BB66000B4CD02 /* Debug */,

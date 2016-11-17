@@ -15,6 +15,7 @@
 #define OAUTH_AUTHORIZATION_KEY @"Authorization"
 
 static NSInteger serviceCallCount = 0;
+static NSDateFormatter *df;
 
 @implementation SproutWebService
 
@@ -75,6 +76,7 @@ static NSInteger serviceCallCount = 0;
     
     // Actually make the service call...
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager setRequestSerializer:[AFJSONRequestSerializer serializer]];
     // Check for oauth and add authorization to header parameters
     if ([self oauthEnabled]) {
         NSString *token = [CurrentUser authToken];
@@ -99,6 +101,9 @@ static NSInteger serviceCallCount = 0;
               [self completedFailure:error];
               [self showStatusBarSpinner:NO];
           }];
+    
+    // Debug
+    NSLog(@"Params - %@",[self parameters]);
 }
 
 - (NSString*)encode64String:(NSString*)value
@@ -139,6 +144,16 @@ static NSInteger serviceCallCount = 0;
 }
 
 # pragma mark Sync Helper Methods
+
+- (NSDateFormatter*)dateFormatter
+{
+    if (df==nil) {
+        df = [[NSDateFormatter alloc] init];
+        [df setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"PST"]]; // This should be using UTC
+        [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"]; // Ex: 2016-11-14T07:59:31.037
+    }
+    return df;
+}
 
 - (BOOL)isNull:(NSObject*)obj
 {
@@ -210,14 +225,15 @@ static NSInteger serviceCallCount = 0;
 
 - (NSDate*)dateForKey:(NSString*)key inDict:(NSDictionary*)dictionary
 {
-    // Ex: 2016-11-14T07:59:31.037
     if (key && dictionary) {
         NSObject *obj = [dictionary objectForKey:key];
         if (obj && ![self isNull:obj]) {
-            return [NSDate date];
+            if ([obj isKindOfClass:[NSString class]]) {
+                return [[self dateFormatter] dateFromString:(NSString*)obj];
+            }
         }
     }
-    return [NSDate date]; // This is the default
+    return nil; // This is the default
 }
 
 @end

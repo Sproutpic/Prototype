@@ -33,13 +33,14 @@
 #define PARAM_KEY_PROJECT_VIDEO_VIEW_CT @"videoViewCount"
 #define PARAM_KEY_PROJECT_FEATURE_IND   @"featuredInd" // Not sure what this is...
 #define PARAM_KEY_PROJECT_FRONT_CAMERA  @"frontCameraInd"
+#define PARAM_KEY_PROJECT_USE_SHADOW    @"useShadow" // Need to add
 //#define PARAM_KEY_PROJECT_LAST_SYNC_DT  @"lastSyncDt" // Not used
 #define PARAM_KEY_PROJECT_TITLE         @"title"
 #define PARAM_KEY_PROJECT_SUBTITLE      @"subTitle"
 #define PARAM_KEY_PROJECT_DESCRIPTION   @"description" // I assume this is the same as subtitle
 #define PARAM_KEY_PROJECT_REMINDER_ON   @"reminderEnabledInd"
 #define PARAM_KEY_PROJECT_REPEAT_FREQ   @"repeatFrequency"
-#define PARAM_KEY_PROJECT_REPEAT_DATE   @""
+#define PARAM_KEY_PROJECT_REPEAT_DATE   @"repeatDate" // Need to add
 #define PARAM_KEY_PROJECT_SPROUT_PUBLIC @"sproutPublicInd"
 #define PARAM_KEY_PROJECT_SLIDE_DURAT   @"slideDuration"
 #define PARAM_KEY_PROJECT_CREATE_DATE   @"createdDt" // Used only for projects pulled from server
@@ -58,7 +59,6 @@
     [service setUrl:SERVICE_URL_GET_PROJECTS];
     [service setServiceTag:SERVICE_TAG_GET_PROJECTS];
     [service setOauthEnabled:YES];
-    [service start];
     return service;
 }
 
@@ -71,7 +71,6 @@
     [service setParameters:@{ PARAM_KEY_PROJECT_SERVER_ID : serverId }];
     [service setServiceTag:SERVICE_TAG_GET_PROJECT_BY_ID];
     [service setOauthEnabled:YES];
-    [service start];
     return service;
 }
 
@@ -88,36 +87,35 @@
                                  PARAM_KEY_PROJECT_SUBTITLE : ([project subtitle]) ? [project subtitle] : @"",
                                  PARAM_KEY_PROJECT_DESCRIPTION : ([project subtitle]) ? [project subtitle] : @"",
                                  
-                                 PARAM_KEY_PROJECT_FRONT_CAMERA : @([[project frontCameraEnabled] boolValue]),
-                                 //PARAM_KEY_PROJECT_USE_SHADOW : @([[project useShadow] boolValue]),
+                                 PARAM_KEY_PROJECT_FRONT_CAMERA : ([[project frontCameraEnabled] boolValue]) ? @(YES) : @(NO),
+                                 PARAM_KEY_PROJECT_USE_SHADOW : ([[project useShadow] boolValue]) ? @(YES) : @(NO),
                                  PARAM_KEY_PROJECT_SLIDE_DURAT : ([project slideTime]) ? [project slideTime] : @(1),
-                                 PARAM_KEY_PROJECT_SPROUT_PUBLIC : @([[project sproutSocial] boolValue]),
+                                 PARAM_KEY_PROJECT_SPROUT_PUBLIC : ([[project sproutSocial] boolValue]) ? @(YES) : @(NO),
                                  
-                                 PARAM_KEY_PROJECT_REMINDER_ON : @([[project remindEnabled] boolValue]),
+                                 PARAM_KEY_PROJECT_REMINDER_ON : ([[project remindEnabled] boolValue]) ? @(YES) : @(NO),
                                  PARAM_KEY_PROJECT_REPEAT_FREQ : ([project repeatFrequency]) ? [project repeatFrequency] : @(0),
-                                 //PARAM_KEY_PROJECT_REPEAT_DATE : ([[project repeatNextDate] description]) ? @"" : @"",
+                                 PARAM_KEY_PROJECT_REPEAT_DATE : ([project repeatNextDate]) ? [[service dateFormatter] stringFromDate:[project repeatNextDate]]: @"",
                                  }];
         [service setServiceTag:SERVICE_TAG_UPDATE_PROJECT];
     } else {
         [service setUrl:SERVICE_URL_CREATE_PROJECT];
         [service setParameters:@{
                                  PARAM_KEY_PROJECT_TITLE : ([project title]) ? [project title] : @"",
-//                                 PARAM_KEY_PROJECT_SUBTITLE : ([project subtitle]) ? [project subtitle] : @"",
+                                 PARAM_KEY_PROJECT_SUBTITLE : ([project subtitle]) ? [project subtitle] : @"",
                                  PARAM_KEY_PROJECT_DESCRIPTION : ([project subtitle]) ? [project subtitle] : @"",
-//
-//                                 PARAM_KEY_PROJECT_FRONT_CAMERA : @([[project frontCameraEnabled] boolValue]),
-//                                 //PARAM_KEY_PROJECT_USE_SHADOW : @([[project useShadow] boolValue]),
+
+//                                 PARAM_KEY_PROJECT_FRONT_CAMERA : ([[project frontCameraEnabled] boolValue]) ? @(YES) : @(NO),
+//                                 PARAM_KEY_PROJECT_USE_SHADOW : ([[project useShadow] boolValue]) ? @(YES) : @(NO),
 //                                 PARAM_KEY_PROJECT_SLIDE_DURAT : ([project slideTime]) ? [project slideTime] : @(1),
-//                                 PARAM_KEY_PROJECT_SPROUT_PUBLIC : @([[project sproutSocial] boolValue]),
-//                                 
-//                                 PARAM_KEY_PROJECT_REMINDER_ON : @([[project remindEnabled] boolValue]),
+//                                 PARAM_KEY_PROJECT_SPROUT_PUBLIC : ([[project sproutSocial] boolValue]) ? @(YES) : @(NO),
+
+//                                 PARAM_KEY_PROJECT_REMINDER_ON : ([[project remindEnabled] boolValue]) ? @(YES) : @(NO),
 //                                 PARAM_KEY_PROJECT_REPEAT_FREQ : ([project repeatFrequency]) ? [project repeatFrequency] : @(0),
-//                                 //PARAM_KEY_PROJECT_REPEAT_DATE : ([[project repeatNextDate] description]) ? @"" : @"",
+//                                 PARAM_KEY_PROJECT_REPEAT_DATE : ([project repeatNextDate]) ? [[service dateFormatter] stringFromDate:[project repeatNextDate]]: @"",
                                  }];
         [service setServiceTag:SERVICE_TAG_CREATE_PROJECT];
     }
     [service setOauthEnabled:YES];
-    [service start];
     return service;
 }
 
@@ -130,7 +128,6 @@
     [service setParameters:@{ PARAM_KEY_PROJECT_SERVER_ID : serverId }];
     [service setServiceTag:SERVICE_TAG_DELETE_PROJECT];
     [service setOauthEnabled:YES];
-    [service start];
     return service;
 }
 
@@ -139,7 +136,7 @@
 - (NSNumber*)syncProjectWithDictionary:(NSDictionary*)projectDict
 {
     NSNumber *serverId = @(0);
-    if (projectDict) {
+    if (projectDict) {        
         // Create a shortcut for the CoreDataAccessKit
         CoreDataAccessKit *cdak = [CoreDataAccessKit sharedInstance];
 
@@ -182,16 +179,16 @@
         if (![[project title] isEqualToString:title]) { [project setTitle:title]; }
         if (![[project subtitle] isEqualToString:subtitle]) { [project setSubtitle:subtitle]; }
         
-        if (![[project frontCameraEnabled] isEqual:frontCameraEnabled]) { [project setFrontCameraEnabled:frontCameraEnabled]; }
-        //if (![[project useShadow] isEqual:useShadow]) { [project setUseShadow:useShadow]; }
-        if (![[project slideTime] isEqual:slideTime]) { [project setSlideTime:slideTime]; }
-        if (![[project sproutSocial] isEqual:sproutSocial]) { [project setSproutSocial:sproutSocial]; }
+        if (![[project frontCameraEnabled] isEqualToNumber:frontCameraEnabled]) { [project setFrontCameraEnabled:frontCameraEnabled]; }
+        //if (![[project useShadow] isEqualToNumber:useShadow]) { [project setUseShadow:useShadow]; }
+        if (![[project slideTime] isEqualToNumber:slideTime]) { [project setSlideTime:slideTime]; }
+        if (![[project sproutSocial] isEqualToNumber:sproutSocial]) { [project setSproutSocial:sproutSocial]; }
         
-        if (![[project remindEnabled] isEqual:remindEnabled]) { [project setRemindEnabled:remindEnabled]; }
-        if (![[project repeatFrequency] isEqual:repeatFrequency]) { [project setRepeatFrequency:repeatFrequency]; }
+        if (![[project remindEnabled] isEqualToNumber:remindEnabled]) { [project setRemindEnabled:remindEnabled]; }
+        if (![[project repeatFrequency] isEqualToNumber:repeatFrequency]) { [project setRepeatFrequency:repeatFrequency]; }
         //if (![[project repeatNextDate] isEqualToDate:repeatNextDate]) { [project setRepeatNextDate:repeatNextDate]; }
         
-        if (![[project videoURL] isEqual:videoURL]) { [project setVideoURL:videoURL]; }
+        if (![[project videoURL] isEqualToString:videoURL]) { [project setVideoURL:videoURL]; }
         if (![[project videoLastModified] isEqualToDate:videoLastModified]) { [project setVideoLastModified:videoLastModified]; }
         
         if (![[project created] isEqualToDate:created]) { [project setCreated:created]; }

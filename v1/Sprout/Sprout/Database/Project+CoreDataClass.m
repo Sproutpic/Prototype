@@ -11,6 +11,7 @@
 #import "DataObjects.h"
 #import "JDMLocalNotification.h"
 #import "ProjectWebService.h"
+#import "CoreDataAccessKit.h"
 
 @implementation Project
 
@@ -20,10 +21,9 @@
 {
     switch ([[self repeatFrequency] integerValue]) {
         case RF_Daily: return NSCalendarUnitDay;
-        case RF_Weekly: return NSCalendarUnitDay;
-        case RF_BiWeekly: return NSCalendarUnitDay;
+        case RF_Weekly: return NSCalendarUnitWeekday;
+        case RF_BiWeekly: return NSCalendarUnitWeekday;
         case RF_Monthly: return NSCalendarUnitMonth;
-        case RF_Every_5_Minutes: return NSCalendarUnitMinute;
         case RF_Every_Hour: return NSCalendarUnitHour;
         default: return NSCalendarUnitDay;
     }
@@ -52,11 +52,7 @@
                 } break;
                 case RF_Monthly: {
                     nextDate = [[NSCalendar currentCalendar] dateByAddingUnit:unit value:1 toDate:nextDate options:NSCalendarMatchNextTime];
-                } break;
-                case RF_Every_5_Minutes: {
-                    nextDate = [[NSCalendar currentCalendar] dateByAddingUnit:unit value:5 toDate:nextDate options:NSCalendarMatchNextTime];
-                } break;
-                case RF_Every_Hour: {
+                } break;                case RF_Every_Hour: {
                     nextDate = [[NSCalendar currentCalendar] dateByAddingUnit:unit value:1 toDate:nextDate options:NSCalendarMatchNextTime];
                 } break;
                 default: {
@@ -66,16 +62,18 @@
             [self setRepeatNextDate:nextDate];
         }
         NSLog(@"Created Local Notification at - %@",[[self repeatNextDate] description]);
-        ln = [JDMLocalNotification sendAlertNowWithMessage:NSLocalizedString(@"It's time to take a SproutPic photo.",
-                                                                             @"It's time to take a SproutPic photo.")
+        ln = [JDMLocalNotification sendAlertNowWithMessage:[NSString stringWithFormat:NSLocalizedString(@"It's time to take a photo for your %@ project",
+                                                                                                        @"It's time to take a photo for your %@ project"),
+                                                            ([self title]) ? [self title] : NSLocalizedString(@"SproutPic", @"SproutPic")]
                                                   andSound:JDM_Notification_Sound_Default
                                              andBadgeCount:NO_BADGE_UPDATE
                                                     onDate:[self repeatNextDate]
                                             repeatInterval:unit
-                                              withUserInfo:nil];
+                                              withUserInfo:@{ NOTIFICATION_KEY_PROJECT_UUID : [self uuid]}];
     }
     return ln;
 }
+
 
 # pragma mark Public
 
@@ -94,6 +92,19 @@
     [project setCreated:date];
     [project setSlideTime:@(1)];
     [project setRepeatFrequency:@(0)];
+    return project;
+}
+
++ (Project*)findByUUID:(NSString*)uuid
+               withMOC:(NSManagedObjectContext*)moc
+{
+    Project *project = nil;
+    if (uuid && moc) {
+        project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:@"Project"
+                                                                forPredicate:[NSPredicate predicateWithFormat:@"uuid = %@",uuid]
+                                                                    withSort:nil
+                                                                       inMOC:moc];
+    }
     return project;
 }
 
@@ -161,19 +172,23 @@
 
 # pragma mark NSManagedObject
 
+- (void)awakeFromFetch
+{
+    [super awakeFromFetch];
+    if (![self uuid]) {
+        [self setUuid:[[NSUUID UUID] UUIDString]];
+        [self save];
+    }
+}
+
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
     NSDate *now = [NSDate date];
     [self setCreated:now];
     [self setLastModified:now];
+    [self setUuid:[[NSUUID UUID] UUIDString]];
 }
-
-//- (void)didSave
-//{
-//    [super didSave];
-//    [ProjectWebService syncProject:self withCallback:nil];
-//}
 
 - (void)prepareForDeletion
 {

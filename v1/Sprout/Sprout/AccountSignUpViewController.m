@@ -105,33 +105,33 @@
     [self showFullScreenSpinner:YES];
     
     // All looks good, so lets call the web service...
-    [AccountWebService signUpUserWithName:fullName
-                                withEmail:email
-                             withPassword:password
-                             withCallback:
-     ^(NSError *error, SproutWebService *service) {
-         [self showFullScreenSpinner:NO];
-         if (error) {
-             if ([[error localizedDescription] containsString:@"Request failed: conflict (409)"]) {
-                 [self displayMessageWithTitle:NSLocalizedString(@"Email Issue", @"Email Issue")
-                                       andBody:NSLocalizedString(@"The email address is already in use. Try again with another email address.", @"The email address is already in use. Try again with another email address.")];
-             } else {
-                 [self displayMessageWithTitle:NSLocalizedString(@"Problem", @"Problem")
-                                       andBody:[error localizedDescription]];
-             }
-         } else {
-             UIAlertController *alert =
-             [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Congratulations", @"Congratulations")
-                                                 message:NSLocalizedString(@"You have signed up for a new account.",
-                                                                           @"You have signed up for a new account.") preferredStyle:UIAlertControllerStyleAlert];
-             [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
-                                                       style:UIAlertActionStyleDefault
-                                                     handler:^(UIAlertAction * _Nonnull action) {
-                                                         [[self navigationController] popToRootViewControllerAnimated:YES];
-                                                     }]];
-             [[self navigationController] presentViewController:alert animated:YES completion:nil];
-         }
-     }];
+    [[AccountWebService signUpUserWithName:fullName
+                                 withEmail:email
+                              withPassword:password
+                              withCallback:
+      ^(NSError *error, SproutWebService *service) {
+          [self showFullScreenSpinner:NO];
+          if (error) {
+              if ([[error localizedDescription] containsString:@"Request failed: conflict (409)"]) {
+                  [self displayMessageWithTitle:NSLocalizedString(@"Email Issue", @"Email Issue")
+                                        andBody:NSLocalizedString(@"The email address is already in use. Try again with another email address.", @"The email address is already in use. Try again with another email address.")];
+              } else {
+                  [self displayMessageWithTitle:NSLocalizedString(@"Problem", @"Problem")
+                                        andBody:[error localizedDescription]];
+              }
+          } else {
+              UIAlertController *alert =
+              [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Congratulations", @"Congratulations")
+                                                  message:NSLocalizedString(@"You have signed up for a new account.",
+                                                                            @"You have signed up for a new account.") preferredStyle:UIAlertControllerStyleAlert];
+              [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull action) {
+                                                          [[self navigationController] popToRootViewControllerAnimated:YES];
+                                                      }]];
+              [[self navigationController] presentViewController:alert animated:YES completion:nil];
+          }
+      }] start];
 }
 
 - (IBAction)signInButtonTapped:(id)sender

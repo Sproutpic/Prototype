@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+#define NOTIFICATION_KEY_PROJECT_UUID    @"NOTIFICATION_KEY_PROJECT_UUID"
+
 @class Timeline;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -18,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (Project*)createNewProject:(NSString*)title
                     subTitle:(NSString*)subTitle
     withManagedObjectContext:(NSManagedObjectContext*)managedObjectContext;
+
++ (Project*)findByUUID:(NSString*)uuid
+               withMOC:(NSManagedObjectContext*)moc;
 
 + (NSArray*)sortDescriptors;
 

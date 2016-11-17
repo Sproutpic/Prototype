@@ -16,6 +16,7 @@
 #import "OnboardingManager.h"
 #import "UIScrollView+SVPullToRefresh.h"
 #import "ProjectWebService.h"
+#import "SyncQueue.h"
 
 @interface MyProjectsViewController () <UITableViewDelegate, ProjectTableViewCellDelegate>
 
@@ -80,9 +81,9 @@
     [[[self tableView] pullToRefreshView] setArrowColor:[UIUtils colorNavigationBar]];
     [[[self tableView] pullToRefreshView] setTextColor:[UIUtils colorNavigationBar]];
     [[self tableView] addPullToRefreshWithActionHandler:^{
-        [ProjectWebService getAllProjectsWithCallback:^(NSError *error, SproutWebService *service) {
+        [[SyncQueue manager] addService:[ProjectWebService getAllProjectsWithCallback:^(NSError *error, SproutWebService *service) {
             [[[self tableView] pullToRefreshView] stopAnimating];
-        }];
+        }]];
     }];
 }
 

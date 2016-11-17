@@ -72,22 +72,31 @@
     [self showFullScreenSpinner:YES];
     
     // All looks good, so lets call the web service...
-    [AccountWebService changePasswordForEmail:[CurrentUser emailAddress]
-                              currentPassword:currentPwd
-                                  newPassword:passwordNew
-                                 withCallback:
-     ^(NSError *error, SproutWebService *service) {
-         [self showFullScreenSpinner:NO];
-         if (error) {
-             [self displayMessageWithTitle:NSLocalizedString(@"Problem", @"Problem")
-                                   andBody:[error localizedDescription]];
-         } else {
-             [[self navigationController] popViewControllerAnimated:YES];
-             [self displayMessageWithTitle:NSLocalizedString(@"Success", @"Success")
-                                   andBody:NSLocalizedString(@"Your password has been changed!",
-                                                             @"Your password has been changed!")];
-         }
-     }];
+    [[AccountWebService changePasswordForEmail:[CurrentUser emailAddress]
+                               currentPassword:currentPwd
+                                   newPassword:passwordNew
+                                  withCallback:
+      ^(NSError *error, SproutWebService *service) {
+          [self showFullScreenSpinner:NO];
+          if (error) {
+              if ([error userInfo] && [[error userInfo] objectForKey:@"NSLocalizedDescription"]) {
+                  NSString *local = [[error userInfo] objectForKey:@"NSLocalizedDescription"];
+                  if ([local containsString:@"Request failed: bad request (400)"]) {
+                      [self displayMessageWithTitle:NSLocalizedString(@"Password Incorrect", @"Password Incorrect")
+                                            andBody:NSLocalizedString(@"The password you entered was incorrect. Please enter the correct current password and try again.",
+                                                                      @"The password you entered was incorrect. Please enter the correct current password and try again.")];
+                      return;
+                  }
+              }
+              [self displayMessageWithTitle:NSLocalizedString(@"Problem", @"Problem")
+                                    andBody:[error localizedDescription]];
+          } else {
+              [[self navigationController] popViewControllerAnimated:YES];
+              [self displayMessageWithTitle:NSLocalizedString(@"Success", @"Success")
+                                    andBody:NSLocalizedString(@"Your password has been changed!",
+                                                              @"Your password has been changed!")];
+          }
+      }] start];
 }
 
 # pragma mark UIViewController

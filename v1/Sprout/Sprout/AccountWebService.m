@@ -49,7 +49,6 @@
                               PARAM_KEY_SIGN_IN_PASSWORD : password,
                               PARAM_KEY_SIGN_IN_GRANT_TYPE : @"password" }];
     [service setServiceTag:SERVICE_TAG_SIGN_IN];
-    [service start];
     return service;
 }
 
@@ -61,7 +60,6 @@
     [service setUrl:SERVICE_URL_FORGOT_PASSWORD];
     [service setParameters:@{ PARAM_KEY_FORGOT_PASSWORD_EMAIL : email }];
     [service setServiceTag:SERVICE_TAG_RESET_PASSWORD];
-    [service start];
     return service;
 }
 
@@ -73,15 +71,13 @@
     AccountWebService *service = [[AccountWebService alloc] init];
     [service setServiceCallBack:callBack];
     [service setUrl:SERVICE_URL_SIGN_UP];
-    [service setParameters:@{
-                             PARAM_KEY_SIGN_UP_EMAIL : email,
-                             PARAM_KEY_SIGN_UP_PASSWORD : password,
-                             PARAM_KEY_SIGN_UP_CONFIRM : password,
-                             PARAM_KEY_SIGN_UP_USERNAME : email,
-                             PARAM_KEY_SIGN_UP_NAME : name
-                             }];
+    [service setParameters:@{ PARAM_KEY_SIGN_UP_EMAIL : email,
+                              PARAM_KEY_SIGN_UP_PASSWORD : password,
+                              PARAM_KEY_SIGN_UP_CONFIRM : password,
+                              PARAM_KEY_SIGN_UP_USERNAME : email,
+                              PARAM_KEY_SIGN_UP_NAME : name
+                              }];
     [service setServiceTag:SERVICE_TAG_SIGN_UP];
-    [service start];
     return service;
 }
 
@@ -101,13 +97,11 @@
     AccountWebService *service = [[AccountWebService alloc] init];
     [service setServiceCallBack:callBack];
     [service setUrl:SERVICE_URL_CHANGE_PASSWORD];
-    [service setParameters:@{ @"email" : email,
-                              PARAM_KEY_CHANGE_PASSWORD_OLD : passwordCurrent,
+    [service setParameters:@{ PARAM_KEY_CHANGE_PASSWORD_OLD : passwordCurrent,
                               PARAM_KEY_CHANGE_PASSWORD_NEW : passwordNew,
                               PARAM_KEY_CHANGE_PASSWORD_CNFRM : passwordNew }];
     [service setOauthEnabled:YES];
     [service setServiceTag:SERVICE_TAG_CHANGE_PASSWORD];
-    [service start];
     return service;
 }
 

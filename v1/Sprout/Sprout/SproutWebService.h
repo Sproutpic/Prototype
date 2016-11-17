@@ -53,6 +53,7 @@ typedef void (^ SproutServiceCallBack)(NSError *error, SproutWebService* service
 
 // Sync Helper Methods
 
+- (NSDateFormatter*)dateFormatter;
 - (BOOL)isNull:(NSObject*)obj;
 - (NSString*)stringForKey:(NSString*)key inDict:(NSDictionary*)dictionary;
 - (NSNumber*)numberForKey:(NSString*)key inDict:(NSDictionary*)dictionary;

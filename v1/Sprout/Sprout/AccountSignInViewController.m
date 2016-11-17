@@ -58,22 +58,22 @@
     [self showFullScreenSpinner:YES];
     
     // All looks good, so lets call the web service...
-    [AccountWebService signInUserWithEmail:email
-                              withPassword:password
-                              withCallback:
-     ^(NSError *error, SproutWebService *service) {
-         [self showFullScreenSpinner:NO];
-         if (error) {
-             [self displayMessageWithTitle:NSLocalizedString(@"Invalid Username/Password", @"Invalid Username/Password")
-                                   andBody:NSLocalizedString(@"Enter a valid username and/or password to Sign In",
-                                                             @"Enter a valid username and/or password to Sign In")];
-         } else {
-             [[self navigationController] popToRootViewControllerAnimated:YES];
-             [self displayMessageWithTitle:NSLocalizedString(@"Success", @"Success")
-                                   andBody:NSLocalizedString(@"You are now Signed In",
-                                                             @"You are now Signed In")];
-         }
-     }];
+    [[AccountWebService signInUserWithEmail:email
+                               withPassword:password
+                               withCallback:
+      ^(NSError *error, SproutWebService *service) {
+          [self showFullScreenSpinner:NO];
+          if (error) {
+              [self displayMessageWithTitle:NSLocalizedString(@"Invalid Username/Password", @"Invalid Username/Password")
+                                    andBody:NSLocalizedString(@"Enter a valid username and/or password to Sign In",
+                                                              @"Enter a valid username and/or password to Sign In")];
+          } else {
+              [[self navigationController] popToRootViewControllerAnimated:YES];
+              [self displayMessageWithTitle:NSLocalizedString(@"Success", @"Success")
+                                    andBody:NSLocalizedString(@"You are now Signed In",
+                                                              @"You are now Signed In")];
+          }
+      }] start];
 }
 
 - (IBAction)resetPasswordButtonTapped:(id)sender
@@ -94,19 +94,19 @@
     [self showFullScreenSpinner:YES];
     
     // All looks good, so lets call the web service...
-    [AccountWebService requestResetPasswordForEmail:email
-                                       withCallback:
-     ^(NSError *error, SproutWebService *service) {
-         [self showFullScreenSpinner:NO];
-         if (error) {
-             [self displayMessageWithTitle:NSLocalizedString(@"Problem", @"Problem")
-                                   andBody:[error localizedDescription]];
-         } else {
-             [self displayMessageWithTitle:NSLocalizedString(@"Check Email", @"Check Email")
-                                   andBody:NSLocalizedString(@"We've sent you an email with more information on how to restore your password",
-                                                             @"We've sent you an email with more information on how to restore your password")];
-         }
-     }];
+    [[AccountWebService requestResetPasswordForEmail:email
+                                        withCallback:
+      ^(NSError *error, SproutWebService *service) {
+          [self showFullScreenSpinner:NO];
+          if (error) {
+              [self displayMessageWithTitle:NSLocalizedString(@"Problem", @"Problem")
+                                    andBody:[error localizedDescription]];
+          } else {
+              [self displayMessageWithTitle:NSLocalizedString(@"Check Your Email", @"Check Your Email")
+                                    andBody:NSLocalizedString(@"We've sent you an email with more information on how to restore your password!",
+                                                              @"We've sent you an email with more information on how to restore your password!")];
+          }
+      }] start];
 }
 
 # pragma mark UIViewController

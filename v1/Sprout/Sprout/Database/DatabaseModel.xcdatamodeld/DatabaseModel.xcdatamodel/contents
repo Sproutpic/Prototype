@@ -18,6 +18,7 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="transitionStyle" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="useShadow" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="videoLastModified" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="videoURL" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="timelines" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Timeline" inverseName="project" inverseEntity="Timeline" syncable="YES"/>
@@ -34,7 +35,7 @@
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="timelines" inverseEntity="Project" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Project" positionX="-477" positionY="-117" width="128" height="345"/>
+        <element name="Project" positionX="-477" positionY="-117" width="128" height="360"/>
         <element name="Timeline" positionX="-126" positionY="-117" width="128" height="180"/>
     </elements>
 </model>

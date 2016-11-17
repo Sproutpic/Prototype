@@ -29,6 +29,7 @@
 @dynamic sproutSocial;
 @dynamic useShadow;
 @dynamic markedForDelete;
+@dynamic uuid;
 
 @dynamic videoURL;
 @dynamic videoLastModified;

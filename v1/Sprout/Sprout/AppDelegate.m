@@ -17,6 +17,10 @@
 #import <TwitterKit/TwitterKit.h>
 #import "DataObjects.h"
 #import "SproutWebService.h"
+#import "AFNetworkActivityLogger.h"
+#import "ProjectDetailViewController.h"
+
+#import "JDMLocalNotification.h"
 
 @interface AppDelegate () <SproutWebServiceAuthDelegate>
 
@@ -25,6 +29,28 @@
 @end
 
 @implementation AppDelegate
+
+# pragma mark Dev Testing
+
+- (void)devCreateLocalNotificationForTesting
+{
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    
+    Project *project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:@"Project"
+                                                                     forPredicate:nil
+                                                                         withSort:nil
+                                                                            inMOC:[[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"Test" andConcurrency:NSMainQueueConcurrencyType]];
+    if (project) {
+        [JDMLocalNotification sendAlertNowWithMessage:[NSString stringWithFormat:NSLocalizedString(@"It's time to take a photo for your %@ project",
+                                                                                                   @"It's time to take a photo for your %@ project"),
+                                                       ([project title]) ? [project title] : NSLocalizedString(@"SproutPic", @"SproutPic")]
+                                             andSound:JDM_Notification_Sound_Default
+                                        andBadgeCount:NO_BADGE_UPDATE
+                                               onDate:nil
+                                       repeatInterval:NSCalendarUnitMinute
+                                         withUserInfo:@{ NOTIFICATION_KEY_PROJECT_UUID : [project uuid] }];
+    }
+}
 
 # pragma mark Private
 
@@ -68,6 +94,43 @@
     [[UITabBar appearance] setTranslucent:NO];
 }
 
+- (void)gotoProjectDetailForNotification:(UILocalNotification *)notification withApplication:(UIApplication *)application
+{
+    NSDictionary *userInfo = [notification userInfo];
+    if (userInfo && [userInfo objectForKey:NOTIFICATION_KEY_PROJECT_UUID]) {
+        NSString *uuid = [userInfo objectForKey:NOTIFICATION_KEY_PROJECT_UUID];
+        Project *project = [Project findByUUID:uuid withMOC:[[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"Test" andConcurrency:NSMainQueueConcurrencyType]];
+        if (project) {
+            ProjectDetailViewController *pvc = [[ProjectDetailViewController alloc] init];
+            [pvc setProject:project];
+            UINavigationController *nvc = nil;
+            UIViewController *vc = [[application keyWindow] rootViewController];
+            if ([vc isKindOfClass:[UITabBarController class]]) {
+                UITabBarController *tvc = (UITabBarController*)vc;
+                vc = [tvc selectedViewController];
+                if ([vc isKindOfClass:[UINavigationController class]]) {
+                    nvc = (UINavigationController*)vc;
+                } else {
+                    nvc = [vc navigationController];
+                }
+            }
+            if (!nvc) {
+                nvc = [vc navigationController];
+            }
+            
+            // If we have an nvc, go to the root and then show the project details...
+            if (nvc) {
+                [CATransaction begin];
+                [nvc popToRootViewControllerAnimated:NO];
+                [CATransaction setCompletionBlock:^{
+                    [nvc pushViewController:pvc animated:NO];
+                }];
+                [CATransaction commit];
+            }
+        }
+    }
+}
+
 # pragma mark AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -78,6 +141,14 @@
     [self setMainWithControllers];
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     [application setApplicationIconBadgeNumber:0];
+    
+    [[AFNetworkActivityLogger sharedLogger] startLogging];
+    
+    // To see if the app was open by tapping a local notification
+    if ([launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey]) {
+        [self gotoProjectDetailForNotification:[launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey] withApplication:application];
+    }
+    
     return YES;
 }
 
@@ -88,6 +159,8 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    //[self devCreateLocalNotificationForTesting];
+    
     self.bgTask = [application beginBackgroundTaskWithName:@"BackgroundTasks" expirationHandler:^{
         // Clean up any unfinished task business by marking where you
         // stopped or ending the task outright.
@@ -108,9 +181,16 @@
 
 - (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler
 {
-    [application setApplicationIconBadgeNumber:[application applicationIconBadgeNumber]+1]; // For dev testing...
     [Project updateAllProjectNotifications];
     completionHandler(UIBackgroundFetchResultNewData);
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+    // Only go to the project detail if the app was inactive or in the background
+    if ([application applicationState]!=UIApplicationStateActive) {
+        [self gotoProjectDetailForNotification:notification withApplication:application];
+    }
 }
 
 # pragma mark SproutWebServiceAuthDelegate

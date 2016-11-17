@@ -13,6 +13,7 @@
 #import "UIUtils.h"
 #import "DataObjects.h"
 #import "ProjectWebService.h"
+#import "SyncQueue.h"
 
 #import "TextFieldTableViewCell.h"
 #import "SocialMediaButtonsTableViewCell.h"
@@ -52,8 +53,7 @@ typedef enum ProjectRowOrder {
     PO_LastUpdate,
     PO_SocialButtons,
     PO_DeleteButton,
-    PO_SyncButton,
-    PO_GetAllButton
+    PO_SyncButton
 } ProjectRowOrder;
 
 typedef enum RowDataOrder {
@@ -279,21 +279,35 @@ typedef enum RowDataOrder {
         case PO_DeleteButton: {
             ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
             [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
-            [[tCell button] addTarget:self action:@selector(tappedDeleteButton:) forControlEvents:UIControlEventTouchUpInside];
+            [tCell setButtonCallBack:^(UIButton *button){
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Sprout Project", @"Delete Sprout Project")
+                                                                               message:NSLocalizedString(@"Are you sure you want to delete this entire sprout project?", @"Are you sure you want to delete this entire sprout project?")
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Delete Project", @"Delete Project")
+                                                          style:UIAlertActionStyleDestructive
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+                                                            if ([[[self project] serverId] integerValue]>0) {
+                                                                [[self project] setMarkedForDelete:@(YES)];
+                                                                [[self project] save];
+                                                                [[SyncQueue manager] addService:[ProjectWebService deleteProjectById:[[self project] serverId] withCallback:nil]];
+                                                            } else {
+                                                                [[self project] deleteAndSave];
+                                                            }
+                                                            [[self navigationController] popViewControllerAnimated:YES];
+                                                        }]];
+                [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:nil]];
+                [[self navigationController] presentViewController:alert animated:YES completion:nil];
+            }];
             [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         } break;
-            
         case PO_SyncButton: {
             ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
             [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
-            [[tCell button] addTarget:self action:@selector(tappedSyncButton:) forControlEvents:UIControlEventTouchUpInside];
-            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        } break;
-            
-        case PO_GetAllButton: {
-            ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
-            [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
-            [[tCell button] addTarget:self action:@selector(tappedGetAllButton:) forControlEvents:UIControlEventTouchUpInside];
+            [tCell setButtonCallBack:^(UIButton *button){
+                [[SyncQueue manager] addService:[ProjectWebService syncProject:[self project] withCallback:nil]];
+            }];
             [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         } break;
             
@@ -301,42 +315,6 @@ typedef enum RowDataOrder {
             [[cell textLabel] setText:@"Unknown"];
         } break;
     }
-}
-
-- (IBAction)tappedGetAllButton:(UIButton *)sender
-{
-    [ProjectWebService getAllProjectsWithCallback:nil];
-}
-
-- (IBAction)tappedSyncButton:(UIButton *)sender
-{
-    [ProjectWebService syncProject:[self project] withCallback:nil];
-}
-
-- (IBAction)tappedDeleteButton:(UIButton *)sender
-{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Sprout Project", @"Delete Sprout Project")
-                                                                   message:NSLocalizedString(@"Are you sure you want to delete this entire sprout project?", @"Are you sure you want to delete this entire sprout project?")
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Delete Project", @"Delete Project")
-                                              style:UIAlertActionStyleDestructive
-                                            handler:^(UIAlertAction * _Nonnull action) {
-                                                if ([[[self project] serverId] integerValue]>0) {
-                                                    [[self project] setMarkedForDelete:@(YES)];
-                                                    [[self project] save];
-                                                    [ProjectWebService deleteProjectById:[[self project] serverId]
-                                                                            withCallback:^(NSError *error, SproutWebService *service) {
-                                                                                // TODO - Handle any errors...
-                                                                            }];
-                                                } else {
-                                                    [[self project] deleteAndSave];
-                                                }
-                                                [[self navigationController] popViewControllerAnimated:YES];
-                                            }]];
-    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
-                                              style:UIAlertActionStyleCancel
-                                            handler:nil]];
-    [[self navigationController] presentViewController:alert animated:YES completion:nil];
 }
 
 - (NSArray*)rowDataAtIndex:(NSInteger)row
@@ -381,7 +359,6 @@ typedef enum RowDataOrder {
        @[@(PO_SocialButtons),@"Socail Media",@"SocialMediaButtonsTableViewCell",@"SocialMediaButtonsTableViewCell",@(54)],
        @[@(PO_DeleteButton),@"Delete Sprout",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
        @[@(PO_SyncButton),@"Sync Project",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
-       @[@(PO_GetAllButton),@"Get All Projects",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)]
        ]];
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"Project Details", @"Project Details")];

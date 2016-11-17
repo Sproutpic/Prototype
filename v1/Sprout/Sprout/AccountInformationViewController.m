@@ -46,12 +46,12 @@
     [UIUtils hapticFeedback];
     
     // All looks good, so lets call the web service...
-    [AccountWebService signOutUserWithEmail:[CurrentUser emailAddress]
-                               withCallback:
-     ^(NSError *error, SproutWebService *service) {
-         [self showFullScreenSpinner:NO];
-         [[self navigationController] popViewControllerAnimated:YES];
-     }];
+    [[AccountWebService signOutUserWithEmail:[CurrentUser emailAddress]
+                                withCallback:
+      ^(NSError *error, SproutWebService *service) {
+          [self showFullScreenSpinner:NO];
+          [[self navigationController] popViewControllerAnimated:YES];
+      }] start];
 }
 
 - (IBAction)signInButtonTapped:(id)sender

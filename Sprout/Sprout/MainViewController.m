@@ -318,6 +318,9 @@
             _circleView.layer.borderWidth = 1;
             _circleView.image = [UIImage new];
             _circleView.animationImages=@[];
+            _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
+            _circleView.image = [self makeRoundCornersWithRadius:self.view.frame.size.width / 4 withImage:[self cropImage:[self fixOrientation:[UIImage imageWithContentsOfFile:[_startSprout lastObject]]] withRect:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.height * .25, self.view.frame.size.width * .5, self.view.frame.size.width * .5)]];
+            _circleView.alpha = 0.3;
         }
     }else{
         if(!(_circleView.hidden)){
@@ -503,8 +506,8 @@
         //[_startSprout addObject:[self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]]];
         if(!(_circleView.hidden)){
             _startSprout = [[[NSUserDefaults standardUserDefaults] objectForKey:@"tempSprout"] mutableCopy];
-            if (_startSprout.count == 0) {
-                int radius = self.view.frame.size.width/4;
+            if (_startSprout.count + 1 > 0) {
+                /*int radius = self.view.frame.size.width/4;
                 UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, _prevImg.bounds.size.width, _prevImg.bounds.size.height) cornerRadius:0];
                 UIBezierPath *circlePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(radius, radius*4/3, 2.0*radius, 2.0*radius) cornerRadius:radius];
                 [path appendPath:circlePath];
@@ -513,9 +516,11 @@
                 maskLayer.fillRule  = kCAFillRuleEvenOdd;
                 maskLayer.fillColor = [UIColor blackColor].CGColor;
                 maskLayer.path      = path.CGPath;
-                maskLayer.opacity = 1;
+                maskLayer.opacity = 0.3;
                 _prevImg.layer.mask = maskLayer;
-                _prevImg.image = [self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]];
+                _prevImg.image = [self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]];*/
+                _circleView.image = [self makeRoundCornersWithRadius:self.view.frame.size.width / 4 withImage:[self cropImage:[self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]] withRect:CGRectMake(self.view.frame.size.width / 4, self.view.frame.size.height * .25, self.view.frame.size.width * .5, self.view.frame.size.width * .5)]];
+                _circleView.alpha = 0.3;
             }
         }else{
             _prevImg.image = [self fixOrientation:[info objectForKey:UIImagePickerControllerOriginalImage]];

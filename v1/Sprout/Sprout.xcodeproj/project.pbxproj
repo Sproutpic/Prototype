@@ -55,6 +55,8 @@
 		E78E3DD01DB41C7C00C4C815 /* AccountSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E78E3DCF1DB41C7C00C4C815 /* AccountSignUpViewController.m */; };
 		E78E3DD31DB41D7C00C4C815 /* AccountSignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E78E3DD11DB41D7C00C4C815 /* AccountSignUpViewController.xib */; };
 		E79687FB1DB40A8F009F7AB9 /* AppDelegate+DemoData.m in Sources */ = {isa = PBXBuildFile; fileRef = E76FBA9C1DAE0F7900BA46F0 /* AppDelegate+DemoData.m */; };
+		E7A681701DDEC56300B512CE /* privacy_policy.html in Resources */ = {isa = PBXBuildFile; fileRef = E7A6816F1DDEC56300B512CE /* privacy_policy.html */; };
+		E7A681731DDECA5D00B512CE /* PrivacyPolicyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E7A681721DDECA5D00B512CE /* PrivacyPolicyViewController.m */; };
 		E7A6BFE41DBB23230067C409 /* SproutDisplayTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E7A6BFE21DBB23230067C409 /* SproutDisplayTableViewCell.xib */; };
 		E7A6BFE71DBB233A0067C409 /* SproutDisplayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E7A6BFE61DBB233A0067C409 /* SproutDisplayTableViewCell.m */; };
 		E7A6BFEA1DBB26870067C409 /* ButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E7A6BFE81DBB26870067C409 /* ButtonTableViewCell.xib */; };
@@ -164,6 +166,9 @@
 		E78E3DCE1DB41C7C00C4C815 /* AccountSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountSignUpViewController.h; sourceTree = "<group>"; };
 		E78E3DCF1DB41C7C00C4C815 /* AccountSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountSignUpViewController.m; sourceTree = "<group>"; };
 		E78E3DD21DB41D7C00C4C815 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AccountSignUpViewController.xib; sourceTree = "<group>"; };
+		E7A6816F1DDEC56300B512CE /* privacy_policy.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = privacy_policy.html; sourceTree = "<group>"; };
+		E7A681711DDECA5D00B512CE /* PrivacyPolicyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyPolicyViewController.h; sourceTree = "<group>"; };
+		E7A681721DDECA5D00B512CE /* PrivacyPolicyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyPolicyViewController.m; sourceTree = "<group>"; };
 		E7A6BFE31DBB23230067C409 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SproutDisplayTableViewCell.xib; sourceTree = "<group>"; };
 		E7A6BFE51DBB233A0067C409 /* SproutDisplayTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SproutDisplayTableViewCell.h; sourceTree = "<group>"; };
 		E7A6BFE61DBB233A0067C409 /* SproutDisplayTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SproutDisplayTableViewCell.m; sourceTree = "<group>"; };
@@ -248,6 +253,8 @@
 			children = (
 				5A245E1A1D488E7F006A6F52 /* AboutViewController.h */,
 				5A245E1B1D488E7F006A6F52 /* AboutViewController.m */,
+				E7A681711DDECA5D00B512CE /* PrivacyPolicyViewController.h */,
+				E7A681721DDECA5D00B512CE /* PrivacyPolicyViewController.m */,
 			);
 			name = About;
 			sourceTree = "<group>";
@@ -317,6 +324,7 @@
 				5A85A2C71D2BB65F00B4CD02 /* main.m */,
 				5A85A2D31D2BB65F00B4CD02 /* Info.plist */,
 				5A85A2D01D2BB65F00B4CD02 /* LaunchScreen.storyboard */,
+				E7A6816F1DDEC56300B512CE /* privacy_policy.html */,
 				E7B36F101DBC4A7F00402A7F /* Sprout-Swift.h */,
 			);
 			name = "Supporting Files";
@@ -641,6 +649,7 @@
 				E762D1BD1DB9F4CC00988104 /* TextFieldTableViewCell.xib in Resources */,
 				E7A6BFE41DBB23230067C409 /* SproutDisplayTableViewCell.xib in Resources */,
 				E7EC350E1DC584AF004703D1 /* DateSelectorViewController.xib in Resources */,
+				E7A681701DDEC56300B512CE /* privacy_policy.html in Resources */,
 				E78E3DD31DB41D7C00C4C815 /* AccountSignUpViewController.xib in Resources */,
 				E7A6BFEA1DBB26870067C409 /* ButtonTableViewCell.xib in Resources */,
 				E7C61BA61DBB0293008A86C0 /* SwitchTableViewCell.xib in Resources */,
@@ -734,6 +743,7 @@
 				E70144E81DC0D9E200E115BF /* SproutView.m in Sources */,
 				E72642E01DDD38E50081CE03 /* SyncQueue.m in Sources */,
 				E749C0FA1DB462980068C3F1 /* AccountWebService.m in Sources */,
+				E7A681731DDECA5D00B512CE /* PrivacyPolicyViewController.m in Sources */,
 				E746D4771DD03696009C1BDD /* JDMLocalNotification.m in Sources */,
 				E749C0F11DB44DF10068C3F1 /* SproutWebService.m in Sources */,
 				E7C61BA91DBB02A4008A86C0 /* SwitchTableViewCell.m in Sources */,

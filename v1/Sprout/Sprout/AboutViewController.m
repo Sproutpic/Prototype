@@ -8,6 +8,7 @@
 
 #import "AboutViewController.h"
 #import "UIUtils.h"
+#import "PrivacyPolicyViewController.h"
 
 @interface AboutViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -27,7 +28,7 @@
 
 - (IBAction)privacyAndPolicyButtonTapped:(id)sender
 {
-    [self displayUnderConstructionAlert];
+    [[self navigationController] pushViewController:[[PrivacyPolicyViewController alloc] init] animated:YES];
 }
 
 - (IBAction)acknowledgementsButtonTapped:(id)sender

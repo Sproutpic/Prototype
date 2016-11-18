@@ -261,6 +261,12 @@
     return tableView;
 }
 
+- (UIWebView*)createBaseWebView
+{
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:[[self view] bounds]];
+    return webView;
+}
+
 - (void)addSproutLogoTableFooter:(UITableView*)tableView
 {
     UIImageView *tableFooter = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo-green"]];

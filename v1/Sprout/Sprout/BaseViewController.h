@@ -21,6 +21,7 @@
 - (void)addRightBarButton;
 
 - (UITableView*)createBaseTableView:(UITableViewStyle)tableStyle;
+- (UIWebView*)createBaseWebView;
 - (void)addSproutLogoTableFooter:(UITableView*)tableView;
 - (UIView*)fakeTableFooter;
 

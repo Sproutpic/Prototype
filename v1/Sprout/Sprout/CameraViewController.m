@@ -34,7 +34,7 @@
 
 # pragma mark Private
 
-- (UIImage *)fixOrientation:(UIImage *)image
+- (UIImage*)fixOrientation:(UIImage *)image
 {
     // No-op if the orientation is already correct
     // if (image.imageOrientation == UIImageOrientationUp) return image;
@@ -77,6 +77,7 @@
             break;
         case UIImageOrientationUp:
         case UIImageOrientationDown:
+            break;
         case UIImageOrientationLeft:
         case UIImageOrientationRight:
             break;
@@ -126,6 +127,9 @@
             [[self project] setFrontCameraEnabled:@(YES)];
         } break;
     }
+    
+    // Flip the overlay for front facing camera...
+    [[[[self imgPicker] cameraOverlayView] layer] setTransform:CATransform3DMakeRotation(M_PI, 0.0f, 1.0f, 0.0f)];
 }
 
 - (IBAction)tappedCloseButton:(UIButton *)sender
@@ -242,6 +246,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self configureFlashButtons];
 }
 
 # pragma mark BaseViewController
@@ -253,14 +258,19 @@
 
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         [self setImgPicker:[[UIImagePickerController alloc] init]];
-        //[[[self imgPicker] view] setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width)];
         [[[self imgPicker] view] setFrame:[[self view] bounds]];
         [[self imgPicker] setDelegate:self];
-        [[self imgPicker] setAllowsEditing:NO];
+        [[self imgPicker] setAllowsEditing:YES];
         [[self imgPicker] setSourceType:UIImagePickerControllerSourceTypeCamera];
         [[self imgPicker] setCameraDevice:[[[self project] frontCameraEnabled] boolValue]?UIImagePickerControllerCameraDeviceFront:UIImagePickerControllerCameraDeviceRear];
         [[self imgPicker] setShowsCameraControls:NO];
-        [[self imgPicker] setCameraFlashMode:UIImagePickerControllerCameraFlashModeOff];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:PREF_FLASH_AUTO_BOOL]) {
+            [[self imgPicker] setCameraFlashMode:UIImagePickerControllerCameraFlashModeAuto];
+        } else if ([[NSUserDefaults standardUserDefaults] boolForKey:PREF_FLASH_ON_BOOL]) {
+            [[self imgPicker] setCameraFlashMode:UIImagePickerControllerCameraFlashModeOn];
+        } else {
+            [[self imgPicker] setCameraFlashMode:UIImagePickerControllerCameraFlashModeOff];
+        }
         [self setPickerView:[[self imgPicker] view]];
     }
     
@@ -294,6 +304,11 @@
     UIView *btmView = [[UIView alloc] initWithFrame:CGRectMake(0, frame.origin.y+frame.size.height, frame.size.width, 500)];
     [btmView setBackgroundColor:[UIColor blackColor]];
     [ol addSubview:btmView];
+    
+    if ([[[self project] frontCameraEnabled] boolValue]) {
+        // Flip the overlay for front facing camera...
+        [[ol layer] setTransform:CATransform3DMakeRotation(M_PI, 0.0f, 1.0f, 0.0f)];
+    }
 
     [[self imgPicker] setCameraOverlayView:ol];
     

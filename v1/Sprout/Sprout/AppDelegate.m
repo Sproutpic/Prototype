@@ -19,7 +19,7 @@
 #import "SproutWebService.h"
 #import "AFNetworkActivityLogger.h"
 #import "ProjectDetailViewController.h"
-
+#import "AccountWebService.h"
 #import "JDMLocalNotification.h"
 
 @interface AppDelegate () <SproutWebServiceAuthDelegate>
@@ -195,10 +195,71 @@
 
 # pragma mark SproutWebServiceAuthDelegate
 
+- (IBAction)textChanged:(id)sender
+{
+    if (sender && [sender isKindOfClass:[UITextField class]]) {
+        UIResponder *responder = (UIResponder*)sender;
+        while (![responder isKindOfClass:[UIAlertController class]]) {
+            responder = [responder nextResponder];
+        }
+        UIAlertController *alert = (UIAlertController*)responder;
+        UITextField *usernameTxt = [[alert textFields] objectAtIndex:0];
+        UITextField *passwordTxt = [[alert textFields] objectAtIndex:1];
+        [[[alert actions] objectAtIndex:0] setEnabled:([[usernameTxt text] length]>0 && [[passwordTxt text] length]>0)];
+    }
+}
+
 - (void)authenticationNeeded:(void (^)(void))completion
 {
-    NSLog(@"authenticationNeeded");
-    completion();
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Sign In", @"Sign In")
+                                                                   message:NSLocalizedString(@"You need to Sign-In to use SproutPic",
+                                                                                             @"You need to Sign-In to use SproutPic")
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        [textField setPlaceholder:NSLocalizedString(@"Username/Email", @"Username/Email")];
+        [textField setClearButtonMode:UITextFieldViewModeAlways];
+        [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
+        [textField setTag:919];
+    }];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        [textField setPlaceholder:NSLocalizedString(@"Password", @"Password")];
+        [textField setClearButtonMode:UITextFieldViewModeAlways];
+        [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
+        [textField setTag:616];
+    }];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Sign In", @"Sign In")
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                // All looks good, so lets call the web service...
+                                                [[AccountWebService signInUserWithEmail:[[[[alert textFields] objectAtIndex:0] text] copy]
+                                                                           withPassword:[[[[alert textFields] objectAtIndex:1] text] copy]
+                                                                           withCallback:
+                                                  ^(NSError *error, SproutWebService *service) {
+                                                      if (error) {
+                                                          // Failure, so show a message and then call the same authentication peice
+                                                          UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Invalid Username/Password", @"Invalid Username/Password")
+                                                                                                                         message:NSLocalizedString(@"Enter a valid username and/or password to Sign In",
+                                                                                                                                                   @"Enter a valid username and/or password to Sign In")
+                                                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                                                          [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+                                                                                                    style:UIAlertActionStyleDefault
+                                                                                                  handler:^(UIAlertAction * _Nonnull action) {
+                                                                                                      [self authenticationNeeded:completion];
+                                                                                                  }]];
+                                                          [[[self window] rootViewController] presentViewController:alert animated:YES completion:nil];
+                                                      } else {
+                                                          // We logged in, so not lets finish out this completion block.
+                                                          completion();
+                                                      }
+                                                  }] start];
+                                            }]];
+    [[[alert actions] objectAtIndex:0] setEnabled:NO];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                              style:UIAlertActionStyleCancel
+                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                completion();
+                                            }]];
+    [[[self window] rootViewController] presentViewController:alert animated:YES completion:nil];
 }
 
 @end

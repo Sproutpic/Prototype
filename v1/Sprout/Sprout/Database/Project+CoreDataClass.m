@@ -62,9 +62,9 @@
             [self setRepeatNextDate:nextDate];
         }
         NSLog(@"Created Local Notification at - %@",[[self repeatNextDate] description]);
-        ln = [JDMLocalNotification sendAlertNowWithMessage:[NSString stringWithFormat:NSLocalizedString(@"It's time to take a photo for your %@ project",
-                                                                                                        @"It's time to take a photo for your %@ project"),
-                                                            ([self title]) ? [self title] : NSLocalizedString(@"SproutPic", @"SproutPic")]
+        ln = [JDMLocalNotification sendAlertNowWithMessage:[NSString stringWithFormat:NSLocalizedString(@"It's time to take a photo for your %@ Sprout",
+                                                                                                        @"It's time to take a photo for your %@ Sprout"),
+                                                            ([self title]) ? [self title] : NSLocalizedString(@"awesome", @"awesome")]
                                                   andSound:JDM_Notification_Sound_Default
                                              andBadgeCount:NO_BADGE_UPDATE
                                                     onDate:[self repeatNextDate]

@@ -8,6 +8,7 @@
 
 #import "AboutViewController.h"
 #import "UIUtils.h"
+#import "TermsAndConditionsViewController.h"
 #import "PrivacyPolicyViewController.h"
 #import "VTAcknowledgementsViewController.h"
 
@@ -24,7 +25,7 @@
 
 - (IBAction)termsAndConditionsButtonTapped:(id)sender
 {
-    [self displayUnderConstructionAlert];
+    [[self navigationController] pushViewController:[[TermsAndConditionsViewController alloc] init] animated:YES];
 }
 
 - (IBAction)privacyAndPolicyButtonTapped:(id)sender

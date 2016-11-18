@@ -58,6 +58,8 @@
 		E7A681701DDEC56300B512CE /* privacy_policy.html in Resources */ = {isa = PBXBuildFile; fileRef = E7A6816F1DDEC56300B512CE /* privacy_policy.html */; };
 		E7A681731DDECA5D00B512CE /* PrivacyPolicyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E7A681721DDECA5D00B512CE /* PrivacyPolicyViewController.m */; };
 		E7A681771DDECFDF00B512CE /* Pods-SproutPic-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E7A681761DDECFDF00B512CE /* Pods-SproutPic-acknowledgements.plist */; };
+		E7A681791DDED42000B512CE /* terms_and_conditions.html in Resources */ = {isa = PBXBuildFile; fileRef = E7A681781DDED42000B512CE /* terms_and_conditions.html */; };
+		E7A6817C1DDED47B00B512CE /* TermsAndConditionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E7A6817B1DDED47B00B512CE /* TermsAndConditionsViewController.m */; };
 		E7A6BFE41DBB23230067C409 /* SproutDisplayTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E7A6BFE21DBB23230067C409 /* SproutDisplayTableViewCell.xib */; };
 		E7A6BFE71DBB233A0067C409 /* SproutDisplayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E7A6BFE61DBB233A0067C409 /* SproutDisplayTableViewCell.m */; };
 		E7A6BFEA1DBB26870067C409 /* ButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E7A6BFE81DBB26870067C409 /* ButtonTableViewCell.xib */; };
@@ -175,6 +177,9 @@
 		E7A681711DDECA5D00B512CE /* PrivacyPolicyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyPolicyViewController.h; sourceTree = "<group>"; };
 		E7A681721DDECA5D00B512CE /* PrivacyPolicyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyPolicyViewController.m; sourceTree = "<group>"; };
 		E7A681761DDECFDF00B512CE /* Pods-SproutPic-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-SproutPic-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-SproutPic/Pods-SproutPic-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		E7A681781DDED42000B512CE /* terms_and_conditions.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = terms_and_conditions.html; sourceTree = "<group>"; };
+		E7A6817A1DDED47B00B512CE /* TermsAndConditionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TermsAndConditionsViewController.h; sourceTree = "<group>"; };
+		E7A6817B1DDED47B00B512CE /* TermsAndConditionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TermsAndConditionsViewController.m; sourceTree = "<group>"; };
 		E7A6BFE31DBB23230067C409 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SproutDisplayTableViewCell.xib; sourceTree = "<group>"; };
 		E7A6BFE51DBB233A0067C409 /* SproutDisplayTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SproutDisplayTableViewCell.h; sourceTree = "<group>"; };
 		E7A6BFE61DBB233A0067C409 /* SproutDisplayTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SproutDisplayTableViewCell.m; sourceTree = "<group>"; };
@@ -262,6 +267,8 @@
 				5A245E1B1D488E7F006A6F52 /* AboutViewController.m */,
 				E7A681711DDECA5D00B512CE /* PrivacyPolicyViewController.h */,
 				E7A681721DDECA5D00B512CE /* PrivacyPolicyViewController.m */,
+				E7A6817A1DDED47B00B512CE /* TermsAndConditionsViewController.h */,
+				E7A6817B1DDED47B00B512CE /* TermsAndConditionsViewController.m */,
 			);
 			name = About;
 			sourceTree = "<group>";
@@ -332,6 +339,7 @@
 				5A85A2D31D2BB65F00B4CD02 /* Info.plist */,
 				5A85A2D01D2BB65F00B4CD02 /* LaunchScreen.storyboard */,
 				E7A6816F1DDEC56300B512CE /* privacy_policy.html */,
+				E7A681781DDED42000B512CE /* terms_and_conditions.html */,
 				E7A681761DDECFDF00B512CE /* Pods-SproutPic-acknowledgements.plist */,
 				E7B36F101DBC4A7F00402A7F /* Sprout-Swift.h */,
 			);
@@ -667,6 +675,7 @@
 				E7EC35111DC5CE21004703D1 /* CameraViewController.xib in Resources */,
 				E7A681771DDECFDF00B512CE /* Pods-SproutPic-acknowledgements.plist in Resources */,
 				E7C61BA01DBAFF36008A86C0 /* SliderTableViewCell.xib in Resources */,
+				E7A681791DDED42000B512CE /* terms_and_conditions.html in Resources */,
 				E7ABE1F31DB412C30056224D /* AccountSignInViewController.xib in Resources */,
 				5A85A2CF1D2BB65F00B4CD02 /* Assets.xcassets in Resources */,
 				E7C72A0B1DB89DB500128D32 /* SelectNewProjectViewController.xib in Resources */,
@@ -781,6 +790,7 @@
 				5AD140331D50673D004C301B /* CameraViewController.m in Sources */,
 				5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */,
 				E70700321DBE37F3009E8D7D /* Timeline+CoreDataClass.m in Sources */,
+				E7A6817C1DDED47B00B512CE /* TermsAndConditionsViewController.m in Sources */,
 				E7EC350B1DC584A0004703D1 /* DateSelectorViewController.m in Sources */,
 				5A2180951D3E015C0057F298 /* AccountInformationViewController.m in Sources */,
 				E7DBE62A1DACAE730052064E /* DatabaseModel.xcdatamodeld in Sources */,

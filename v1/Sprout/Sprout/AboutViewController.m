@@ -9,6 +9,7 @@
 #import "AboutViewController.h"
 #import "UIUtils.h"
 #import "PrivacyPolicyViewController.h"
+#import "VTAcknowledgementsViewController.h"
 
 @interface AboutViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -33,7 +34,10 @@
 
 - (IBAction)acknowledgementsButtonTapped:(id)sender
 {
-    [self displayUnderConstructionAlert];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Pods-SproutPic-acknowledgements" ofType:@"plist"];
+    VTAcknowledgementsViewController *vc = [[VTAcknowledgementsViewController alloc] initWithPath:path];
+    [vc setHeaderText:NSLocalizedString(@"We love open source software.", @"We love open source software.")];
+    [[self navigationController] pushViewController:vc animated:YES];
 }
 
 - (NSArray*)rowDataAtIndex:(NSInteger)row

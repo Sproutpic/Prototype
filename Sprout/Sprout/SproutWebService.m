@@ -76,7 +76,7 @@ static NSDateFormatter *df;
     
     // Actually make the service call...
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager setRequestSerializer:[AFJSONRequestSerializer serializer]];
+    //[manager setRequestSerializer:[AFJSONRequestSerializer serializer]];
     // Check for oauth and add authorization to header parameters
     if ([self oauthEnabled]) {
         NSString *token = [CurrentUser authToken];
@@ -130,10 +130,9 @@ static NSDateFormatter *df;
             if ([local containsString:@"Request failed: unauthorized (401)"]) {
                 id<SproutWebServiceAuthDelegate> delegate = (id<SproutWebServiceAuthDelegate>)[[UIApplication sharedApplication] delegate];
                 [delegate authenticationNeeded:^{
-                    NSLog(@"Call service again...");
-                    //[self start];
+                    [self start];
                 }];
-                //return;
+                return;
             }
         }
     }

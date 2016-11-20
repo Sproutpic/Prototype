@@ -48,6 +48,8 @@
 		E749C0F71DB45B420068C3F1 /* CurrentUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0F61DB45B420068C3F1 /* CurrentUser.m */; };
 		E749C0FA1DB462980068C3F1 /* AccountWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0F91DB462980068C3F1 /* AccountWebService.m */; };
 		E749C0FF1DB49B880068C3F1 /* ProjectWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0FE1DB49B880068C3F1 /* ProjectWebService.m */; };
+		E75E9B531DE1568000666132 /* EditAccountInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E75E9B521DE1568000666132 /* EditAccountInfoViewController.m */; };
+		E75E9B561DE159CF00666132 /* EditAccountInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E75E9B541DE159CF00666132 /* EditAccountInfoViewController.xib */; };
 		E762D1BA1DB9F4BD00988104 /* TextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E762D1B91DB9F4BD00988104 /* TextFieldTableViewCell.m */; };
 		E762D1BD1DB9F4CC00988104 /* TextFieldTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E762D1BB1DB9F4CC00988104 /* TextFieldTableViewCell.xib */; };
 		E76FBA931DADEDCA00BA46F0 /* TableAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = E76FBA921DADEDCA00BA46F0 /* TableAdapter.m */; };
@@ -156,6 +158,9 @@
 		E749C0F91DB462980068C3F1 /* AccountWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountWebService.m; sourceTree = "<group>"; };
 		E749C0FD1DB49B880068C3F1 /* ProjectWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectWebService.h; sourceTree = "<group>"; };
 		E749C0FE1DB49B880068C3F1 /* ProjectWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectWebService.m; sourceTree = "<group>"; };
+		E75E9B511DE1568000666132 /* EditAccountInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditAccountInfoViewController.h; sourceTree = "<group>"; };
+		E75E9B521DE1568000666132 /* EditAccountInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditAccountInfoViewController.m; sourceTree = "<group>"; };
+		E75E9B551DE159CF00666132 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EditAccountInfoViewController.xib; sourceTree = "<group>"; };
 		E762D1B81DB9F4BD00988104 /* TextFieldTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldTableViewCell.h; sourceTree = "<group>"; };
 		E762D1B91DB9F4BD00988104 /* TextFieldTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldTableViewCell.m; sourceTree = "<group>"; };
 		E762D1BC1DB9F4CC00988104 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TextFieldTableViewCell.xib; sourceTree = "<group>"; };
@@ -245,6 +250,9 @@
 				E749AA081DBA063C007DC7D8 /* AccountInformationViewController.xib */,
 				5A2180931D3E015C0057F298 /* AccountInformationViewController.h */,
 				5A2180941D3E015C0057F298 /* AccountInformationViewController.m */,
+				E75E9B541DE159CF00666132 /* EditAccountInfoViewController.xib */,
+				E75E9B511DE1568000666132 /* EditAccountInfoViewController.h */,
+				E75E9B521DE1568000666132 /* EditAccountInfoViewController.m */,
 				E78E3DD11DB41D7C00C4C815 /* AccountSignUpViewController.xib */,
 				E78E3DCE1DB41C7C00C4C815 /* AccountSignUpViewController.h */,
 				E78E3DCF1DB41C7C00C4C815 /* AccountSignUpViewController.m */,
@@ -656,6 +664,7 @@
 			files = (
 				5A85A2D21D2BB65F00B4CD02 /* LaunchScreen.storyboard in Resources */,
 				E746D4781DD03696009C1BDD /* n_default.wav in Resources */,
+				E75E9B561DE159CF00666132 /* EditAccountInfoViewController.xib in Resources */,
 				E749AA0D1DBA0655007DC7D8 /* AccountChangePasswordViewController.xib in Resources */,
 				E762D1BD1DB9F4CC00988104 /* TextFieldTableViewCell.xib in Resources */,
 				E7A6BFE41DBB23230067C409 /* SproutDisplayTableViewCell.xib in Resources */,
@@ -762,6 +771,7 @@
 				E7C61BA91DBB02A4008A86C0 /* SwitchTableViewCell.m in Sources */,
 				E7C61BA31DBAFF48008A86C0 /* SliderTableViewCell.m in Sources */,
 				E7D561521DBF241300647BBB /* TimelineCollectionViewCell.m in Sources */,
+				E75E9B531DE1568000666132 /* EditAccountInfoViewController.m in Sources */,
 				5A85A3101D2BBF0600B4CD02 /* SettingsViewController.m in Sources */,
 				5A17F60E1D4AFDAB00662C1A /* ProjectDetailViewController.m in Sources */,
 				E7C61B9D1DBAFC05008A86C0 /* TimelineTableViewCell.m in Sources */,
@@ -838,6 +848,14 @@
 				E749AA0C1DBA0655007DC7D8 /* Base */,
 			);
 			name = AccountChangePasswordViewController.xib;
+			sourceTree = "<group>";
+		};
+		E75E9B541DE159CF00666132 /* EditAccountInfoViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E75E9B551DE159CF00666132 /* Base */,
+			);
+			name = EditAccountInfoViewController.xib;
 			sourceTree = "<group>";
 		};
 		E762D1BB1DB9F4CC00988104 /* TextFieldTableViewCell.xib */ = {

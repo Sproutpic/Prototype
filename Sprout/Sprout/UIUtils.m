@@ -33,9 +33,9 @@
     return [UIColor colorWithRed:206.0f/255.0f green:205.0f/255.0f blue:205.0f/255.0f alpha:1.0f];
 }
 
-+ (UIColor *)colorSproutGreen
++ (UIColor *)colorLightGrey
 {
-    return [UIColor colorWithRed:216.0f/255.0f green:215.0f/255.0f blue:206.0f/255.0f alpha:1.0f];
+    return [UIColor colorWithRed:239.0f/255.0f green:239.0f/255.0f blue:239.0f/255.0f alpha:1.0f];
 }
 
 + (UIFont *)fontForNavBarTitle

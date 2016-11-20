@@ -56,7 +56,7 @@
 
 - (IBAction)tappedCancelButton:(UIButton *)sender
 {
-    
+    [[self navigationController] dismissViewControllerAnimated:YES completion:nil];
 }
 
 # pragma mark UIViewController
@@ -161,13 +161,18 @@
     }];
 }
 
-- (void)displayMessageWithTitle:(NSString*)title andBody:(NSString*)message
+- (void)displayMessageWithTitle:(NSString*)title andBody:(NSString*)message withHandler:(void (^)(UIAlertAction *action))handler
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
                                               style:UIAlertActionStyleDefault
-                                            handler:nil]];
+                                            handler:handler]];
     [[self navigationController] presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)displayMessageWithTitle:(NSString*)title andBody:(NSString*)message
+{
+    [self displayMessageWithTitle:title andBody:message withHandler:nil];
 }
 
 - (void)displayMessageWithBody:(NSString*)message

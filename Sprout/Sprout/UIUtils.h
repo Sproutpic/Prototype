@@ -16,7 +16,7 @@
 
 + (UIColor*)colorNavigationBar;
 + (UIColor*)colorMenuButtonsSeparator;
-+ (UIColor*)colorSproutGreen;
++ (UIColor *)colorLightGrey;
 
 + (UIFont*)fontForNavBarTitle;
 + (UIFont*)fontForFAQQuestionActive;

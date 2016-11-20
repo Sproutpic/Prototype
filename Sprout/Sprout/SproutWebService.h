@@ -16,11 +16,13 @@
 #define SPROUT_COMMUNITY_URL    [NSString stringWithFormat:@"%@/Community", SPROUT_URL]
 #define SPROUT_API_URL          [NSString stringWithFormat:@"%@/api/Mobile", SPROUT_URL]
 
+#define DEFAULT_DUMMY_PLACE_HOLDER      @"--"
+
 // ---------------------------------------------------------------------------------------------------
 
 @protocol SproutWebServiceAuthDelegate <NSObject>
 
-- (void)authenticationNeeded:(void (^)(void))completion;
+- (void)authenticationNeeded:(void (^)(NSError *error))completion;
 
 @end
 

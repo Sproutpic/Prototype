@@ -15,4 +15,5 @@ target 'Sprout' do
     pod 'SDWebImage', :git => 'https://github.com/rs/SDWebImage.git', :branch => '3.8.2'
     pod 'SVPullToRefresh', :git => 'https://github.com/samvermette/SVPullToRefresh.git', :branch => '0.4.1'
     pod 'VTAcknowledgementsViewController'
+    pod 'CTFeedback'
 end

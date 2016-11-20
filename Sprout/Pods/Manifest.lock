@@ -18,6 +18,7 @@ PODS:
     - AFNetworking/NSURLSession
   - Crashlytics (3.8.3):
     - Fabric (~> 1.6.3)
+  - CTFeedback (1.1.1)
   - Fabric (1.6.11)
   - JVFloatLabeledTextField (1.1.1)
   - Onboard (2.3.1)
@@ -37,6 +38,7 @@ DEPENDENCIES:
   - AFNetworkActivityLogger (from `https://github.com/AFNetworking/AFNetworkActivityLogger.git`, branch `3_0_0`)
   - AFNetworking (~> 3.1.0)
   - Crashlytics
+  - CTFeedback
   - Fabric
   - JVFloatLabeledTextField (from `https://github.com/jverdi/JVFloatLabeledTextField.git`, branch `1.1.1`)
   - Onboard
@@ -91,6 +93,7 @@ SPEC CHECKSUMS:
   AFNetworkActivityLogger: e77f68d014becb33c4306a23f56a64906ff72670
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   Crashlytics: 2b6dbe138a42395577cfa73dfa1aa7248cadf39e
+  CTFeedback: 6f128606e0d26d46075c3fa9fc33884372df8675
   Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   Onboard: b6871f25ac753175b2ab9a362fb2feb26a81a311
@@ -102,6 +105,6 @@ SPEC CHECKSUMS:
   TwitterKit: 3d72f0b25f2cc281f996e976928d2defe28702cb
   VTAcknowledgementsViewController: 62d2b3979b6d86677246967cf880d14b13ee7ac4
 
-PODFILE CHECKSUM: 3e701b0bef2f07f41d3a2d995d950e197253f4dc
+PODFILE CHECKSUM: 25bd25ba0fbc752a046154dc3b3089f04b1da073
 
 COCOAPODS: 1.1.1

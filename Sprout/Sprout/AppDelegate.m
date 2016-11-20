@@ -209,7 +209,7 @@
     }
 }
 
-- (void)authenticationNeeded:(void (^)(void))completion
+- (void)authenticationNeeded:(void (^)(NSError *error))completion
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Sign In", @"Sign In")
                                                                    message:NSLocalizedString(@"You need to Sign-In to use SproutPic",
@@ -219,13 +219,12 @@
         [textField setPlaceholder:NSLocalizedString(@"Username/Email", @"Username/Email")];
         [textField setClearButtonMode:UITextFieldViewModeAlways];
         [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
-        [textField setTag:919];
     }];
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         [textField setPlaceholder:NSLocalizedString(@"Password", @"Password")];
         [textField setClearButtonMode:UITextFieldViewModeAlways];
+        [textField setSecureTextEntry:YES];
         [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
-        [textField setTag:616];
     }];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Sign In", @"Sign In")
                                               style:UIAlertActionStyleDefault
@@ -249,7 +248,7 @@
                                                           [[[self window] rootViewController] presentViewController:alert animated:YES completion:nil];
                                                       } else {
                                                           // We logged in, so not lets finish out this completion block.
-                                                          completion();
+                                                          completion(nil);
                                                       }
                                                   }] start];
                                             }]];
@@ -257,7 +256,7 @@
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                               style:UIAlertActionStyleCancel
                                             handler:^(UIAlertAction * _Nonnull action) {
-                                                completion();
+                                                completion([NSError errorWithDomain:@"Don't Continue" code:0 userInfo:nil]);
                                             }]];
     [[[self window] rootViewController] presentViewController:alert animated:YES completion:nil];
 }

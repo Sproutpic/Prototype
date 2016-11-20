@@ -82,7 +82,7 @@
             <connections>
                 <outlet property="delegate" destination="-1" id="aHw-ki-7y4"/>
             </connections>
-            <point key="canvasLocation" x="-111" y="-93"/>
+            <point key="canvasLocation" x="-139" y="-117"/>
         </scrollView>
     </objects>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

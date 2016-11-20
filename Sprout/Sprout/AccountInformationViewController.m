@@ -9,6 +9,8 @@
 #import "AccountInformationViewController.h"
 #import "AccountSignInViewController.h"
 #import "AccountSignUpViewController.h"
+#import "AccountChangePasswordViewController.h"
+#import "EditAccountInfoViewController.h"
 #import "AccountWebService.h"
 #import "UIUtils.h"
 
@@ -35,7 +37,9 @@
 
 - (void)editState
 {
-    [self displayUnderConstructionAlert];
+    EditAccountInfoViewController *vc = [[EditAccountInfoViewController alloc] initWithNibName:@"EditAccountInfoViewController" bundle:nil];
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+    [[self navigationController] presentViewController:nvc animated:YES completion:nil];
 }
 
 - (IBAction)signOutButtonTapped:(id)sender
@@ -97,17 +101,36 @@
                                                                                       style:UIBarButtonItemStylePlain
                                                                                      target:self
                                                                                      action:@selector(editState)]];
+        [[AccountWebService getAccountInfoWithCallback:^(NSError *error, SproutWebService *service) {
+            [[self tableView] reloadData];
+        }] start];
     } else {
         [[self loggedOutView] setHidden:NO];
         [[self navigationItem] setRightBarButtonItem:nil];
     }
 }
 
+# pragma mark UITableViewDelegate
+
+- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tv deselectRowAtIndexPath:indexPath animated:YES];
+    if ([CurrentUser isLoggedIn]) {
+        switch ([indexPath row]) {
+            case 3: {
+                AccountChangePasswordViewController *vc = [[AccountChangePasswordViewController alloc] initWithNibName:@"AccountChangePasswordViewController" bundle:nil];
+                [[self navigationController] pushViewController:vc animated:YES];
+            } break;
+        }
+    }
+}
+
+
 # pragma mark UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tv numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -116,9 +139,9 @@
     UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:reuseCell];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseCell];
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
     }
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [cell setAccessoryType:UITableViewCellAccessoryNone];
     if ([CurrentUser isLoggedIn]) {
         switch ([indexPath row]) {
             case 0: {
@@ -131,7 +154,13 @@
             } break;
             case 2: {
                 [[cell textLabel] setText:NSLocalizedString(@"Gender", @"Gender")];
-                [[cell detailTextLabel] setText:NSLocalizedString(@"--", @"--")];
+                [[cell detailTextLabel] setText:[CurrentUser gender]];
+            } break;
+            case 3: {
+                [[cell textLabel] setText:NSLocalizedString(@"Change Password", @"Change Password")];
+                [[cell detailTextLabel] setText:nil];
+                [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+                [cell setAccessoryView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow-right"]]];
             } break;
         }
     } else {

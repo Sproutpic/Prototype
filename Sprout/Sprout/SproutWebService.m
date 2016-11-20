@@ -129,8 +129,14 @@ static NSDateFormatter *df;
             NSString *local = [[error userInfo] objectForKey:@"NSLocalizedDescription"];
             if ([local containsString:@"Request failed: unauthorized (401)"]) {
                 id<SproutWebServiceAuthDelegate> delegate = (id<SproutWebServiceAuthDelegate>)[[UIApplication sharedApplication] delegate];
-                [delegate authenticationNeeded:^{
-                    [self start];
+                [delegate authenticationNeeded:^(NSError *error) {
+                    if (error) {
+                        if ([self serviceCallBack]) {
+                            [self serviceCallBack](error, self);
+                        }
+                    } else {
+                        [self start];
+                    }
                 }];
                 return;
             }
@@ -138,7 +144,7 @@ static NSDateFormatter *df;
     }
     
     if ([self serviceCallBack]) {
-        _serviceCallBack(error, self);
+        [self serviceCallBack](error, self);
     }
 }
 

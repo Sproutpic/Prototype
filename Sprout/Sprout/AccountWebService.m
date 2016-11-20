@@ -13,6 +13,8 @@
 #define SERVICE_TAG_SIGN_UP             @"SERVICE_TAG_SIGN_UP"
 #define SERVICE_TAG_RESET_PASSWORD      @"SERVICE_TAG_RESET_PASSWORD"
 #define SERVICE_TAG_CHANGE_PASSWORD     @"SERVICE_TAG_CHANGE_PASSWORD"
+#define SERVICE_TAG_GET_ACCOUNT         @"SERVICE_TAG_GET_ACCOUNT"
+#define SERVICE_TAG_UPDATE_ACCOUNT      @"SERVICE_TAG_UPDATE_ACCOUNT"
 
 #define SERVICE_URL_SIGN_IN             [NSString stringWithFormat:@"%@/Token",SPROUT_URL]
 #define PARAM_KEY_SIGN_IN_USERNAME      @"username"
@@ -33,6 +35,12 @@
 #define PARAM_KEY_CHANGE_PASSWORD_OLD   @"oldPassword"
 #define PARAM_KEY_CHANGE_PASSWORD_NEW   @"newPassword"
 #define PARAM_KEY_CHANGE_PASSWORD_CNFRM @"confirmPassword"
+
+#define SERVICE_URL_GET_ACCOUNT         [NSString stringWithFormat:@"%@/GetAccount",SPROUT_API_URL]
+#define SERVICE_URL_UPDATE_ACCOUNT      [NSString stringWithFormat:@"%@/UpdateAccount",SPROUT_API_URL]
+#define PARAM_KEY_ACCOUNT_EMAIL         @"email"
+#define PARAM_KEY_ACCOUNT_NAME          @"name"
+#define PARAM_KEY_ACCOUNT_GENDER        @"gender"
 
 @implementation AccountWebService
 
@@ -105,6 +113,34 @@
     return service;
 }
 
++ (AccountWebService*)getAccountInfoWithCallback:(SproutServiceCallBack)callBack
+{
+    AccountWebService *service = [[AccountWebService alloc] init];
+    [service setServiceCallBack:callBack];
+    [service setUrl:SERVICE_URL_GET_ACCOUNT];
+    [service setParameters:@{ }];
+    [service setOauthEnabled:YES];
+    [service setServiceTag:SERVICE_TAG_GET_ACCOUNT];
+    return service;
+}
+
++ (AccountWebService*)updateAccountInfo:(NSString*)email
+                                   name:(NSString*)name
+                                 gender:(NSString*)gender
+                           withCallback:(SproutServiceCallBack)callBack
+{
+    AccountWebService *service = [[AccountWebService alloc] init];
+    [service setServiceCallBack:callBack];
+    [service setUrl:SERVICE_URL_UPDATE_ACCOUNT];
+    [service setParameters:@{ PARAM_KEY_ACCOUNT_EMAIL : email,
+                              PARAM_KEY_ACCOUNT_NAME : name,
+                              PARAM_KEY_ACCOUNT_GENDER : gender
+                              }];
+    [service setOauthEnabled:YES];
+    [service setServiceTag:SERVICE_TAG_UPDATE_ACCOUNT];
+    return service;
+}
+
 # pragma mark SproutWebServiceDelegate
 
 - (void)completedSuccess:(id)responseObject
@@ -113,19 +149,57 @@
     
     if ([[self serviceTag] isEqualToString:SERVICE_TAG_SIGN_IN]) {
         NSDictionary *response = (NSDictionary*)responseObject;
-        [CurrentUser setUser:@{ CURRENT_USER_NAME_KEY : @"Unknown",
+        [CurrentUser setUser:@{ CURRENT_USER_NAME_KEY : DEFAULT_DUMMY_PLACE_HOLDER,
                                 CURRENT_USER_EMAIL_KEY : [[self parameters] objectForKey:PARAM_KEY_SIGN_IN_USERNAME],
+                                CURRENT_USER_GENDER_KEY : DEFAULT_DUMMY_PLACE_HOLDER,
                                 CURRENT_USER_ACCESS_TOKEN : [response objectForKey:CURRENT_USER_ACCESS_TOKEN],
                                 CURRENT_USER_TOKEN_TYPE : [response objectForKey:CURRENT_USER_TOKEN_TYPE],
                                 CURRENT_USER_EXPIRES_IN : [response objectForKey:CURRENT_USER_EXPIRES_IN]
                                 }];
     } else if ([[self serviceTag] isEqualToString:SERVICE_TAG_SIGN_UP]) {
+        NSDictionary *response = (NSDictionary*)responseObject;
         [CurrentUser setUser:@{ CURRENT_USER_NAME_KEY : [[self parameters] objectForKey:PARAM_KEY_SIGN_UP_NAME],
-                                CURRENT_USER_EMAIL_KEY : [[self parameters] objectForKey:PARAM_KEY_SIGN_UP_USERNAME] }];
+                                CURRENT_USER_EMAIL_KEY : [[self parameters] objectForKey:PARAM_KEY_SIGN_UP_USERNAME],
+                                CURRENT_USER_GENDER_KEY : DEFAULT_DUMMY_PLACE_HOLDER,
+                                CURRENT_USER_ACCESS_TOKEN : [response objectForKey:CURRENT_USER_ACCESS_TOKEN],
+                                CURRENT_USER_TOKEN_TYPE : [response objectForKey:CURRENT_USER_TOKEN_TYPE],
+                                CURRENT_USER_EXPIRES_IN : [response objectForKey:CURRENT_USER_EXPIRES_IN] }];
+        // Now update the account...
+        [[AccountWebService updateAccountInfo:[[self parameters] objectForKey:PARAM_KEY_SIGN_UP_USERNAME]
+                                         name:[[self parameters] objectForKey:PARAM_KEY_SIGN_UP_NAME]
+                                       gender:DEFAULT_DUMMY_PLACE_HOLDER
+                                 withCallback:^(NSError *error, SproutWebService *service) {
+                                     [super completedSuccess:responseObject];
+                                 }] start];
+        return;
     } else if ([[self serviceTag] isEqualToString:SERVICE_TAG_RESET_PASSWORD]) {
         // Nothing to do...
     } else if ([[self serviceTag] isEqualToString:SERVICE_TAG_CHANGE_PASSWORD]) {
         // Nothing to do...
+    } else if ([[self serviceTag] isEqualToString:SERVICE_TAG_GET_ACCOUNT]) {
+        NSDictionary *response = (NSDictionary*)responseObject;
+        NSDictionary *currentUser = [CurrentUser getUser];
+        NSString *name = [response objectForKey:PARAM_KEY_ACCOUNT_NAME];
+        NSString *gender = [response objectForKey:PARAM_KEY_ACCOUNT_GENDER];
+        [CurrentUser setUser:@{ CURRENT_USER_NAME_KEY : (![self isNull:name]) ? name : DEFAULT_DUMMY_PLACE_HOLDER,
+                                CURRENT_USER_EMAIL_KEY : [CurrentUser emailAddress],
+                                CURRENT_USER_GENDER_KEY : (![self isNull:gender]) ? gender : DEFAULT_DUMMY_PLACE_HOLDER,
+                                CURRENT_USER_ACCESS_TOKEN : [currentUser objectForKey:CURRENT_USER_ACCESS_TOKEN],
+                                CURRENT_USER_TOKEN_TYPE : [currentUser objectForKey:CURRENT_USER_TOKEN_TYPE],
+                                CURRENT_USER_EXPIRES_IN : [currentUser objectForKey:CURRENT_USER_EXPIRES_IN]
+                                }];
+    } else if ([[self serviceTag] isEqualToString:SERVICE_TAG_UPDATE_ACCOUNT]) {
+        NSDictionary *response = (NSDictionary*)responseObject;
+        NSDictionary *currentUser = [CurrentUser getUser];
+        NSString *name = [response objectForKey:PARAM_KEY_ACCOUNT_NAME];
+        NSString *gender = [response objectForKey:PARAM_KEY_ACCOUNT_GENDER];
+        [CurrentUser setUser:@{ CURRENT_USER_NAME_KEY : (![self isNull:name]) ? name : DEFAULT_DUMMY_PLACE_HOLDER,
+                                CURRENT_USER_EMAIL_KEY : [[self parameters] objectForKey:PARAM_KEY_ACCOUNT_EMAIL],
+                                CURRENT_USER_GENDER_KEY : (![self isNull:gender]) ? gender : DEFAULT_DUMMY_PLACE_HOLDER,
+                                CURRENT_USER_ACCESS_TOKEN : [currentUser objectForKey:CURRENT_USER_ACCESS_TOKEN],
+                                CURRENT_USER_TOKEN_TYPE : [currentUser objectForKey:CURRENT_USER_TOKEN_TYPE],
+                                CURRENT_USER_EXPIRES_IN : [currentUser objectForKey:CURRENT_USER_EXPIRES_IN]
+                                }];
     }
     
     [super completedSuccess:responseObject];

@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSNumber *repeatFrequency;
 @property (nullable, nonatomic, copy) NSDate *repeatNextDate;
 @property (nullable, nonatomic, copy) NSNumber *transitionStyle;
-@property (nullable, nonatomic, copy) NSNumber *slideTime;
+@property (nullable, nonatomic, copy) NSDecimalNumber *slideTime;
 @property (nullable, nonatomic, copy) NSNumber *playing;
 @property (nullable, nonatomic, copy) NSNumber *sproutSocial;
 @property (nullable, nonatomic, copy) NSNumber *useShadow;

@@ -175,41 +175,22 @@ static CoreDataAccessKit *shared = nil;
 
 - (void)mergeChangesWithParent:(NSNotification *)notification
 {
-    //NSLog(@"--[ NOTIFATION START ]-----------------------------------------------------");
     if ([[notification object] isKindOfClass:[NSManagedObjectContext class]]) {
         NSManagedObjectContext *moc = (NSManagedObjectContext*)[notification object];
-        NSManagedObjectContext *parent = moc.parentContext;
-        [moc performBlockAndWait:^{
-            NSError *error = nil;
-            //NSLog(@"--[ %@ ]----------------------------------------------------------",moc.name);
-            if ([moc hasChanges]) {
-                if (![parent save:&error]) {
-                    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-                    abort();
+        if (moc) {
+            NSManagedObjectContext *parent = moc.parentContext;
+            [parent performBlockAndWait:^{
+                NSError *error = nil;
+                if ([parent hasChanges]) {
+                    if (![parent save:&error]) {
+                        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                        abort();
+                    }
+                    //[parent refreshAllObjects];
                 }
-                //NSLog(@"NSManagedObjectContext Name: %@ - Saved",[moc name]);
-            } else {
-                //NSLog(@"NSManagedObjectContext Name: %@ - No changes",[moc name]);
-            }
-            //NSLog(@"---------------------------------------------------------------------------");
-        }];
-        [parent performBlockAndWait:^{
-            NSError *error = nil;
-            //NSLog(@"--[ %@ ]----------------------------------------------------------",parent.name);
-            if ([parent hasChanges]) {
-                if (![parent save:&error]) {
-                    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-                    abort();
-                }
-                //NSLog(@"NSManagedObjectContext Name: %@ - Saved",[parent name]);
-            } else {
-                //NSLog(@"NSManagedObjectContext Name: %@ - No changes",[parent name]);
-            }
-            //NSLog(@"---------------------------------------------------------------------------");
-        }];
+            }];
+        }
     }
-    //NSLog(@"--[ NOTIFATION END ]-------------------------------------------------------");
-    //NSLog(@" ");
 }
 
 - (void)mergeChanges:(NSNotification *)notification

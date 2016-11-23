@@ -58,12 +58,12 @@ static SyncQueue *shared = nil;
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (![self paused] && ![self currentService] && [[self queue] count]>0) {
-            [self setCurrentService:[[self queue]  firstObject]];
+            [self setCurrentService:[[self queue] firstObject]];
             [self setServiceCallBack:[[self currentService] serviceCallBack]];
             [[self currentService] setServiceCallBack:^(NSError *error, SproutWebService *service) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     SproutServiceCallBack callback = [self serviceCallBack];
-                    if ([self currentService]) {
+                    if ([self currentService] && [[self queue] count]>0) {
                         [[self queue] removeObject:[self currentService]];
                     }
                     [self setCurrentService:nil];

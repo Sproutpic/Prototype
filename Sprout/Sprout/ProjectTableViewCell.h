@@ -13,9 +13,9 @@
 
 @interface ProjectTableViewCell : UITableViewCell <UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (strong, nonatomic) IBOutlet UILabel *titleLabel;
+@property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) IBOutlet UILabel *descriptionLabel;
 
 @property (weak, nonatomic) Project *project;
 @property (weak, nonatomic) id<ProjectTableViewCellDelegate> projectDelegate;

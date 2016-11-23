@@ -131,7 +131,7 @@ typedef enum RowDataOrder {
             [[tCell slider] setValue:[[[self project] slideTime] floatValue]];
             [tCell setSliderCallback:^(UISlider *slider, UITableViewCell *cell){
                 if (slider) {
-                    [[self project] setSlideTime:@([slider value])];
+                    [[self project] setSlideTime:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%0.5f",[slider value]]]];
                     [[self project] setLastModified:[NSDate date]];
                     [[self project] save];
                     SliderTableViewCell *tCell = (SliderTableViewCell*)cell;

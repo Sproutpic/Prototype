@@ -34,11 +34,7 @@
     UILocalNotification *ln = nil;
     if ([[self remindEnabled] boolValue]) {
         NSCalendarUnit unit = [self calendarUnitForRepeatFrequency];
-        //NSLog(@"--- NOW - %@",[[NSDate date] description]);
-        //NSLog(@"---- REPEAT - %@",[[self repeatNextDate] description]);
         while ([[self repeatNextDate] compare:[NSDate date]]!=NSOrderedDescending) {
-            //NSLog(@"NOW - %@",[[NSDate date] description]);
-            //NSLog(@"REPEAT - %@",[[self repeatNextDate] description]);
             NSDate *nextDate = [self repeatNextDate];
             switch ([[self repeatFrequency] integerValue]) {
                 case RF_Daily: {
@@ -62,9 +58,9 @@
             [self setRepeatNextDate:nextDate];
         }
         NSLog(@"Created Local Notification at - %@",[[self repeatNextDate] description]);
-        ln = [JDMLocalNotification sendAlertNowWithMessage:[NSString stringWithFormat:NSLocalizedString(@"It's time to take a photo for your %@ Sprout",
-                                                                                                        @"It's time to take a photo for your %@ Sprout"),
-                                                            ([self title]) ? [self title] : NSLocalizedString(@"awesome", @"awesome")]
+        ln = [JDMLocalNotification sendAlertNowWithMessage:[NSString stringWithFormat:NSLocalizedString(@"It's time to take a photo for your %@ project",
+                                                                                                        @"It's time to take a photo for your %@ project"),
+                                                            ([self title]) ? [self title] : NSLocalizedString(@"sprout", @"sprout")]
                                                   andSound:JDM_Notification_Sound_Default
                                              andBadgeCount:NO_BADGE_UPDATE
                                                     onDate:[self repeatNextDate]
@@ -90,7 +86,7 @@
     [project setSubtitle:subTitle];
     [project setRepeatNextDate:noonDate];
     [project setCreated:date];
-    [project setSlideTime:@(1)];
+    [project setSlideTime:[NSDecimalNumber decimalNumberWithString:@"1"]];
     [project setRepeatFrequency:@(0)];
     return project;
 }

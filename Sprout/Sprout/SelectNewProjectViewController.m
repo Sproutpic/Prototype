@@ -60,7 +60,7 @@ typedef enum NewSproutType {
             [project setRepeatFrequency:@(RF_Weekly)];
         } break;
         case 3: { // NST_Landscape
-            [project setSlideTime:@(1.5)];
+            [project setSlideTime:[NSDecimalNumber decimalNumberWithString:@"1.5"]];
             [project setFrontCameraEnabled:@(NO)];
             [project setRemindEnabled:@(NO)];
             [project setRepeatFrequency:@(RF_Weekly)];

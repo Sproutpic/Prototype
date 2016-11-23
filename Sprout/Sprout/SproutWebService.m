@@ -76,7 +76,6 @@ static NSDateFormatter *df;
     
     // Actually make the service call...
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    //[manager setRequestSerializer:[AFJSONRequestSerializer serializer]];
     // Check for oauth and add authorization to header parameters
     if ([self oauthEnabled]) {
         NSString *token = [CurrentUser authToken];
@@ -87,6 +86,17 @@ static NSDateFormatter *df;
         }
     }
     [[manager requestSerializer] setCachePolicy:NSURLRequestReloadIgnoringCacheData];
+    [[manager requestSerializer] setStringEncoding:NSASCIIStringEncoding];
+//    [[manager requestSerializer] setQueryStringSerializationWithBlock:^NSString * _Nonnull(NSURLRequest * _Nonnull request, id  _Nonnull parameters, NSError * _Nullable __autoreleasing * _Nullable error) {
+//        
+//        NSLog(@"Request: %@",request);
+//        NSLog(@"Headers: %@",[request allHTTPHeaderFields]);
+//        NSLog(@"Params : %@",parameters);
+//        NSLog(@"Body   : %@",[request HTTPBody]);
+//        NSLog(@"Body   : %@",[request HTTPBody]);
+//
+//        return nil;
+//    }];
     [manager setResponseSerializer:[AFJSONResponseSerializer serializer]];
     [manager POST:[self url]
        parameters:[self parameters]
@@ -101,9 +111,6 @@ static NSDateFormatter *df;
               [self completedFailure:error];
               [self showStatusBarSpinner:NO];
           }];
-    
-    // Debug
-    NSLog(@"Params - %@",[self parameters]);
 }
 
 - (NSString*)encode64String:(NSString*)value
@@ -154,8 +161,8 @@ static NSDateFormatter *df;
 {
     if (df==nil) {
         df = [[NSDateFormatter alloc] init];
-        [df setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"PST"]]; // This should be using UTC
-        [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"]; // Ex: 2016-11-14T07:59:31.037
+        [df setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]]; // This should be using UTC
+        [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SS'Z'"]; // Ex: 2016-11-14T07:59:31.037
     }
     return df;
 }

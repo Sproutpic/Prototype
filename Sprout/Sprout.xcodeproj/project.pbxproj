@@ -32,10 +32,11 @@
 		E708E6161DCEBBB300E9D626 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E708E6151DCEBBB300E9D626 /* UIKit.framework */; };
 		E708E6181DCEBD1500E9D626 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E708E6171DCEBD1500E9D626 /* AudioToolbox.framework */; };
 		E70CB3EA1DAB2E7D003F4AA0 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E70CB3E91DAB2E7D003F4AA0 /* BaseViewController.m */; };
-		E70CB3ED1DAB5688003F4AA0 /* ProjectTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E70CB3EB1DAB5688003F4AA0 /* ProjectTableViewCell.xib */; };
 		E70CB3F11DAB57D9003F4AA0 /* ProjectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E70CB3F01DAB57D9003F4AA0 /* ProjectTableViewCell.m */; };
 		E72642E01DDD38E50081CE03 /* SyncQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = E72642DF1DDD38E50081CE03 /* SyncQueue.m */; };
 		E72B91341DD119030050C7C8 /* OnboardingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E72B91331DD119030050C7C8 /* OnboardingManager.m */; };
+		E737B7601DE26A8F00978E0E /* MyProjectNoDataVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E737B75E1DE26A8F00978E0E /* MyProjectNoDataVC.xib */; };
+		E737B7631DE26F9F00978E0E /* NoDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = E737B7621DE26F9F00978E0E /* NoDataView.m */; };
 		E746D4771DD03696009C1BDD /* JDMLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = E746D4741DD03696009C1BDD /* JDMLocalNotification.m */; };
 		E746D4781DD03696009C1BDD /* n_default.wav in Resources */ = {isa = PBXBuildFile; fileRef = E746D4761DD03696009C1BDD /* n_default.wav */; };
 		E749AA041DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E749AA021DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib */; };
@@ -48,6 +49,8 @@
 		E749C0F71DB45B420068C3F1 /* CurrentUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0F61DB45B420068C3F1 /* CurrentUser.m */; };
 		E749C0FA1DB462980068C3F1 /* AccountWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0F91DB462980068C3F1 /* AccountWebService.m */; };
 		E749C0FF1DB49B880068C3F1 /* ProjectWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E749C0FE1DB49B880068C3F1 /* ProjectWebService.m */; };
+		E759F7801DE63E46002C1E96 /* TimelineWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E759F77F1DE63E46002C1E96 /* TimelineWebService.m */; };
+		E759F7831DE64984002C1E96 /* SyncAllData.m in Sources */ = {isa = PBXBuildFile; fileRef = E759F7821DE64984002C1E96 /* SyncAllData.m */; };
 		E75E9B531DE1568000666132 /* EditAccountInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E75E9B521DE1568000666132 /* EditAccountInfoViewController.m */; };
 		E75E9B561DE159CF00666132 /* EditAccountInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E75E9B541DE159CF00666132 /* EditAccountInfoViewController.xib */; };
 		E762D1BA1DB9F4BD00988104 /* TextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E762D1B91DB9F4BD00988104 /* TextFieldTableViewCell.m */; };
@@ -131,13 +134,15 @@
 		E708E6171DCEBD1500E9D626 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		E70CB3E81DAB2E7D003F4AA0 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		E70CB3E91DAB2E7D003F4AA0 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
-		E70CB3EC1DAB5688003F4AA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ProjectTableViewCell.xib; sourceTree = "<group>"; };
 		E70CB3EF1DAB57D9003F4AA0 /* ProjectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectTableViewCell.h; sourceTree = "<group>"; };
 		E70CB3F01DAB57D9003F4AA0 /* ProjectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectTableViewCell.m; sourceTree = "<group>"; };
 		E72642DE1DDD38E50081CE03 /* SyncQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncQueue.h; sourceTree = "<group>"; };
 		E72642DF1DDD38E50081CE03 /* SyncQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncQueue.m; sourceTree = "<group>"; };
 		E72B91321DD119030050C7C8 /* OnboardingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnboardingManager.h; sourceTree = "<group>"; };
 		E72B91331DD119030050C7C8 /* OnboardingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnboardingManager.m; sourceTree = "<group>"; };
+		E737B75F1DE26A8F00978E0E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyProjectNoDataVC.xib; sourceTree = "<group>"; };
+		E737B7611DE26F9F00978E0E /* NoDataView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoDataView.h; sourceTree = "<group>"; };
+		E737B7621DE26F9F00978E0E /* NoDataView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoDataView.m; sourceTree = "<group>"; };
 		E746D4731DD03696009C1BDD /* JDMLocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDMLocalNotification.h; sourceTree = "<group>"; };
 		E746D4741DD03696009C1BDD /* JDMLocalNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JDMLocalNotification.m; sourceTree = "<group>"; };
 		E746D4761DD03696009C1BDD /* n_default.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = n_default.wav; sourceTree = "<group>"; };
@@ -158,6 +163,10 @@
 		E749C0F91DB462980068C3F1 /* AccountWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountWebService.m; sourceTree = "<group>"; };
 		E749C0FD1DB49B880068C3F1 /* ProjectWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectWebService.h; sourceTree = "<group>"; };
 		E749C0FE1DB49B880068C3F1 /* ProjectWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectWebService.m; sourceTree = "<group>"; };
+		E759F77E1DE63E46002C1E96 /* TimelineWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelineWebService.h; sourceTree = "<group>"; };
+		E759F77F1DE63E46002C1E96 /* TimelineWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimelineWebService.m; sourceTree = "<group>"; };
+		E759F7811DE64984002C1E96 /* SyncAllData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncAllData.h; sourceTree = "<group>"; };
+		E759F7821DE64984002C1E96 /* SyncAllData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncAllData.m; sourceTree = "<group>"; };
 		E75E9B511DE1568000666132 /* EditAccountInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditAccountInfoViewController.h; sourceTree = "<group>"; };
 		E75E9B521DE1568000666132 /* EditAccountInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditAccountInfoViewController.m; sourceTree = "<group>"; };
 		E75E9B551DE159CF00666132 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EditAccountInfoViewController.xib; sourceTree = "<group>"; };
@@ -287,6 +296,10 @@
 				E749C0F91DB462980068C3F1 /* AccountWebService.m */,
 				E749C0FD1DB49B880068C3F1 /* ProjectWebService.h */,
 				E749C0FE1DB49B880068C3F1 /* ProjectWebService.m */,
+				E759F77E1DE63E46002C1E96 /* TimelineWebService.h */,
+				E759F77F1DE63E46002C1E96 /* TimelineWebService.m */,
+				E759F7811DE64984002C1E96 /* SyncAllData.h */,
+				E759F7821DE64984002C1E96 /* SyncAllData.m */,
 			);
 			name = "Web Services";
 			sourceTree = "<group>";
@@ -352,6 +365,7 @@
 		5A85A2F51D2BB7CB00B4CD02 /* Sprout Projects */ = {
 			isa = PBXGroup;
 			children = (
+				E737B75E1DE26A8F00978E0E /* MyProjectNoDataVC.xib */,
 				5A85A2FF1D2BB88900B4CD02 /* MyProjectsViewController.h */,
 				5A85A3001D2BB88900B4CD02 /* MyProjectsViewController.m */,
 				5A17F60C1D4AFDAB00662C1A /* ProjectDetailViewController.h */,
@@ -452,6 +466,8 @@
 				E7EC350C1DC584AF004703D1 /* DateSelectorViewController.xib */,
 				E7EC35091DC584A0004703D1 /* DateSelectorViewController.h */,
 				E7EC350A1DC584A0004703D1 /* DateSelectorViewController.m */,
+				E737B7611DE26F9F00978E0E /* NoDataView.h */,
+				E737B7621DE26F9F00978E0E /* NoDataView.m */,
 			);
 			name = "Base Classes";
 			sourceTree = "<group>";
@@ -533,7 +549,6 @@
 			isa = PBXGroup;
 			children = (
 				E7A6BFEE1DBB2D250067C409 /* ProjectTableViewCellDelegate.h */,
-				E70CB3EB1DAB5688003F4AA0 /* ProjectTableViewCell.xib */,
 				E70CB3EF1DAB57D9003F4AA0 /* ProjectTableViewCell.h */,
 				E70CB3F01DAB57D9003F4AA0 /* ProjectTableViewCell.m */,
 				E762D1BB1DB9F4CC00988104 /* TextFieldTableViewCell.xib */,
@@ -672,6 +687,7 @@
 				E7E236FD1DDEEDF900BB3D5D /* Pods-Sprout-acknowledgements.plist in Resources */,
 				E7A681701DDEC56300B512CE /* privacy_policy.html in Resources */,
 				E78E3DD31DB41D7C00C4C815 /* AccountSignUpViewController.xib in Resources */,
+				E737B7601DE26A8F00978E0E /* MyProjectNoDataVC.xib in Resources */,
 				E7A6BFEA1DBB26870067C409 /* ButtonTableViewCell.xib in Resources */,
 				E7C61BA61DBB0293008A86C0 /* SwitchTableViewCell.xib in Resources */,
 				E7EC35111DC5CE21004703D1 /* CameraViewController.xib in Resources */,
@@ -682,7 +698,6 @@
 				E7C72A0B1DB89DB500128D32 /* SelectNewProjectViewController.xib in Resources */,
 				E749AA041DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib in Resources */,
 				E7C61B9A1DBAFBF0008A86C0 /* TimelineTableViewCell.xib in Resources */,
-				E70CB3ED1DAB5688003F4AA0 /* ProjectTableViewCell.xib in Resources */,
 				E749AA0A1DBA063C007DC7D8 /* AccountInformationViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -784,6 +799,7 @@
 				E749C0EE1DB44D450068C3F1 /* NSString+WhiteSpacing.m in Sources */,
 				E78E3DD01DB41C7C00C4C815 /* AccountSignUpViewController.m in Sources */,
 				E762D1BA1DB9F4BD00988104 /* TextFieldTableViewCell.m in Sources */,
+				E737B7631DE26F9F00978E0E /* NoDataView.m in Sources */,
 				E7F92BD41DC227E10050E5AD /* DataObjects.m in Sources */,
 				E70700301DBE37F3009E8D7D /* Project+CoreDataProperties.m in Sources */,
 				E76FBA9A1DAE01D400BA46F0 /* CoreDataAccessKit.m in Sources */,
@@ -793,6 +809,8 @@
 				5A85A2C81D2BB65F00B4CD02 /* main.m in Sources */,
 				E70700321DBE37F3009E8D7D /* Timeline+CoreDataClass.m in Sources */,
 				E7A6817C1DDED47B00B512CE /* TermsAndConditionsViewController.m in Sources */,
+				E759F7801DE63E46002C1E96 /* TimelineWebService.m in Sources */,
+				E759F7831DE64984002C1E96 /* SyncAllData.m in Sources */,
 				E7EC350B1DC584A0004703D1 /* DateSelectorViewController.m in Sources */,
 				5A2180951D3E015C0057F298 /* AccountInformationViewController.m in Sources */,
 				E7DBE62A1DACAE730052064E /* DatabaseModel.xcdatamodeld in Sources */,
@@ -818,12 +836,12 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		E70CB3EB1DAB5688003F4AA0 /* ProjectTableViewCell.xib */ = {
+		E737B75E1DE26A8F00978E0E /* MyProjectNoDataVC.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				E70CB3EC1DAB5688003F4AA0 /* Base */,
+				E737B75F1DE26A8F00978E0E /* Base */,
 			);
-			name = ProjectTableViewCell.xib;
+			name = MyProjectNoDataVC.xib;
 			sourceTree = "<group>";
 		};
 		E749AA021DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib */ = {

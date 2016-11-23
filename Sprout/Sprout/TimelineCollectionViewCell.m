@@ -155,6 +155,10 @@
         [[self dateLbl] setText:NSLocalizedString(@"Add Photo", @"Add Photo")];
     }
     
+    
+    [[self imageView] setNeedsLayout];
+    [[self imageView] setNeedsDisplay];
+    
 }
 
 @end

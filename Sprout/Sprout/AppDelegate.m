@@ -30,28 +30,6 @@
 
 @implementation AppDelegate
 
-# pragma mark Dev Testing
-
-- (void)devCreateLocalNotificationForTesting
-{
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    
-    Project *project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:@"Project"
-                                                                     forPredicate:nil
-                                                                         withSort:nil
-                                                                            inMOC:[[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"Test" andConcurrency:NSMainQueueConcurrencyType]];
-    if (project) {
-        [JDMLocalNotification sendAlertNowWithMessage:[NSString stringWithFormat:NSLocalizedString(@"It's time to take a photo for your %@ project",
-                                                                                                   @"It's time to take a photo for your %@ project"),
-                                                       ([project title]) ? [project title] : NSLocalizedString(@"SproutPic", @"SproutPic")]
-                                             andSound:JDM_Notification_Sound_Default
-                                        andBadgeCount:NO_BADGE_UPDATE
-                                               onDate:nil
-                                       repeatInterval:NSCalendarUnitMinute
-                                         withUserInfo:@{ NOTIFICATION_KEY_PROJECT_UUID : [project uuid] }];
-    }
-}
-
 # pragma mark Private
 
 - (void)setMainWithControllers
@@ -143,6 +121,10 @@
     [application setApplicationIconBadgeNumber:0];
     
     [[AFNetworkActivityLogger sharedLogger] startLogging];
+    NSArray *loggers = [[[AFNetworkActivityLogger sharedLogger] loggers] allObjects];
+    for (id<AFNetworkActivityLoggerProtocol> logger in loggers) {
+        logger.level = AFLoggerLevelDebug;
+    }
     
     // To see if the app was open by tapping a local notification
     if ([launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey]) {
@@ -159,8 +141,6 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    //[self devCreateLocalNotificationForTesting];
-    
     self.bgTask = [application beginBackgroundTaskWithName:@"BackgroundTasks" expirationHandler:^{
         // Clean up any unfinished task business by marking where you
         // stopped or ending the task outright.

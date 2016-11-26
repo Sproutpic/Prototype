@@ -289,7 +289,7 @@
     
     UIImageView *imgView = [[UIImageView alloc] initWithFrame:frame];
     [imgView setImage:img];
-    [imgView setAlpha:0.3];
+    [imgView setAlpha:0.35];
     [imgView setClipsToBounds:YES];
     [imgView setUserInteractionEnabled:NO];
     [imgView setContentMode:UIViewContentModeScaleAspectFill];

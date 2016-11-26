@@ -37,6 +37,8 @@
 		E72B91341DD119030050C7C8 /* OnboardingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E72B91331DD119030050C7C8 /* OnboardingManager.m */; };
 		E737B7601DE26A8F00978E0E /* MyProjectNoDataVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E737B75E1DE26A8F00978E0E /* MyProjectNoDataVC.xib */; };
 		E737B7631DE26F9F00978E0E /* NoDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = E737B7621DE26F9F00978E0E /* NoDataView.m */; };
+		E741C7B81DE686C600298797 /* EditImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E741C7B61DE686C600298797 /* EditImageViewController.xib */; };
+		E741C7BB1DE686F400298797 /* EditImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E741C7BA1DE686F400298797 /* EditImageViewController.m */; };
 		E746D4771DD03696009C1BDD /* JDMLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = E746D4741DD03696009C1BDD /* JDMLocalNotification.m */; };
 		E746D4781DD03696009C1BDD /* n_default.wav in Resources */ = {isa = PBXBuildFile; fileRef = E746D4761DD03696009C1BDD /* n_default.wav */; };
 		E749AA041DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E749AA021DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib */; };
@@ -143,6 +145,9 @@
 		E737B75F1DE26A8F00978E0E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyProjectNoDataVC.xib; sourceTree = "<group>"; };
 		E737B7611DE26F9F00978E0E /* NoDataView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoDataView.h; sourceTree = "<group>"; };
 		E737B7621DE26F9F00978E0E /* NoDataView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoDataView.m; sourceTree = "<group>"; };
+		E741C7B71DE686C600298797 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EditImageViewController.xib; sourceTree = "<group>"; };
+		E741C7B91DE686F400298797 /* EditImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditImageViewController.h; sourceTree = "<group>"; };
+		E741C7BA1DE686F400298797 /* EditImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditImageViewController.m; sourceTree = "<group>"; };
 		E746D4731DD03696009C1BDD /* JDMLocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDMLocalNotification.h; sourceTree = "<group>"; };
 		E746D4741DD03696009C1BDD /* JDMLocalNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JDMLocalNotification.m; sourceTree = "<group>"; };
 		E746D4761DD03696009C1BDD /* n_default.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = n_default.wav; sourceTree = "<group>"; };
@@ -376,6 +381,9 @@
 				E7C72A091DB89DB500128D32 /* SelectNewProjectViewController.xib */,
 				E7C72A061DB88DE100128D32 /* SelectNewProjectViewController.h */,
 				E7C72A071DB88DE100128D32 /* SelectNewProjectViewController.m */,
+				E741C7B61DE686C600298797 /* EditImageViewController.xib */,
+				E741C7B91DE686F400298797 /* EditImageViewController.h */,
+				E741C7BA1DE686F400298797 /* EditImageViewController.m */,
 			);
 			name = "Sprout Projects";
 			sourceTree = "<group>";
@@ -698,6 +706,7 @@
 				E7C72A0B1DB89DB500128D32 /* SelectNewProjectViewController.xib in Resources */,
 				E749AA041DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib in Resources */,
 				E7C61B9A1DBAFBF0008A86C0 /* TimelineTableViewCell.xib in Resources */,
+				E741C7B81DE686C600298797 /* EditImageViewController.xib in Resources */,
 				E749AA0A1DBA063C007DC7D8 /* AccountInformationViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -820,6 +829,7 @@
 				E72B91341DD119030050C7C8 /* OnboardingManager.m in Sources */,
 				E70700331DBE37F3009E8D7D /* Timeline+CoreDataProperties.m in Sources */,
 				5A5F3D621D599FD300AC6767 /* UIImage+animatedGIF.m in Sources */,
+				E741C7BB1DE686F400298797 /* EditImageViewController.m in Sources */,
 				E7A6BFED1DBB26950067C409 /* ButtonTableViewCell.m in Sources */,
 				5A85A3041D2BB8D600B4CD02 /* UIUtils.m in Sources */,
 			);
@@ -842,6 +852,14 @@
 				E737B75F1DE26A8F00978E0E /* Base */,
 			);
 			name = MyProjectNoDataVC.xib;
+			sourceTree = "<group>";
+		};
+		E741C7B61DE686C600298797 /* EditImageViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E741C7B71DE686C600298797 /* Base */,
+			);
+			name = EditImageViewController.xib;
 			sourceTree = "<group>";
 		};
 		E749AA021DBA05D0007DC7D8 /* SocialMediaButtonsTableViewCell.xib */ = {

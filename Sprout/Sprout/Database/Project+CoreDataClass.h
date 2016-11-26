@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray*)sortDescriptors;
 
 - (NSArray*)timelinesArraySorted;
+- (NSArray*)timelinesArraySortedOldestToNewest;
 
 - (void)updateScheduledNotification;
 

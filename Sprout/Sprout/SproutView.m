@@ -33,6 +33,11 @@
 
 # pragma mark Private
 
+- (NSArray*)timelinesSorted
+{
+    return [[self project] timelinesArraySortedOldestToNewest];
+}
+
 - (void)playSprout
 {
     [self playSproutView];
@@ -42,7 +47,7 @@
 {
     if ([[[self project] playing] boolValue]) {
         NSMutableArray *imagesArray = [[NSMutableArray alloc] init];
-        NSArray *timelines = [[self project] timelinesArraySorted];
+        NSArray *timelines = [self timelinesSorted];
         for (Timeline *timeline in timelines) {
             UIImage *timelineImage = [timeline imageThumbnail];
             if (timelineImage) {
@@ -81,7 +86,7 @@
         [[self imageView] setImage:[UIImage animatedImageWithAnimatedGIFURL:fileURL]];
         [[self playButton] setImage:nil forState:UIControlStateNormal];
     } else {
-        NSArray *timelines = [[self project] timelinesArraySorted];
+        NSArray *timelines = [self timelinesSorted];
         if ([timelines count]>0) {
             Timeline *timeline = [timelines objectAtIndex:0];
             UIImage *timelineImage = [timeline imageThumbnail];
@@ -103,7 +108,7 @@
 - (UIImage*)sproutFirstImage
 {
     UIImage *img = nil;
-    NSArray *timelines = [[self project] timelinesArraySorted];
+    NSArray *timelines = [self timelinesSorted];
     if (timelines && [timelines count]>0) {
         Timeline *timeline = [timelines objectAtIndex:0];
         img = [timeline imageThumbnail];
@@ -120,7 +125,7 @@
 {
     if ([[[self project] playing] boolValue]) {
         NSMutableArray *imagesArray = [[NSMutableArray alloc] init];
-        NSArray *timelines = [[self project] timelinesArraySorted];
+        NSArray *timelines = [self timelinesSorted];
         for (Timeline *timeline in timelines) {
             UIImage *timelineImage = [timeline imageThumbnail];
             if (timelineImage) {
@@ -148,7 +153,7 @@
     if ([keyPath isEqualToString:KVO_PROJECT_SLIDE_TIME]) {
         if ([[[self project] playing] boolValue]) {
             [[self imageView] stopAnimating];
-            NSArray *timelines = [[self project] timelinesArraySorted];
+            NSArray *timelines = [self timelinesSorted];
             [[self imageView] setAnimationDuration:[[[self project] slideTime] floatValue]*[timelines count]];
             [[self imageView] startAnimating];
         }

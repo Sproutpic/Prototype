@@ -123,6 +123,15 @@
               ]];
 }
 
+- (NSArray*)timelinesArraySortedOldestToNewest
+{
+    return [[[self timelines] allObjects] sortedArrayUsingDescriptors:
+            @[
+              [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:YES],
+              [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES],
+              ]];
+}
+
 - (void)updateScheduledNotification
 {
     UILocalNotification *ln = nil;

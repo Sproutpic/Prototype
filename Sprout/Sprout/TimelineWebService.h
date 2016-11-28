@@ -12,8 +12,8 @@
 
 @interface TimelineWebService : SproutWebService
 
-+ (TimelineWebService*)getSproutImagesForProject:(Project*)project
-                                    withCallback:(SproutServiceCallBack)callBack;
++ (TimelineWebService*)getSproutImagesForProjectId:(NSNumber*)projectId
+                                      withCallback:(SproutServiceCallBack)callBack;
 
 + (TimelineWebService*)getSproutImageById:(Timeline*)timeline
                              withCallback:(SproutServiceCallBack)callBack;
@@ -21,7 +21,7 @@
 + (TimelineWebService*)syncTimeline:(Timeline*)timeline
                        withCallback:(SproutServiceCallBack)callBack;
 
-+ (TimelineWebService*)deleteTimeline:(Timeline*)timeline
-                         withCallback:(SproutServiceCallBack)callBack;
++ (TimelineWebService*)deleteTimelineId:(NSNumber*)serverId
+                           withCallback:(SproutServiceCallBack)callBack;
 
 @end

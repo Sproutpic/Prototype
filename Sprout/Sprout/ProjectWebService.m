@@ -64,6 +64,7 @@
 + (ProjectWebService*)getProjectById:(NSNumber*)serverId
                         withCallback:(SproutServiceCallBack)callBack
 {
+    if (!serverId) return nil;
     ProjectWebService *service = [[ProjectWebService alloc] init];
     [service setServiceCallBack:callBack];
     [service setUrl:SERVICE_URL_GET_PROJECT_BY_ID];
@@ -76,6 +77,7 @@
 + (ProjectWebService*)syncProject:(Project*)project
                      withCallback:(SproutServiceCallBack)callBack
 {
+    if (!project) return nil;
     ProjectWebService *service = [[ProjectWebService alloc] init];
     [service setServiceCallBack:callBack];
     if ([[project serverId] integerValue]>0) {
@@ -100,9 +102,9 @@
     } else {
         [service setUrl:SERVICE_URL_CREATE_PROJECT];
         [service setProject:project];
-        if (![project lastSync]) {
-            [project setLastSync:[NSDate date]];
-        }
+//        if (![project lastSync]) {
+//            [project setLastSync:[NSDate date]];
+//        }
         [service setParameters:
          @{
            PARAM_KEY_PROJECT_TITLE : ([project title]) ? [project title] : @"",
@@ -126,6 +128,7 @@
 + (ProjectWebService*)deleteProjectById:(NSNumber*)serverId
                            withCallback:(SproutServiceCallBack)callBack
 {
+    if (!serverId) return nil;
     ProjectWebService *service = [[ProjectWebService alloc] init];
     [service setServiceCallBack:callBack];
     [service setUrl:SERVICE_URL_DELETE_PROJECT];
@@ -135,13 +138,14 @@
     return service;
 }
 
-+ (ProjectWebService*)createProjectVideo:(Project*)project
-                            withCallback:(SproutServiceCallBack)callBack
++ (ProjectWebService*)createProjectIdVideo:(NSNumber*)serverId
+                              withCallback:(SproutServiceCallBack)callBack
 {
+    if (!serverId) return nil;
     ProjectWebService *service = [[ProjectWebService alloc] init];
     [service setServiceCallBack:callBack];
     [service setUrl:SERVICE_URL_CREATE_VIDEO];
-    [service setParameters:@{ PARAM_KEY_PROJECT_SERVER_ID : [project serverId] }];
+    [service setParameters:@{ PARAM_KEY_PROJECT_SERVER_ID : serverId }];
     [service setServiceTag:SERVICE_URL_CREATE_VIDEO];
     [service setOauthEnabled:YES];
     return service;
@@ -231,7 +235,7 @@
         
         // Next we want to delete any projects that are no longer on the server (also don't delete any that have not been saved)
         CoreDataAccessKit *cdak = [CoreDataAccessKit sharedInstance];
-        NSArray *delProjects = [cdak findObjects:@"Project"
+        NSArray *delProjects = [cdak findObjects:NSStringFromClass([Project class])
                                     forPredicate:[NSPredicate predicateWithFormat:@"NOT serverId IN %@ AND serverId > 0",syncedIds]
                                         withSort:nil
                                            inMOC:[self moc]];
@@ -247,7 +251,8 @@
             CoreDataAccessKit *cdak = [CoreDataAccessKit sharedInstance];
             project = (Project*)[cdak findAnObject:NSStringFromClass([Project class])
                                       forPredicate:[NSPredicate predicateWithFormat:@"serverId = %@",serverId]
-                                          withSort:nil inMOC:[self moc]];
+                                          withSort:nil
+                                             inMOC:[self moc]];
         }
         [self syncProjectWithDictionary:responseObject withProject:project];
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_CREATE_PROJECT]) {
@@ -257,7 +262,8 @@
             CoreDataAccessKit *cdak = [CoreDataAccessKit sharedInstance];
             project = (Project*)[cdak findAnObject:NSStringFromClass([Project class])
                                       forPredicate:[NSPredicate predicateWithFormat:@"SELF = %@",[self project]]
-                                          withSort:nil inMOC:[self moc]];
+                                          withSort:nil
+                                             inMOC:[self moc]];
         }
         [self syncProjectWithDictionary:responseObject withProject:project];
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_UPDATE_PROJECT]) {
@@ -267,7 +273,8 @@
             CoreDataAccessKit *cdak = [CoreDataAccessKit sharedInstance];
             project = (Project*)[cdak findAnObject:NSStringFromClass([Project class])
                                       forPredicate:[NSPredicate predicateWithFormat:@"SELF = %@",[self project]]
-                                          withSort:nil inMOC:[self moc]];
+                                          withSort:nil
+                                             inMOC:[self moc]];
         }
         [self syncProjectWithDictionary:responseObject withProject:project];
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_DELETE_PROJECT]) {
@@ -277,7 +284,8 @@
             Project *project = (Project*)[[CoreDataAccessKit sharedInstance]
                                           findAnObject:NSStringFromClass([Project class])
                                           forPredicate:[NSPredicate predicateWithFormat:@"serverId = %@",serverId]
-                                          withSort:nil inMOC:[self moc]];
+                                          withSort:nil
+                                          inMOC:[self moc]];
             if (project) { [project deleteAndSave]; }
         }
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_CREATE_VIDEO]) {

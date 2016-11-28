@@ -14,29 +14,46 @@
 
 @implementation SyncAllData
 
-+ (void)syncNewProjects
++ (void)syncNewProjects:(SyncAllDataCallBack)callBack;
 {
-    // Setup variables first
-    CoreDataAccessKit *cdak = [CoreDataAccessKit sharedInstance];
-    NSManagedObjectContext *moc = [cdak createNewManagedObjectContextwithName:@"SyncAll" andConcurrency:NSPrivateQueueConcurrencyType];
-
     // Get all the projects that have not been synced up from the server yet
-    NSArray *newProjects = [cdak findObjects:@"Projects"
-                                forPredicate:[NSPredicate predicateWithFormat:@"serverId <=0"]
-                                    withSort:@[[NSSortDescriptor sortDescriptorWithKey:@"created" ascending:YES]]
-                                       inMOC:moc];
+    NSArray *newProjects = [[CoreDataAccessKit sharedInstance]
+                            findObjects:NSStringFromClass([Project class])
+                            forPredicate:[NSPredicate predicateWithFormat:@"serverId <= 0"]
+                            withSort:@[[NSSortDescriptor sortDescriptorWithKey:@"created" ascending:YES]]
+                            inMOC:[[CoreDataAccessKit sharedInstance]
+                                   createNewManagedObjectContextwithName:@"SyncAllNew"
+                                   andConcurrency:NSPrivateQueueConcurrencyType]];
     for (Project *project in newProjects) {
-        [[SyncQueue manager] addService:[ProjectWebService syncProject:project withCallback:nil]];
+        [[SyncQueue manager] addService:[ProjectWebService syncProject:project withCallback:^(NSError *error, SproutWebService *service) {
+//            if (!error) {
+//                [[SyncQueue manager] addService:[TimelineWebService getSproutImagesForProject:project withCallback:nil]];
+//            }
+        }]];
+    }
+    if (callBack) {
+        callBack();
     }
 }
 
-+ (void)now
++ (void)now:(SyncAllDataCallBack)callBack;
 {
     // First, sync all the projects with SproutPic remove server
     [[SyncQueue manager] addService:[ProjectWebService getAllProjectsWithCallback:^(NSError *error, SproutWebService *service) {
         if (!error) {
+            // Now sync all the timelines for these projects
+            NSArray *projects = [[CoreDataAccessKit sharedInstance]
+                                 findObjects:NSStringFromClass([Project class])
+                                 forPredicate:[NSPredicate predicateWithFormat:@"serverId > 0"]
+                                 withSort:@[[NSSortDescriptor sortDescriptorWithKey:@"created" ascending:YES]]
+                                 inMOC:[[CoreDataAccessKit sharedInstance]
+                                        createNewManagedObjectContextwithName:@"SyncTimelines"
+                                        andConcurrency:NSPrivateQueueConcurrencyType]];
+            for (Project *project in projects) {
+                [[SyncQueue manager] addService:[TimelineWebService getSproutImagesForProjectId:[project serverId] withCallback:nil]];
+            }
             // Next sync all the projects that have not been uploaded to the server yet
-            [SyncAllData syncNewProjects];
+            [SyncAllData syncNewProjects:callBack];
         }
     }]];
 }

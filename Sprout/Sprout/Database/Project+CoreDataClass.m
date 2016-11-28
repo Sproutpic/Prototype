@@ -118,8 +118,8 @@
 {
     return [[[self timelines] allObjects] sortedArrayUsingDescriptors:
             @[
-              [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:NO],
               [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:NO],
+              [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:NO],
               ]];
 }
 
@@ -127,8 +127,8 @@
 {
     return [[[self timelines] allObjects] sortedArrayUsingDescriptors:
             @[
-              [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:YES],
               [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES],
+              [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:YES],
               ]];
 }
 
@@ -202,7 +202,5 @@
         if (ln) [JDMLocalNotification cancelLocalNotification:ln];
     }
 }
-
-
 
 @end

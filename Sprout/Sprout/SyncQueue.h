@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SyncAllData.h"
 
 @class SproutWebService;
 

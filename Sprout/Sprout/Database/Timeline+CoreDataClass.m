@@ -168,17 +168,7 @@
     return (image) ? image : [self tempImage];
 }
 
-# pragma mark NSManagedObject
-
-- (void)awakeFromInsert
-{
-    [super awakeFromInsert];
-    NSDate *now = [NSDate date];
-    [self setCreated:now];
-    [self setLastModified:now];
-}
-
-- (void)prepareForDeletion
+- (void)deleteLocalImages
 {
     if ([self localURL]) {
         NSString *localURL = [self localPathToImage];
@@ -191,6 +181,21 @@
             [[NSFileManager defaultManager] removeItemAtPath:localURL error:&error];
         }
     }
+}
+
+# pragma mark NSManagedObject
+
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    NSDate *now = [NSDate date];
+    [self setCreated:now];
+    [self setLastModified:now];
+}
+
+- (void)prepareForDeletion
+{
+    [self deleteLocalImages];
 }
 
 @end

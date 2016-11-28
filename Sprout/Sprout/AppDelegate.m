@@ -115,7 +115,7 @@
 {
     [Fabric with:@[[Crashlytics class],[Answers class],[Twitter class]]];
     [self configureGlobalTheme];
-    [self createDemoData];
+    //[self createDemoData];
     [self setMainWithControllers];
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     [application setApplicationIconBadgeNumber:0];

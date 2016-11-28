@@ -10,6 +10,8 @@
 
 @interface SyncAllData : NSObject
 
-+ (void)now;
+typedef void (^ SyncAllDataCallBack)();
+
++ (void)now:(SyncAllDataCallBack)callBack;
 
 @end

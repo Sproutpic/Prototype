@@ -23,7 +23,7 @@
 + (ProjectWebService*)deleteProjectById:(NSNumber*)serverId
                            withCallback:(SproutServiceCallBack)callBack;
 
-+ (ProjectWebService*)createProjectVideo:(Project*)project
-                            withCallback:(SproutServiceCallBack)callBack;
++ (ProjectWebService*)createProjectIdVideo:(NSNumber*)serverId
+                              withCallback:(SproutServiceCallBack)callBack;
 
 @end

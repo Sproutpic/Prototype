@@ -100,9 +100,12 @@
     
     // Pull to refresh configuration
     [[self tableView] addPullToRefreshWithActionHandler:^{
-        [[SyncQueue manager] addService:[ProjectWebService getAllProjectsWithCallback:^(NSError *error, SproutWebService *service) {
+//        [[SyncQueue manager] addService:[ProjectWebService getAllProjectsWithCallback:^(NSError *error, SproutWebService *service) {
+//            [[[self tableView] pullToRefreshView] stopAnimating];
+//        }]];
+        [SyncAllData now:^{
             [[[self tableView] pullToRefreshView] stopAnimating];
-        }]];
+        }];
     }];
     [[[self tableView] pullToRefreshView] setArrowColor:[UIUtils colorNavigationBar]];
     [[[self tableView] pullToRefreshView] setTextColor:[UIUtils colorNavigationBar]];    

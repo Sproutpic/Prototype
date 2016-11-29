@@ -53,6 +53,7 @@ typedef enum ProjectRowOrder {
     PO_LastUpdate,
     PO_SocialButtons,
     PO_DeleteButton,
+    PO_FeedbackButton,
     PO_SyncButton
 } ProjectRowOrder;
 
@@ -302,6 +303,18 @@ typedef enum RowDataOrder {
             }];
             [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         } break;
+        case PO_FeedbackButton: {
+            ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
+            [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
+            [tCell setButtonCallBack:^(UIButton *button){
+                [self showFeedbackViewController:
+                 [NSString stringWithFormat:@"Project ID: %ld - %@",
+                  [[[self project] serverId] integerValue],
+                  [[self project] title]
+                  ]];
+            }];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
         case PO_SyncButton: {
             ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
             [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
@@ -357,6 +370,7 @@ typedef enum RowDataOrder {
        @[@(PO_CreateDate),@"Created",@"UITableViewCellStyleValue1",@"",@(44)],
        //@[@(PO_LastUpdate),@"Last Updated",@"UITableViewCellStyleValue1",@"",@(44)],
        @[@(PO_SocialButtons),@"Socail Media",@"SocialMediaButtonsTableViewCell",@"SocialMediaButtonsTableViewCell",@(54)],
+       @[@(PO_FeedbackButton),@"Send Us Feedback",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
        @[@(PO_DeleteButton),@"Delete Sprout",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
        @[@(PO_SyncButton),@"Sync Project",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
        ]];
@@ -395,6 +409,7 @@ typedef enum RowDataOrder {
     [[self tableView] setKeyboardDismissMode:UIScrollViewKeyboardDismissModeOnDrag];
     [[self tableView] setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self addSproutLogoTableFooter:[self tableView]];
+    //[self addFeedbackButtonToFooter:[self tableView]];
     [[self view] addSubview:[self tableView]];
 }
 

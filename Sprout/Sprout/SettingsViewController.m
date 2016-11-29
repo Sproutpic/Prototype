@@ -107,19 +107,21 @@
             vc = [[NSClassFromString([dataRow objectAtIndex:1]) alloc] init];
         }
         if ([[dataRow objectAtIndex:1] isEqualToString:@"CTFeedbackViewController"]) {
-            CTFeedbackViewController *cc = (CTFeedbackViewController*)vc;
+            CTFeedbackViewController *cc = [[CTFeedbackViewController alloc]
+                                            initWithTopics:@[
+                                                             NSLocalizedString(@"General Feedback", @"General Feedback"),
+                                                             NSLocalizedString(@"Feature Request", @"Feature Request"),
+                                                             NSLocalizedString(@"Bug/Issue", @"Bug/Issue")
+                                                             ]
+                                            localizedTopics:@[
+                                                              NSLocalizedString(@"General Feedback", @"General Feedback"),
+                                                              NSLocalizedString(@"Feature Request", @"Feature Request"),
+                                                              NSLocalizedString(@"Bug/Issue", @"Bug/Issue")
+                                                              ]];
+            
             [cc setUseHTML:YES];
             [cc setToRecipients:@[@"info@sproutpic.com"]];
-            [cc setTopics:@[
-                            NSLocalizedString(@"General Feedback", @"General Feedback"),
-                            NSLocalizedString(@"Feature Request", @"Feature Request"),
-                            NSLocalizedString(@"Bug/Issue", @"Bug/Issue")
-                            ]];
-            [cc setLocalizedTopics:@[
-                                     NSLocalizedString(@"General Feedback", @"General Feedback"),
-                                     NSLocalizedString(@"Feature Request", @"Feature Request"),
-                                     NSLocalizedString(@"Bug/Issue", @"Bug/Issue")
-                                     ]];
+            vc = cc;
         }
         if (vc) {
             [[self navigationController] pushViewController:vc animated:YES];

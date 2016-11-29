@@ -22,7 +22,9 @@
 
 - (UITableView*)createBaseTableView:(UITableViewStyle)tableStyle;
 - (UIWebView*)createBaseWebView;
+- (void)showFeedbackViewController:(NSString*)additionalContent;
 - (void)addSproutLogoTableFooter:(UITableView*)tableView;
+- (void)addFeedbackButtonToFooter:(UITableView*)tableView;
 - (UIView*)fakeTableFooter;
 
 @end

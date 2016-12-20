@@ -80,7 +80,7 @@
     NSDate *date = [NSDate date];
     NSDate *noonDate = [[NSCalendar currentCalendar] dateBySettingHour:12 minute:0 second:0 ofDate:date options:NSCalendarWrapComponents];
     
-    Project *project = [NSEntityDescription insertNewObjectForEntityForName:@"Project"
+    Project *project = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([Project class])
                                                      inManagedObjectContext:managedObjectContext];
     [project setTitle:title];
     [project setSubtitle:subTitle];
@@ -96,7 +96,7 @@
 {
     Project *project = nil;
     if (uuid && moc) {
-        project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:@"Project"
+        project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:NSStringFromClass([Project class])
                                                                 forPredicate:[NSPredicate predicateWithFormat:@"uuid = %@",uuid]
                                                                     withSort:nil
                                                                        inMOC:moc];
@@ -173,6 +173,11 @@
     for (Project *project in allProjects) {
         [project updateScheduledNotification];
     }
+}
+
+- (BOOL)showProjectBeSynced
+{
+    return (![[self lastModified] isEqual:[self lastSync]]);
 }
 
 # pragma mark NSManagedObject

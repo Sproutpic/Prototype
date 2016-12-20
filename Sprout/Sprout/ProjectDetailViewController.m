@@ -259,6 +259,7 @@ typedef enum RowDataOrder {
                                                                     handler:
                                               ^(UIAlertAction * _Nonnull action) {
                                                   [[self project] setSproutSocial:@(NO)];
+                                                  [[self project] setLastModified:[NSDate date]];
                                                   [[self project] save];
                                                   [[self tableView] reloadData];
                                               }]];
@@ -267,6 +268,7 @@ typedef enum RowDataOrder {
                                                                     handler:
                                               ^(UIAlertAction * _Nonnull action) {
                                                   [[self project] setSproutSocial:@(YES)];
+                                                  [[self project] setLastModified:[NSDate date]];
                                                   [[self project] save];
                                                   [[self tableView] reloadData];
                                               }]];
@@ -307,11 +309,8 @@ typedef enum RowDataOrder {
             ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
             [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
             [tCell setButtonCallBack:^(UIButton *button){
-                [self showFeedbackViewController:
-                 [NSString stringWithFormat:@"Project ID: %ld - %@",
-                  [[[self project] serverId] integerValue],
-                  [[self project] title]
-                  ]];
+                long projID = [[[self project] serverId] longValue];
+                [self showFeedbackViewController:[NSString stringWithFormat:@"Project ID: %ld - %@",projID,[[self project] title]]];
             }];
             [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         } break;
@@ -338,12 +337,8 @@ typedef enum RowDataOrder {
 - (void)setProject:(Project *)project
 {
     if (project) {
-        [self setMoc:[[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"EditProject"
-                                                                                andConcurrency:NSMainQueueConcurrencyType]];
-        _project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:NSStringFromClass([Project class])
-                                                                 forPredicate:[NSPredicate predicateWithFormat:@"self = %@",project]
-                                                                     withSort:nil
-                                                                        inMOC:[self moc]];
+        [self setMoc:[project managedObjectContext]];
+        _project = project;
     } else {
         _project = nil;
         [self setMoc:nil];
@@ -372,7 +367,7 @@ typedef enum RowDataOrder {
        @[@(PO_SocialButtons),@"Socail Media",@"SocialMediaButtonsTableViewCell",@"SocialMediaButtonsTableViewCell",@(54)],
        @[@(PO_FeedbackButton),@"Send Us Feedback",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
        @[@(PO_DeleteButton),@"Delete Sprout",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
-       @[@(PO_SyncButton),@"Sync Project",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
+       //@[@(PO_SyncButton),@"Sync Project",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
        ]];
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"Project Details", @"Project Details")];
@@ -397,6 +392,14 @@ typedef enum RowDataOrder {
     [[self tableView] setFrame:[[self view] bounds]];
     if ([[self project] isDeleted] || [[[self project] markedForDelete] boolValue]) {
         [[self navigationController] popViewControllerAnimated:YES];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    if (!([[self project] isDeleted] || [[[self project] markedForDelete] boolValue]) && [[self project] showProjectBeSynced]) {
+        [[SyncQueue manager] addService:[ProjectWebService syncProject:[self project] withCallback:nil]];
     }
 }
 
@@ -537,6 +540,5 @@ typedef enum RowDataOrder {
     [[self project] setLastModified:[NSDate date]];
     [[self project] save];
 }
-
 
 @end

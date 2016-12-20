@@ -26,12 +26,30 @@
 #define PARAM_KEY_GET_TIMELINE_CREATED  @"createdDt"
 #define PARAM_KEY_GET_TIMELINE_UPDATED  @"updatedDt"
 
+#define HEADER_KEY_UPLOAD_PROJECT_ID    @"projectId"
+#define HEADER_KEY_UPLOAD_PICTURE_ORDER @"pictureOrder"
+#define HEADER_KEY_GET_TIMELINE_UUID    @"timelineUUID"
+
+#define PARAM_KEY_UPLOADE_FILE_DATA     @"file"
+
+
 @implementation TimelineWebService
+
+# pragma mark Private
+
+- (Project*)getProjectByID:(NSNumber*)projectId
+{
+    return (Project*)[[CoreDataAccessKit sharedInstance]
+                      findAnObject:NSStringFromClass([Project class])
+                      forPredicate:[NSPredicate predicateWithFormat:@"serverId = %@",projectId]
+                      withSort:nil
+                      inMOC:[self moc]];
+}
 
 # pragma mark TimelineWebService
 
-+ (TimelineWebService*)getSproutImagesForProjectId:(NSNumber*)projectId
-                                      withCallback:(SproutServiceCallBack)callBack
++ (TimelineWebService*)getTimelineForProjectId:(NSNumber*)projectId
+                                  withCallback:(SproutServiceCallBack)callBack
 {
     if (!projectId) return nil;
     TimelineWebService *service = [[TimelineWebService alloc] init];
@@ -40,7 +58,8 @@
     [service setParameters:@{ PARAM_KEY_PROJECT_SERVER_ID : projectId }];
     [service setServiceTag:SERVICE_URL_GET_TIMELINES];
     [service setOauthEnabled:YES];
-    return service;}
+    return service;
+}
 
 + (TimelineWebService*)getSproutImageById:(Timeline*)timeline
                              withCallback:(SproutServiceCallBack)callBack
@@ -58,7 +77,24 @@
 + (TimelineWebService*)syncTimeline:(Timeline*)timeline
                        withCallback:(SproutServiceCallBack)callBack
 {
-    return nil;
+    if (!timeline || ![timeline uuid] || ![timeline project] || [[[timeline project] serverId] integerValue]<=0 ) return nil;
+
+    TimelineWebService *service = nil;
+    //NSData *imgData = [timeline imageData];
+    NSURL *imgData = [timeline URLToLocalImage];
+    if (imgData) {
+        service = [[TimelineWebService alloc] init];
+        [service setServiceCallBack:callBack];
+        [service setUrl:SERVICE_URL_UPDATE_TIMLINE];
+        [service setContentType:ContentTypeFormData];
+        [service setHeaders:@{ HEADER_KEY_UPLOAD_PROJECT_ID : [[timeline project] serverId],
+                               HEADER_KEY_UPLOAD_PICTURE_ORDER : [timeline serverPictureOrder] }];
+        [service setParameters:@{ PARAM_KEY_UPLOADE_FILE_DATA : imgData }];
+        [service setServiceTag:[timeline uuid]];
+        [service setOauthEnabled:YES];
+    }
+    
+    return service;
 }
 
 + (TimelineWebService*)deleteTimelineId:(NSNumber*)serverId
@@ -83,11 +119,15 @@
         // Create a shortcut for the CoreDataAccessKit
         CoreDataAccessKit *cdak = [CoreDataAccessKit sharedInstance];
         Project *currentProject = nil;
+        BOOL localUpload = NO;
         
         // First get all the attributes
         NSNumber *projectId = [self numberForKey:PARAM_KEY_PROJECT_SERVER_ID inDict:timelineDict];
         serverId = [self numberForKey:PARAM_KEY_GET_TIMELINE_IMG_ID inDict:timelineDict];
-        if (timeline && [[timeline serverId] integerValue]<=0) { [timeline setServerId:serverId]; }
+        if (timeline && [[timeline serverId] integerValue]<=0 && serverId) {
+            [timeline setServerId:serverId];
+            localUpload = YES;
+        }
         NSString *serverURL = [self stringForKey:PARAM_KEY_GET_TIMELINE_URL inDict:timelineDict];
         if (serverURL && ![serverURL hasPrefix:@"http://sproutpic.com"]) {
             serverURL = [NSString stringWithFormat:@"%@/%@",SPROUT_URL,serverURL];
@@ -124,14 +164,21 @@
         // Finally, sync all the data points
         if (![[timeline serverURL] isEqualToString:serverURL]) {
             [timeline setServerURL:serverURL];
-            [timeline deleteLocalImages];
-            [timeline setLocalURL:nil];
+            if (!localUpload) {
+                [timeline deleteLocalImages];
+                [timeline setLocalURL:nil];
+            }
         }
         if (![[timeline order] isEqualToNumber:pictureOrder]) { [timeline setOrder:pictureOrder]; }
         if (![[timeline created] isEqualToDate:created]) { [timeline setCreated:created]; }
-        if (![[timeline lastSync] isEqualToDate:lastModified]) { [timeline setLastSync:lastModified]; }
+        if (![[timeline lastSync] isEqualToDate:lastModified]) {
+            [timeline setLastModified:lastModified];
+            [timeline setLastSync:lastModified];
+        }
         
-        [timeline setLastSync:[NSDate date]];
+        if ([timeline hasChanges] && ![timeline localURL] && [timeline serverURL]) {
+            [timeline loadImageRemotely];
+        }
         
     }
     return serverId;
@@ -145,12 +192,7 @@
 
         // Create an array to track the ids that have been synced
         NSMutableArray *syncedIds = [@[] mutableCopy];
-        NSNumber *projectId = [[self parameters] objectForKey:PARAM_KEY_PROJECT_SERVER_ID];
-        Project *project = (Project*)[[CoreDataAccessKit sharedInstance]
-                                      findAnObject:NSStringFromClass([Project class])
-                                      forPredicate:[NSPredicate predicateWithFormat:@"serverId = %@",projectId]
-                                      withSort:nil
-                                      inMOC:[self moc]];
+        Project *project = [self getProjectByID:[[self parameters] objectForKey:PARAM_KEY_PROJECT_SERVER_ID]];
         
         // Now, sync all the projects that were returned...
         NSArray *timelines = [responseObject objectForKey:PARAM_KEY_GET_TIMELINES];
@@ -183,9 +225,12 @@
         }
         [self syncTimelineWithDictionary:responseObject withTimeline:timeline];
         
-    } else if ([[self serviceTag] isEqualToString:SERVICE_URL_UPDATE_TIMLINE]) {
+    } else if ([[self url] isEqualToString:SERVICE_URL_UPDATE_TIMLINE] && [self serviceTag]) {
         
-        // TODO -
+        Timeline *timeline = [Timeline findByUUID:[self serviceTag] withMOC:[self moc]];
+        if (timeline) {
+            [self syncTimelineWithDictionary:responseObject withTimeline:timeline];
+        }
         
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_DELETE_TIMLINE]) {
         

@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSNumber *sproutSocial;
 @property (nullable, nonatomic, copy) NSNumber *useShadow;
 @property (nullable, nonatomic, copy) NSNumber *markedForDelete;
+@property (nullable, nonatomic, copy) NSNumber *type;
 @property (nullable, nonatomic, copy) NSString *uuid;
 
 @property (nullable, nonatomic, copy) NSString *videoURL;

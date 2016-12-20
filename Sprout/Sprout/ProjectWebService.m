@@ -90,7 +90,7 @@
            PARAM_KEY_PROJECT_DESCRIPTION : ([project subtitle]) ? [project subtitle] : @"",
            
            PARAM_KEY_PROJECT_FRONT_CAMERA : ([[project frontCameraEnabled] boolValue]) ? @"true" : @"false",
-           PARAM_KEY_PROJECT_USE_SHADOW : ([[project useShadow] boolValue]) ? @"true" : @"false",
+           PARAM_KEY_PROJECT_USE_SHADOW : ([[project useShadow] boolValue]) ? @"true" : @"false", // TODO - Still not added to service...
            PARAM_KEY_PROJECT_SLIDE_DURAT : ([project slideTime]) ? [NSString stringWithFormat:@"%0.5f",[[project slideTime] floatValue]] : @"0.5",
            PARAM_KEY_PROJECT_SPROUT_PUBLIC : ([[project sproutSocial] boolValue]) ? @"true" : @"false",
            
@@ -102,9 +102,6 @@
     } else {
         [service setUrl:SERVICE_URL_CREATE_PROJECT];
         [service setProject:project];
-//        if (![project lastSync]) {
-//            [project setLastSync:[NSDate date]];
-//        }
         [service setParameters:
          @{
            PARAM_KEY_PROJECT_TITLE : ([project title]) ? [project title] : @"",
@@ -191,7 +188,7 @@
             project = [Project createNewProject:title subTitle:subtitle withManagedObjectContext:[self moc]];
             [project setServerId:serverId];
             [project setCreated:created];
-            [project setLastModified:lastModified];
+            [project setLastModified:[NSDate date]];
         }
         
         // Now sync all the data points
@@ -211,9 +208,10 @@
         if (![[project videoLastModified] isEqualToDate:videoLastModified]) { [project setVideoLastModified:videoLastModified]; }
         
         if (![[project created] isEqualToDate:created]) { [project setCreated:created]; }
-        if (![[project lastSync] isEqualToDate:lastModified]) { [project setLastSync:lastModified]; }
-        
-        [project setLastSync:[NSDate date]];
+        if (![[project lastSync] isEqualToDate:lastModified]) {
+            [project setLastModified:lastModified];
+            [project setLastSync:lastModified];
+        }
     }
     return serverId;
 }
@@ -223,9 +221,9 @@
 - (void)completedSuccess:(id)responseObject
 {
     if ([[self serviceTag] isEqualToString:SERVICE_URL_GET_PROJECTS]) {
+        
         // Create an array to track the ids that have been synced
         NSMutableArray *syncedIds = [@[] mutableCopy];
-        
         // Now, sync all the projects that were returned...
         NSArray *projects = [responseObject objectForKey:PARAM_KEY_GET_PROJECT_PROJECTS];
         for (NSDictionary *projectDict in projects) {
@@ -244,6 +242,7 @@
         }
 
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_GET_PROJECT_BY_ID]) {
+        
         // Get the project and update it...
         Project *project = nil;
         NSNumber *serverId = [[self parameters] objectForKey:PARAM_KEY_PROJECT_SERVER_ID];
@@ -255,7 +254,9 @@
                                              inMOC:[self moc]];
         }
         [self syncProjectWithDictionary:responseObject withProject:project];
+        
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_CREATE_PROJECT]) {
+        
         // Get a new instance of the project and update it...
         Project *project = nil;
         if ([self project]) {
@@ -266,7 +267,9 @@
                                              inMOC:[self moc]];
         }
         [self syncProjectWithDictionary:responseObject withProject:project];
+        
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_UPDATE_PROJECT]) {
+        
         // Get a new instance of the project and update it...
         Project *project = nil;
         if ([self project]) {
@@ -277,7 +280,9 @@
                                              inMOC:[self moc]];
         }
         [self syncProjectWithDictionary:responseObject withProject:project];
+        
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_DELETE_PROJECT]) {
+        
         NSNumber *serverId = [[self parameters] objectForKey:PARAM_KEY_PROJECT_SERVER_ID];
         // Now, find the project and delete it.
         if (serverId && [serverId integerValue]>0) {
@@ -288,6 +293,7 @@
                                           inMOC:[self moc]];
             if (project) { [project deleteAndSave]; }
         }
+        
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_CREATE_VIDEO]) {
         // TODO - Save Video Information???
     }

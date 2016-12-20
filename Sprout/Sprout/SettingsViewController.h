@@ -12,4 +12,6 @@
     
 }
 
++ (SettingsViewController*)signUpViewController;
+
 @end

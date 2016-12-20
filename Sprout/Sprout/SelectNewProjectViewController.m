@@ -37,7 +37,7 @@ typedef enum NewSproutType {
 - (void)createProjectAndShowCamera:(NSInteger)row forNewSproutType:(NewSproutType)type
 {
     NSArray *rowData = [self rowDataAtIndex:row];
-    NSManagedObjectContext *moc = [[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"NewProject" andConcurrency:NSMainQueueConcurrencyType];
+    NSManagedObjectContext *moc = [[CoreDataAccessKit sharedInstance] managedObjectContext];
     Project *project = [Project createNewProject:[rowData objectAtIndex:0]
                                         subTitle:[rowData objectAtIndex:3]
                         withManagedObjectContext:moc];

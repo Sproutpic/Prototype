@@ -100,6 +100,19 @@
     return timeline;
 }
 
++ (Timeline*)findByUUID:(NSString*)uuid
+                withMOC:(NSManagedObjectContext*)moc
+{
+    Timeline *timeline = nil;
+    if (uuid && moc) {
+        timeline = (Timeline*)[[CoreDataAccessKit sharedInstance] findAnObject:NSStringFromClass([Timeline class])
+                                                                  forPredicate:[NSPredicate predicateWithFormat:@"uuid = %@",uuid]
+                                                                      withSort:nil
+                                                                         inMOC:moc];
+    }
+    return timeline;
+}
+
 - (NSString*)saveImage:(UIImage*)img
 {
     if (img) {
@@ -116,12 +129,9 @@
     return [self saveImage:img withName:[NSString stringWithFormat:@"timeline-sm-%@.png",[[NSUUID UUID] UUIDString]]];
 }
 
-- (UIImage*)image
+- (void)loadImageRemotely
 {
-    NSString *localFile = [self localPathToImage];
-    if (localFile) {
-        return [UIImage imageWithContentsOfFile:localFile];
-    } else if ([self serverURL]) {
+    if ([self serverURL]) {
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[self serverURL]]]];
             if (img) {
@@ -142,6 +152,36 @@
                 }
             }
         });
+    }
+}
+
+- (NSURL*)URLToLocalImage
+{
+    NSURL *url = nil;
+    NSString *localPath = [self localPathToImage];
+    if (localPath) {
+        url = [NSURL URLWithString:localPath];
+    }
+    return url;
+}
+
+
+- (NSData*)imageData
+{
+    NSString *localFile = [self localPathToImage];
+    if (localFile) {
+        return [NSData dataWithContentsOfFile:localFile];
+    }
+    return nil;
+}
+
+- (UIImage*)image
+{
+    NSString *localFile = [self localPathToImage];
+    if (localFile) {
+        return [UIImage imageWithContentsOfFile:localFile];
+    } else {
+        [self loadImageRemotely];
     }
     return nil;
 }
@@ -183,7 +223,21 @@
     }
 }
 
+- (NSNumber*)serverPictureOrder
+{
+    return @([[[self project] timelinesArraySorted] indexOfObject:self]+1);
+}
+
 # pragma mark NSManagedObject
+
+- (void)awakeFromFetch
+{
+    [super awakeFromFetch];
+    if (![self uuid]) {
+        [self setUuid:[[NSUUID UUID] UUIDString]];
+        [self save];
+    }
+}
 
 - (void)awakeFromInsert
 {
@@ -191,6 +245,7 @@
     NSDate *now = [NSDate date];
     [self setCreated:now];
     [self setLastModified:now];
+    [self setUuid:[[NSUUID UUID] UUIDString]];
 }
 
 - (void)prepareForDeletion

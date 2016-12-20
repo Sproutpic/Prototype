@@ -15,6 +15,10 @@
 
 static CoreDataAccessKit *shared = nil;
 
+@interface CoreDataAccessKit ()
+@property (strong, nonatomic) NSManagedObjectContext *privateManagedObjectContext; // Only to be used for major data migrations.
+@end
+
 @implementation CoreDataAccessKit
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -62,13 +66,22 @@ static CoreDataAccessKit *shared = nil;
         }
         NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
         if (coordinator != nil) {
+            NSManagedObjectContext *pmoc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+            [pmoc setPersistentStoreCoordinator:coordinator];
+            [pmoc setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
+            [pmoc setAutomaticallyMergesChangesFromParent:YES];
+            [pmoc setName:@"PrivateMainContext"];
+            _privateManagedObjectContext = pmoc;
+            
             NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-            [moc setPersistentStoreCoordinator:coordinator];
             [moc setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
-            [moc setAutomaticallyMergesChangesFromParent:YES];
-            [moc setUndoManager:nil];
+            [moc setParentContext:_privateManagedObjectContext];
             [moc setName:@"MainContext"];
             _managedObjectContext = moc;
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(mergeChangesWithParent:)
+                                                         name:NSManagedObjectContextDidSaveNotification
+                                                       object:moc];
         }
         return _managedObjectContext;
     }
@@ -128,7 +141,6 @@ static CoreDataAccessKit *shared = nil;
             moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:concurrency];
             [moc setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
             [moc setParentContext:[self managedObjectContext]];
-            [moc setUndoManager:nil];
             if (name) [moc setName:name];
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(mergeChangesWithParent:)
@@ -186,7 +198,6 @@ static CoreDataAccessKit *shared = nil;
                         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
                         abort();
                     }
-                    //[parent refreshAllObjects];
                 }
             }];
         }

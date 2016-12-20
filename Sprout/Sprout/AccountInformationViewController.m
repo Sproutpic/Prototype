@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *signUpBtn;
 @property (weak, nonatomic) IBOutlet UILabel *orLbl;
 @property (weak, nonatomic) IBOutlet UILabel *detailLbl;
+@property (nonatomic) BOOL showSignIn;
 
 - (IBAction)signOutButtonTapped:(id)sender;
 - (IBAction)signInButtonTapped:(id)sender;
@@ -72,12 +73,25 @@
     [[self navigationController] pushViewController:vc animated:YES];
 }
 
+# pragma mark AccountInformationViewController
+
++ (AccountInformationViewController*)signUpViewController
+{
+    AccountInformationViewController *vc = [[AccountInformationViewController alloc] initWithNibName:@"AccountInformationViewController" bundle:nil];
+    [vc setShowSignIn:YES];
+    return vc;
+}
+
 # pragma mark UIViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"Account Info", @"Account Info")];
+    if ([self showSignIn]) {
+        [self setShowSignIn:NO];
+        [self signUpButtonTapped:nil];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

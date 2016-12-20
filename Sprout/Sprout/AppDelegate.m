@@ -21,6 +21,7 @@
 #import "ProjectDetailViewController.h"
 #import "AccountWebService.h"
 #import "JDMLocalNotification.h"
+#import "SettingsViewController.h"
 
 @interface AppDelegate () <SproutWebServiceAuthDelegate>
 
@@ -72,30 +73,35 @@
     [[UITabBar appearance] setTranslucent:NO];
 }
 
+- (UINavigationController*)findNavigationController
+{
+    UINavigationController *nvc = nil;
+    UIViewController *vc = [[self window] rootViewController];
+    if ([vc isKindOfClass:[UITabBarController class]]) {
+        UITabBarController *tvc = (UITabBarController*)vc;
+        vc = [tvc selectedViewController];
+        if ([vc isKindOfClass:[UINavigationController class]]) {
+            nvc = (UINavigationController*)vc;
+        } else {
+            nvc = [vc navigationController];
+        }
+    }
+    if (!nvc) {
+        nvc = [vc navigationController];
+    }
+    return nvc;
+}
+
 - (void)gotoProjectDetailForNotification:(UILocalNotification *)notification withApplication:(UIApplication *)application
 {
     NSDictionary *userInfo = [notification userInfo];
     if (userInfo && [userInfo objectForKey:NOTIFICATION_KEY_PROJECT_UUID]) {
         NSString *uuid = [userInfo objectForKey:NOTIFICATION_KEY_PROJECT_UUID];
-        Project *project = [Project findByUUID:uuid withMOC:[[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"Test" andConcurrency:NSMainQueueConcurrencyType]];
+        Project *project = [Project findByUUID:uuid withMOC:[[CoreDataAccessKit sharedInstance] managedObjectContext]];
         if (project) {
             ProjectDetailViewController *pvc = [[ProjectDetailViewController alloc] init];
             [pvc setProject:project];
-            UINavigationController *nvc = nil;
-            UIViewController *vc = [[application keyWindow] rootViewController];
-            if ([vc isKindOfClass:[UITabBarController class]]) {
-                UITabBarController *tvc = (UITabBarController*)vc;
-                vc = [tvc selectedViewController];
-                if ([vc isKindOfClass:[UINavigationController class]]) {
-                    nvc = (UINavigationController*)vc;
-                } else {
-                    nvc = [vc navigationController];
-                }
-            }
-            if (!nvc) {
-                nvc = [vc navigationController];
-            }
-            
+            UINavigationController *nvc = [self findNavigationController];
             // If we have an nvc, go to the root and then show the project details...
             if (nvc) {
                 [CATransaction begin];
@@ -233,6 +239,16 @@
                                                   }] start];
                                             }]];
     [[[alert actions] objectAtIndex:0] setEnabled:NO];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Create an Account", @"Create an Account")
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                completion([NSError errorWithDomain:@"Don't Continue" code:0 userInfo:nil]);
+                                                SettingsViewController *vc = [SettingsViewController signUpViewController];
+                                                UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+                                                [[self findNavigationController] presentViewController:nvc
+                                                                                              animated:YES
+                                                                                            completion:nil];
+                                            }]];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                               style:UIAlertActionStyleCancel
                                             handler:^(UIAlertAction * _Nonnull action) {

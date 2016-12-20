@@ -10,11 +10,13 @@
 #import "UIUtils.h"
 #import "OnboardingManager.h"
 #import "CTFeedbackViewController.h"
+#import "AccountInformationViewController.h"
 
 @interface SettingsViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) NSArray *tableData;
 @property (strong, nonatomic) UITableView *tableView;
+@property (nonatomic) BOOL showSignIn;
 
 @end
 
@@ -31,6 +33,15 @@
 - (NSArray*)rowDataAtIndex:(NSIndexPath*)indexPath
 {
     return [[[[self tableData] objectAtIndex:[indexPath section]] objectAtIndex:1] objectAtIndex:[indexPath row]];
+}
+
+# pragma mark SettingsViewController
+
++ (SettingsViewController*)signUpViewController
+{
+    SettingsViewController *vc = [[SettingsViewController alloc] init];
+    [vc setShowSignIn:YES];
+    return vc;
 }
 
 # pragma mark UIViewController
@@ -63,6 +74,10 @@
     [super viewWillAppear:animated];
     [[self tableView] setFrame:[[self view] bounds]];
     [[self tableView] reloadData];
+    if ([self showSignIn]) {
+        [self setShowSignIn:NO];
+        [[self navigationController] pushViewController:[AccountInformationViewController signUpViewController] animated:NO];
+    }
 }
 
 - (UITabBarItem*)tabBarItem

@@ -71,7 +71,7 @@
 
 - (IBAction)noDataButtonTapped:(id)sender
 {
-    NSManagedObjectContext *moc = [[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"NewProject" andConcurrency:NSMainQueueConcurrencyType];
+    NSManagedObjectContext *moc = [[CoreDataAccessKit sharedInstance] managedObjectContext];
     Project *project = [Project createNewProject:NSLocalizedString(@"My First Selfie Sprout", @"My First Selfie Sprout")
                                         subTitle:NSLocalizedString(@"A Selfie Sprout is meant to be taken with the front facing camera. We'll remind you every day to update your selfie sprout.",
                                                                    @"A Selfie Sprout is meant to be taken with the front facing camera. We'll remind you every day to update your selfie sprout.")
@@ -100,15 +100,10 @@
     
     // Pull to refresh configuration
     [[self tableView] addPullToRefreshWithActionHandler:^{
-//        [[SyncQueue manager] addService:[ProjectWebService getAllProjectsWithCallback:^(NSError *error, SproutWebService *service) {
-//            [[[self tableView] pullToRefreshView] stopAnimating];
-//        }]];
-        [SyncAllData now:^{
-            [[[self tableView] pullToRefreshView] stopAnimating];
-        }];
+        [SyncAllData now:^{ [[[self tableView] pullToRefreshView] stopAnimating]; }];
     }];
     [[[self tableView] pullToRefreshView] setArrowColor:[UIUtils colorNavigationBar]];
-    [[[self tableView] pullToRefreshView] setTextColor:[UIUtils colorNavigationBar]];    
+    [[[self tableView] pullToRefreshView] setTextColor:[UIUtils colorNavigationBar]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -122,7 +117,11 @@
     [super viewDidAppear:animated];
     [[self tableView] setFrame:[[self view] bounds]];
     
-    [OnboardingManager showOnboardingOn:[self navigationController] forceShow:NO];
+    if (![OnboardingManager hasOnboardingBeenShown]) {
+        [OnboardingManager showOnboardingOn:[self navigationController] forceShow:NO];
+    } else {
+        [SyncAllData now:nil];
+    }
 }
 
 - (UITabBarItem*)tabBarItem

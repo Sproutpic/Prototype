@@ -27,6 +27,7 @@
 		E70700301DBE37F3009E8D7D /* Project+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = E70700261DBE37F3009E8D7D /* Project+CoreDataProperties.m */; };
 		E70700321DBE37F3009E8D7D /* Timeline+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = E707002A1DBE37F3009E8D7D /* Timeline+CoreDataClass.m */; };
 		E70700331DBE37F3009E8D7D /* Timeline+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = E707002C1DBE37F3009E8D7D /* Timeline+CoreDataProperties.m */; };
+		E70818FF1E084408005C9F5D /* SyncWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = E70818FE1E084408005C9F5D /* SyncWebService.m */; };
 		E708E6121DCEBB9600E9D626 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E708E6111DCEBB9600E9D626 /* CoreData.framework */; };
 		E708E6141DCEBBAD00E9D626 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E708E6131DCEBBAD00E9D626 /* Foundation.framework */; };
 		E708E6161DCEBBB300E9D626 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E708E6151DCEBBB300E9D626 /* UIKit.framework */; };
@@ -130,6 +131,8 @@
 		E707002A1DBE37F3009E8D7D /* Timeline+CoreDataClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Timeline+CoreDataClass.m"; path = "Database/Timeline+CoreDataClass.m"; sourceTree = "<group>"; };
 		E707002B1DBE37F3009E8D7D /* Timeline+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Timeline+CoreDataProperties.h"; path = "Database/Timeline+CoreDataProperties.h"; sourceTree = "<group>"; };
 		E707002C1DBE37F3009E8D7D /* Timeline+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Timeline+CoreDataProperties.m"; path = "Database/Timeline+CoreDataProperties.m"; sourceTree = "<group>"; };
+		E70818FD1E084408005C9F5D /* SyncWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncWebService.h; sourceTree = "<group>"; };
+		E70818FE1E084408005C9F5D /* SyncWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncWebService.m; sourceTree = "<group>"; };
 		E708E6111DCEBB9600E9D626 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		E708E6131DCEBBAD00E9D626 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E708E6151DCEBBB300E9D626 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -305,6 +308,8 @@
 				E759F77F1DE63E46002C1E96 /* TimelineWebService.m */,
 				E759F7811DE64984002C1E96 /* SyncAllData.h */,
 				E759F7821DE64984002C1E96 /* SyncAllData.m */,
+				E70818FD1E084408005C9F5D /* SyncWebService.h */,
+				E70818FE1E084408005C9F5D /* SyncWebService.m */,
 			);
 			name = "Web Services";
 			sourceTree = "<group>";
@@ -780,6 +785,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A85A2FB1D2BB85300B4CD02 /* CommunityViewController.m in Sources */,
+				E70818FF1E084408005C9F5D /* SyncWebService.m in Sources */,
 				E7ABE1F01DB410020056224D /* AccountSignInViewController.m in Sources */,
 				E7C72A081DB88DE100128D32 /* SelectNewProjectViewController.m in Sources */,
 				E707002F1DBE37F3009E8D7D /* Project+CoreDataClass.m in Sources */,

@@ -10,6 +10,8 @@
 
 @interface OnboardingManager : NSObject
 
++ (BOOL)hasOnboardingBeenShown;
+
 + (void)showOnboardingOn:(UIViewController*)vc forceShow:(BOOL)force;
 
 @end

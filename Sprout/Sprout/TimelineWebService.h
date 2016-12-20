@@ -12,8 +12,8 @@
 
 @interface TimelineWebService : SproutWebService
 
-+ (TimelineWebService*)getSproutImagesForProjectId:(NSNumber*)projectId
-                                      withCallback:(SproutServiceCallBack)callBack;
++ (TimelineWebService*)getTimelineForProjectId:(NSNumber*)projectId
+                                  withCallback:(SproutServiceCallBack)callBack;
 
 + (TimelineWebService*)getSproutImageById:(Timeline*)timeline
                              withCallback:(SproutServiceCallBack)callBack;

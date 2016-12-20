@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)updateAllProjectNotifications;
 
+- (BOOL)showProjectBeSynced;
+
 @end
 
 NS_ASSUME_NONNULL_END

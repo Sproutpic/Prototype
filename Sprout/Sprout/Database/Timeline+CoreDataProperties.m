@@ -24,5 +24,7 @@
 @dynamic serverId;
 @dynamic serverURL;
 @dynamic project;
+@dynamic markedForDelete;
+@dynamic uuid;
 
 @end

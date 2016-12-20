@@ -28,10 +28,10 @@ PODS:
   - SVProgressHUD (2.0.3)
   - SVPullToRefresh (0.4.1)
   - TPKeyboardAvoiding (1.3)
-  - TwitterCore (2.6.1):
+  - TwitterCore (2.7.0):
     - Fabric
-  - TwitterKit (2.6.1):
-    - TwitterCore (= 2.6.1)
+  - TwitterKit (2.7.0):
+    - TwitterCore (= 2.7.0)
   - VTAcknowledgementsViewController (1.2)
 
 DEPENDENCIES:
@@ -102,8 +102,8 @@ SPEC CHECKSUMS:
   SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   TPKeyboardAvoiding: a5138f318c06fb3e151f886e18ce4a72695d9cbe
-  TwitterCore: a8aea8bdaf2abd6572c8f264707a4ea4dc2d0eab
-  TwitterKit: d38c08d31dfd4ba604f95deca6cf8e174b5cbd96
+  TwitterCore: fbdbeaf6d2d20cf7c7aa4136fe5173c1c85df2e2
+  TwitterKit: 97e729ceea041d174126235bf6ff67dcf37772d4
   VTAcknowledgementsViewController: 62d2b3979b6d86677246967cf880d14b13ee7ac4
 
 PODFILE CHECKSUM: 23a0f8b1c33a55c7e4776d8dd002c1485bbe5b40

@@ -86,7 +86,6 @@ static NSDateFormatter *df;
     
     // Check to see if this is a fake service
     if ([self fakeService]) {
-        NSLog(@"Fake Server: %@",NSStringFromClass([self class]));
         [self completedSuccess:nil];
         [self showStatusBarSpinner:NO];
         return;
@@ -139,25 +138,21 @@ static NSDateFormatter *df;
     [[manager requestSerializer] setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
     if ([self contentType]==ContentTypeFormData) {
-//        NSMutableDictionary *formParameters = [@{} mutableCopy];
-//        NSMutableDictionary *newParameters = [@{} mutableCopy];
-//        for (NSString *key in [[self parameters] allKeys]) {
-//            NSObject *obj = [[self parameters] valueForKey:key];
-//            if ([obj isKindOfClass:[NSData class]]) {
-//                [formParameters setObject:obj forKey:key];
-//            } else {
-//                [newParameters setObject:obj forKey:key];
-//            }
-//        }
+        NSMutableDictionary *formParameters = [@{} mutableCopy];
+        NSMutableDictionary *newParameters = [@{} mutableCopy];
+        for (NSString *key in [[self parameters] allKeys]) {
+            NSObject *obj = [[self parameters] valueForKey:key];
+            if ([obj isKindOfClass:[NSData class]]) {
+                [formParameters setObject:obj forKey:key];
+            } else {
+                [newParameters setObject:obj forKey:key];
+            }
+        }
         [manager POST:[self url]
-           parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-//               for (NSString *key in [formParameters allKeys]) {
-//                   NSData *data = [formParameters valueForKey:key];
-//                   [formData appendPartWithFormData:data name:key];
-//               }
-               for (NSString *key in [[self parameters] allKeys]) {
-                   NSURL *path = [[self parameters] valueForKey:key];
-                   [formData appendPartWithFileURL:path name:key fileName:@"sproutpic-timeline.png" mimeType:@"image/png" error:nil];
+           parameters:newParameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+               for (NSString *key in [formParameters allKeys]) {
+                   NSData *data = [formParameters valueForKey:key];
+                   [formData appendPartWithFileData:data name:key fileName:[NSString stringWithFormat:@"timeline-%@.png",[NSUUID UUID]] mimeType:@"image/png"];
                }
            } progress:^(NSProgress * _Nonnull uploadProgress) {
                NSLog(@"Uploaded Progress - %0.2f",[uploadProgress fractionCompleted]);

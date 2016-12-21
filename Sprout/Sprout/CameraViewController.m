@@ -280,13 +280,15 @@
     }
     
     UIImage *img = nil;
-    if ([[[self project] type] integerValue]==0) {
-        img = [UIImage imageNamed:@"overlay-silhouette"];
-    } else {
-        NSArray *timelines = [[self project] timelinesArraySorted];
-        if ([timelines count]>0) {
-            Timeline *timeline = [timelines objectAtIndex:[timelines count]-1];
-            img = [timeline imageThumbnail];
+    if ([[[self project] useShadow] boolValue]) {
+        if ([[[self project] frontCameraEnabled] boolValue]) {
+            img = [UIImage imageNamed:@"overlay-silhouette"];
+        } else {
+            NSArray *timelines = [[self project] timelinesArraySorted];
+            if ([timelines count]>0) {
+                Timeline *timeline = [timelines objectAtIndex:[timelines count]-1];
+                img = [timeline imageThumbnail];
+            }
         }
     }
     

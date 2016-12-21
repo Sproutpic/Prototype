@@ -10,6 +10,8 @@
 #import "Project+CoreDataClass.h"
 #import "CoreDataAccessKit.h"
 #import "DataObjects.h"
+#import "TimelineWebService.h"
+#import "SyncQueue.h"
 
 #define NORMAL_SIZE     450.0
 #define THUMBNAIL_SIZE  150.0
@@ -131,28 +133,32 @@
 
 - (void)loadImageRemotely
 {
-    if ([self serverURL]) {
-        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-            UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[self serverURL]]]];
-            if (img) {
-                NSString *imageName = [self saveImage:img];
-                NSString *thumbnailImgName = [self saveThumbnailImage:img];
-                if (imageName && thumbnailImgName) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSDate *now = [NSDate date];
-                        [self setLocalURL:imageName];
-                        [self setLocalThumbnailURL:thumbnailImgName];
-                        [self setLastModified:now];
-                        [[self project] setLastModified:now];
-                        [self save];
-                        NSLog(@"Saved new image - %@",imageName);
-                    });
-                } else {
-                    NSLog(@"Issue trying to save image");
-                }
-            }
-        });
+    if ([self serverURL] && ![[SyncQueue manager] isServiceTagQueued:[self uuid]]) {
+        [[SyncQueue manager] addService:[TimelineWebService loadTimelineImage:self withCallback:nil]];
     }
+    
+//    if ([self serverURL]) {
+//        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+//            UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[self serverURL]]]];
+//            if (img) {
+//                NSString *imageName = [self saveImage:img];
+//                NSString *thumbnailImgName = [self saveThumbnailImage:img];
+//                if (imageName && thumbnailImgName) {
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        NSDate *now = [NSDate date];
+//                        [self setLocalURL:imageName];
+//                        [self setLocalThumbnailURL:thumbnailImgName];
+//                        [self setLastModified:now];
+//                        [[self project] setLastModified:now];
+//                        [self save];
+//                        NSLog(@"Saved new image - %@",imageName);
+//                    });
+//                } else {
+//                    NSLog(@"Issue trying to save image");
+//                }
+//            }
+//        });
+//    }
 }
 
 - (NSURL*)URLToLocalImage
@@ -225,7 +231,7 @@
 
 - (NSNumber*)serverPictureOrder
 {
-    return @([[[self project] timelinesArraySorted] indexOfObject:self]+1);
+    return @([[[self project] timelinesArraySortedOldestToNewest] indexOfObject:self]+1);
 }
 
 # pragma mark NSManagedObject

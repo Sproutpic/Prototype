@@ -8,6 +8,7 @@
 
 #import "AccountWebService.h"
 #import "CurrentUser.h"
+#import "DataObjects.h"
 
 #define SERVICE_TAG_SIGN_IN             @"SERVICE_TAG_SIGN_IN"
 #define SERVICE_TAG_SIGN_UP             @"SERVICE_TAG_SIGN_UP"
@@ -92,8 +93,18 @@
 + (AccountWebService*)signOutUserWithEmail:(NSString*)email
                               withCallback:(SproutServiceCallBack)callBack
 {
+    // Clear the user information
     [CurrentUser setUser:nil];
-    callBack(nil,nil);
+    // Now delete all the data (that's not synced with the server)
+    NSArray * projects = [[CoreDataAccessKit sharedInstance] findObjects:NSStringFromClass([Project class])
+                                                            forPredicate:[NSPredicate predicateWithFormat:@"serverId > 0"]
+                                                                withSort:nil
+                                                                   inMOC:[[CoreDataAccessKit sharedInstance] managedObjectContext]];
+    for (Project *project in projects) {
+        [project deleteAndSave];
+    }
+    // Call the callback, if any...
+    if (callBack) callBack(nil,nil);
     return nil;
 }
 

@@ -14,6 +14,7 @@
 
 #define SERVICE_URL_FAKE_SYNC_SERVICE       @"fakeSyncService"
 #define SERVICE_URL_SYNC_ALL_PROJECTS       @"syncAllProjects"
+#define SERVICE_URL_SYNC_PROJECT_VIDEOS     @"syncProjectVideos"
 
 #define PARAM_KEY_PROJECT_UUID              @"projectUUID"
 
@@ -47,6 +48,7 @@
         service = [ProjectWebService syncProject:project withCallback:^(NSError *error, SproutWebService *service) {
             if (!error && project && ![project isFault]) {
                 [[SyncQueue manager] addService:[SyncWebService syncTimeLineForProject:project withCallback:callBack]];
+                
             } else if (callBack) { // Hold on to the callback...
                 [[SyncQueue manager] addService:[SyncWebService fakeServiceToHoldCallback:callBack]];
             }
@@ -77,13 +79,25 @@
             }
             // Hold on to the callback...
             if (callBack) {
-                [[SyncQueue manager] addService:[SyncWebService fakeServiceToHoldCallback:callBack]];
+                [[SyncQueue manager] addService:[SyncWebService fakeServiceToHoldCallback:^(NSError *error, SproutWebService *service) {
+                    [[SyncQueue manager] addService:[ProjectWebService createVideoByProject:project withCallback:nil]];
+                    if (callBack) callBack(error,service);
+                }]];
             }
             
         }];
     } else if (callBack) {
         service = [SyncWebService fakeServiceToHoldCallback:callBack];
     }
+    return service;
+}
+
++ (SproutWebService*)syncProjectVideosWithCallback:(SproutServiceCallBack)callBack
+{
+    SyncWebService *service = [[SyncWebService alloc] init];
+    [service setFakeService:YES];
+    [service setServiceCallBack:callBack];
+    [service setServiceTag:SERVICE_URL_SYNC_PROJECT_VIDEOS];
     return service;
 }
 
@@ -117,6 +131,9 @@
                     [[SyncQueue manager] addService:[SyncWebService syncProject:project withCallback:nil]];
                 }
                 
+                // Add a service call to check for videos...
+                [[SyncQueue manager] addService:[SyncWebService syncProjectVideosWithCallback:nil]];
+                
                 // Now, hold on to the callback until queue is cleared, a litte more.
                 if ([self serviceCallBack]) {
                     [[SyncQueue manager] addService:[SyncWebService fakeServiceToHoldCallback:[self serviceCallBack]]];
@@ -124,6 +141,20 @@
                 }
             }
         }]];
+        
+    } else if ([[self serviceTag] isEqualToString:SERVICE_URL_SYNC_PROJECT_VIDEOS]) {
+
+        // Now add a request for all projects that do not have a videoURL and more them 2 timelines
+        NSArray *projects = [[CoreDataAccessKit sharedInstance]
+                             findObjects:NSStringFromClass([Project class])
+                             forPredicate:[NSPredicate predicateWithFormat:@"serverId > 0 AND markedForDelete = NO"] // Don't forget the mark for delete.
+                             withSort:@[[NSSortDescriptor sortDescriptorWithKey:@"created" ascending:YES]]
+                             inMOC:[self moc]];
+        for (Project *project in projects) {
+            if (![project videoURL] && [[project timelines] count]>1 && ![[SyncQueue manager] isServiceTagQueued:[NSString stringWithFormat:@"CREATE-%@",[project uuid]]]) {
+                [[SyncQueue manager] addService:[ProjectWebService createVideoByProject:project withCallback:nil]];
+            }
+        }
         
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_FAKE_SYNC_SERVICE]) {
         

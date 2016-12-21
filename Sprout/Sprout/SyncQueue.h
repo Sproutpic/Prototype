@@ -18,4 +18,7 @@
 - (void)addService:(SproutWebService*)service;
 - (void)emptyQueue;
 
+- (BOOL)isServiceTagQueued:(NSString*)serviceTag;
+
+
 @end

@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#define PREF_SHOULD_SYNC_BOOL @"PREF_SHOULD_SYNC_BOOL"
+
 @interface UIUtils : NSObject
     
 + (void)vibrate;

@@ -119,9 +119,20 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Set the sync flag
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_SHOULD_SYNC_BOOL];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    // Create timer to reset the sync value every X number of minutes (3 minutes)
+    [NSTimer scheduledTimerWithTimeInterval:(60*3) repeats:YES block:^(NSTimer * _Nonnull timer) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_SHOULD_SYNC_BOOL];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }];
+    
+    // Setup Crashlytics and Fabrics
     [Fabric with:@[[Crashlytics class],[Answers class],[Twitter class]]];
     [self configureGlobalTheme];
-    //[self createDemoData];
+    //[self createDemoData]; // No need for demo data anymore...
     [self setMainWithControllers];
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     [application setApplicationIconBadgeNumber:0];
@@ -147,6 +158,10 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    // Set the sync flag (When placed in background)
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_SHOULD_SYNC_BOOL];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     self.bgTask = [application beginBackgroundTaskWithName:@"BackgroundTasks" expirationHandler:^{
         // Clean up any unfinished task business by marking where you
         // stopped or ending the task outright.

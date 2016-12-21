@@ -19,4 +19,6 @@
 + (SproutWebService*)syncTimeLineForProject:(Project*)project
                                withCallback:(SproutServiceCallBack)callBack;
 
++ (SproutWebService*)syncProjectVideosWithCallback:(SproutServiceCallBack)callBack;
+
 @end

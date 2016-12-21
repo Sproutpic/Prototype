@@ -14,4 +14,6 @@ typedef void (^ SyncAllDataCallBack)();
 
 + (void)now:(SyncAllDataCallBack)callBack;
 
++ (void)syncProjectVideos:(SyncAllDataCallBack)callBack;
+
 @end

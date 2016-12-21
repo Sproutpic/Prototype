@@ -52,6 +52,18 @@ static SyncQueue *shared = nil;
     });
 }
 
+- (BOOL)isServiceTagQueued:(NSString*)serviceTag
+{
+    if (serviceTag) {
+        for (SproutWebService *ws in [self queue]) {
+            if ([[ws serviceTag] isEqualToString:serviceTag]) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
 # pragma mark Private
 
 - (void)processQueue

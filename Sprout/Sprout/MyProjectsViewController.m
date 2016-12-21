@@ -119,8 +119,10 @@
     
     if (![OnboardingManager hasOnboardingBeenShown]) {
         [OnboardingManager showOnboardingOn:[self navigationController] forceShow:NO];
-    } else {
+    } else if ([[NSUserDefaults standardUserDefaults] boolForKey:PREF_SHOULD_SYNC_BOOL]) {
         [SyncAllData now:nil];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_SHOULD_SYNC_BOOL];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 

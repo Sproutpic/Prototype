@@ -22,4 +22,14 @@
     }]];
 }
 
+
++ (void)syncProjectVideos:(SyncAllDataCallBack)callBack;
+{
+    [[SyncQueue manager] addService:[SyncWebService syncProjectVideosWithCallback:^(NSError *error, SproutWebService *service) {
+        if (callBack) {
+            callBack();
+        }
+    }]];
+}
+
 @end

@@ -16,6 +16,7 @@
 #define SERVICE_URL_GET_TIMLINE_BY_ID   [NSString stringWithFormat:@"%@/GetSproutImageById",SPROUT_API_URL]
 #define SERVICE_URL_UPDATE_TIMLINE      [NSString stringWithFormat:@"%@/UploadSproutImage",SPROUT_API_URL]
 #define SERVICE_URL_DELETE_TIMLINE      [NSString stringWithFormat:@"%@/DeleteSproutImage",SPROUT_API_URL]
+#define SERVICE_URL_GET_IMAGE           @"SERVICE_URL_GET_IMAGE"
 
 #define PARAM_KEY_PROJECT_SERVER_ID     @"projectId"
 #define PARAM_KEY_GET_TIMELINE_IMG_ID   @"sproutImageId"
@@ -61,8 +62,8 @@
     return service;
 }
 
-+ (TimelineWebService*)getSproutImageById:(Timeline*)timeline
-                             withCallback:(SproutServiceCallBack)callBack
++ (TimelineWebService*)getTimelineById:(Timeline*)timeline
+                          withCallback:(SproutServiceCallBack)callBack
 {
     if (!timeline) return nil;
     TimelineWebService *service = [[TimelineWebService alloc] init];
@@ -80,8 +81,7 @@
     if (!timeline || ![timeline uuid] || ![timeline project] || [[[timeline project] serverId] integerValue]<=0 ) return nil;
 
     TimelineWebService *service = nil;
-    //NSData *imgData = [timeline imageData];
-    NSURL *imgData = [timeline URLToLocalImage];
+    NSData *imgData = [timeline imageData];
     if (imgData) {
         service = [[TimelineWebService alloc] init];
         [service setServiceCallBack:callBack];
@@ -107,6 +107,44 @@
     [service setParameters:@{ PARAM_KEY_GET_TIMELINE_IMG_ID : serverId }];
     [service setServiceTag:SERVICE_URL_DELETE_TIMLINE];
     [service setOauthEnabled:YES];
+    return service;
+}
+
++ (TimelineWebService*)loadTimelineImage:(Timeline*)timeline
+                            withCallback:(SproutServiceCallBack)callBack
+{
+    if (!timeline) return nil;
+    TimelineWebService *service = [[TimelineWebService alloc] init];
+    [service setFakeService:YES];
+    [service setServiceTag:[timeline uuid]];
+    [service setServiceCallBack:^(NSError *error, SproutWebService *service) {
+        Timeline *timeline = [Timeline findByUUID:[service serviceTag] withMOC:[service moc]];
+        if (timeline && [timeline serverURL]) {
+            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+                UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[timeline serverURL]]]];
+                if (img) {
+                    NSString *imageName = [timeline saveImage:img];
+                    NSString *thumbnailImgName = [timeline saveThumbnailImage:img];
+                    if (imageName && thumbnailImgName) {
+                        NSDate *now = [NSDate date];
+                        [timeline setLocalURL:imageName];
+                        [timeline setLocalThumbnailURL:thumbnailImgName];
+                        [timeline setLastModified:now];
+                        [[timeline project] setLastModified:now];
+                        [timeline save];
+                        NSLog(@"Saved new image - %@",imageName);
+                    } else {
+                        NSLog(@"Issue trying to save image");
+                    }
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (callBack) callBack(error,service);
+                });
+            });
+        } else if (callBack) {
+            callBack(error,service);
+        }
+    }];
     return service;
 }
 
@@ -244,7 +282,9 @@
                                              inMOC:[self moc]];
             if (timeline) { [timeline deleteAndSave]; }
         }
-        
+     
+    } else if ([[self serviceTag] isEqualToString:SERVICE_URL_GET_IMAGE]) {
+        // Do nothing, the magic is in the callback...
     }
     
     // Lastly, save the MOC

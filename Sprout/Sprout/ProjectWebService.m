@@ -135,14 +135,14 @@
     return service;
 }
 
-+ (ProjectWebService*)createProjectIdVideo:(NSNumber*)serverId
++ (ProjectWebService*)createVideoByProject:(Project*)project
                               withCallback:(SproutServiceCallBack)callBack
 {
-    if (!serverId) return nil;
+    if (!project || ![project serverId] || [[project timelines] count]<=1) return nil;
     ProjectWebService *service = [[ProjectWebService alloc] init];
     [service setServiceCallBack:callBack];
     [service setUrl:SERVICE_URL_CREATE_VIDEO];
-    [service setParameters:@{ PARAM_KEY_PROJECT_SERVER_ID : serverId }];
+    [service setParameters:@{ PARAM_KEY_PROJECT_SERVER_ID : [project serverId] }];
     [service setServiceTag:SERVICE_URL_CREATE_VIDEO];
     [service setOauthEnabled:YES];
     return service;
@@ -295,7 +295,18 @@
         }
         
     } else if ([[self serviceTag] isEqualToString:SERVICE_URL_CREATE_VIDEO]) {
-        // TODO - Save Video Information???
+        
+        NSNumber *serverId = [[self parameters] objectForKey:PARAM_KEY_PROJECT_SERVER_ID];
+        // Now, find the project and sync it...
+        if (serverId && [serverId integerValue]>0) {
+            Project *project = (Project*)[[CoreDataAccessKit sharedInstance]
+                                          findAnObject:NSStringFromClass([Project class])
+                                          forPredicate:[NSPredicate predicateWithFormat:@"serverId = %@",serverId]
+                                          withSort:nil
+                                          inMOC:[self moc]];
+            [self syncProjectWithDictionary:responseObject withProject:project];
+        }
+        
     }
     
     // Lastly, save the MOC

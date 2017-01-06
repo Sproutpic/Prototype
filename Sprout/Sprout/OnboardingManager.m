@@ -35,9 +35,14 @@ static OnboardingManager *shared = nil;
 
 # pragma mark Public
 
++ (BOOL)hasOnboardingBeenShown
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:PREF_ONBOARDING_SHOWN];
+}
+
 + (void)showOnboardingOn:(UIViewController*)vc forceShow:(BOOL)force
 {
-    BOOL alreadyShown = [[NSUserDefaults standardUserDefaults] boolForKey:PREF_ONBOARDING_SHOWN];
+    BOOL alreadyShown = [OnboardingManager hasOnboardingBeenShown];
     OnboardingManager *om = [OnboardingManager sharedInstance];
     if (vc && (force || !alreadyShown) && ![om onboardingVC]) {
         [om setOnboardingVC:

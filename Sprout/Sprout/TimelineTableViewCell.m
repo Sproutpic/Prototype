@@ -12,6 +12,8 @@
 #import "DataObjects.h"
 #import "TimelineCollectionViewCell.h"
 #import "TimelineCollectionViewCellDelegate.h"
+#import "SyncQueue.h"
+#import "TimelineWebService.h"
 
 @interface TimelineTableViewCell () <TimelineCollectionViewCellDelegate>
 
@@ -85,7 +87,14 @@
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Delete Photo", @"Delete Photo")
                                               style:UIAlertActionStyleDestructive
                                             handler:^(UIAlertAction * _Nonnull action) {
+                                                NSNumber *serverId = [timeline serverId];
                                                 [timeline deleteAndSave];
+                                                [[SyncQueue manager] addService:[TimelineWebService deleteTimelineId:serverId withCallback:^(NSError *error, SproutWebService *service) {
+                                                    if (!error) {
+                                                        // Add a service call to check for videos...
+                                                        [SyncAllData syncProjectVideos:nil];
+                                                    }
+                                                }]];
                                                 [[self collectionView] reloadData];
                                             }]];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")

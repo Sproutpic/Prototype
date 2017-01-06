@@ -16,6 +16,7 @@
 #import "CameraViewController.h"
 #import "SettingsViewController.h"
 #import "DataObjects.h"
+#import "CTFeedbackViewController.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -56,7 +57,7 @@
 
 - (IBAction)tappedCancelButton:(UIButton *)sender
 {
-    
+    [[self navigationController] dismissViewControllerAnimated:YES completion:nil];
 }
 
 # pragma mark UIViewController
@@ -161,13 +162,18 @@
     }];
 }
 
-- (void)displayMessageWithTitle:(NSString*)title andBody:(NSString*)message
+- (void)displayMessageWithTitle:(NSString*)title andBody:(NSString*)message withHandler:(void (^)(UIAlertAction *action))handler
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
                                               style:UIAlertActionStyleDefault
-                                            handler:nil]];
+                                            handler:handler]];
     [[self navigationController] presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)displayMessageWithTitle:(NSString*)title andBody:(NSString*)message
+{
+    [self displayMessageWithTitle:title andBody:message withHandler:nil];
 }
 
 - (void)displayMessageWithBody:(NSString*)message
@@ -267,12 +273,44 @@
     return webView;
 }
 
+- (void)showFeedbackViewController:(NSString*)additionalContent
+{
+    CTFeedbackViewController *cc = [[CTFeedbackViewController alloc]
+                                    initWithTopics:@[
+                                                     NSLocalizedString(@"General Feedback", @"General Feedback"),
+                                                     NSLocalizedString(@"Feature Request", @"Feature Request"),
+                                                     NSLocalizedString(@"Bug/Issue", @"Bug/Issue")
+                                                     ]
+                                    localizedTopics:@[
+                                                      NSLocalizedString(@"General Feedback", @"General Feedback"),
+                                                      NSLocalizedString(@"Feature Request", @"Feature Request"),
+                                                      NSLocalizedString(@"Bug/Issue", @"Bug/Issue")
+                                                      ]];
+    [cc setUseHTML:YES];
+    [cc setToRecipients:@[@"info@sproutpic.com"]];
+    if (additionalContent && [additionalContent isKindOfClass:[NSString class]]) {
+        [cc setAdditionalDiagnosticContent:additionalContent];
+    }
+    [[self navigationController] pushViewController:cc animated:YES];
+}
+
 - (void)addSproutLogoTableFooter:(UITableView*)tableView
 {
     UIImageView *tableFooter = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo-green"]];
     [tableFooter setFrame:CGRectMake(0, 0, [[self view] bounds].size.width, 100)];
     [tableFooter setContentMode:UIViewContentModeCenter];
+    [tableFooter setUserInteractionEnabled:YES];
     [tableView setTableFooterView:tableFooter];
+}
+
+- (void)addFeedbackButtonToFooter:(UITableView*)tableView
+{
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn setFrame:CGRectMake([[tableView tableFooterView] bounds].size.width-50, 25, 50, 50)];
+    [btn setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin];
+    [btn setImage:[UIImage imageNamed:@"button-feedback"] forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(showFeedbackViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [[tableView tableFooterView] addSubview:btn];
 }
 
 - (UIView*)fakeTableFooter

@@ -28,7 +28,7 @@
                         <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="N7D-VB-gjf">
                             <rect key="frame" x="164.5" y="8" width="84" height="84"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" red="0.47058823529999999" green="0.72941176470000002" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="0.396078431372549" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="takePictureButtonTapped:" destination="-1" eventType="touchUpInside" id="bdw-k3-Ht4"/>
                             </connections>
@@ -37,7 +37,7 @@
                     <color key="backgroundColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
             </subviews>
-            <color key="backgroundColor" red="0.47058823529999999" green="0.72941176470000002" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.396078431372549" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="calibratedRGB"/>
             <point key="canvasLocation" x="-908" y="0.0"/>
         </view>
     </objects>

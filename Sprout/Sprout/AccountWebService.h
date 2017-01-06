@@ -30,4 +30,12 @@
                                  newPassword:(NSString*)passwordNew
                                 withCallback:(SproutServiceCallBack)callBack;
 
++ (AccountWebService*)getAccountInfoWithCallback:(SproutServiceCallBack)callBack;
+
++ (AccountWebService*)updateAccountInfo:(NSString*)email
+                                   name:(NSString*)name
+                                 gender:(NSString*)gender
+                           withCallback:(SproutServiceCallBack)callBack;
+
+
 @end

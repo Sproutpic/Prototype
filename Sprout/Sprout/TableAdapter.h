@@ -19,6 +19,7 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContect;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) UITableView *tableView;
+@property (strong, nonatomic) UIView *noDataView;
 
 typedef UITableViewCell* (^ ConfigureTableCellBlock)(UITableView* tableView, NSIndexPath* indexPath, NSManagedObject* managedObject);
 @property (strong, nonatomic) ConfigureTableCellBlock configureTableCellBlock;

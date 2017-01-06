@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSNumber *order;
 @property (nullable, nonatomic, copy) NSNumber *serverId;
 @property (nullable, nonatomic, copy) NSString *serverURL;
+@property (nullable, nonatomic, copy) NSNumber *markedForDelete;
+@property (nullable, nonatomic, copy) NSString *uuid;
+
 @property (nullable, nonatomic, retain) Project *project;
 
 @end

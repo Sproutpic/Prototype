@@ -98,7 +98,6 @@
         [[self contentView] setBackgroundColor:[UIUtils colorNavigationBar]];
         [[self layer] setMasksToBounds:YES];
         [[self layer] setCornerRadius:10.0];
-        [[self layer] setBackgroundColor:[[UIUtils colorNavigationBar] CGColor]];
     }
     
     if (![self deleteBtn]) {
@@ -133,6 +132,8 @@
         }
         [[self imageView] setImage:[[self timeline] imageOrTempImage]];
         [[self dateLbl] setText:[[self dateFormatter] stringFromDate:[[self timeline] created]]];
+        [[self contentView] setBackgroundColor:[UIColor clearColor]];
+        [[self layer] setBackgroundColor:[[UIColor clearColor] CGColor]];
         switch ([self state]) {
             case TimelineCellStateNormal: {
                 [[self deleteBtn] setHidden:YES];
@@ -148,12 +149,17 @@
             } break;
         }
     } else {
+        [[self contentView] setBackgroundColor:[UIUtils colorNavigationBar]];
+        [[self layer] setBackgroundColor:[[UIUtils colorNavigationBar] CGColor]];
         [[self imageView] setContentMode:UIViewContentModeCenter];
         [[self imageView] setImage:[UIImage imageNamed:@"button-plus"]];
         [[self deleteBtn] setHidden:YES];
         [[self dateLbl] setHidden:NO];
         [[self dateLbl] setText:NSLocalizedString(@"Add Photo", @"Add Photo")];
     }
+    
+    [[self imageView] setNeedsLayout];
+    [[self imageView] setNeedsDisplay];
     
 }
 

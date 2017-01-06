@@ -52,18 +52,30 @@ static SyncQueue *shared = nil;
     });
 }
 
+- (BOOL)isServiceTagQueued:(NSString*)serviceTag
+{
+    if (serviceTag) {
+        for (SproutWebService *ws in [self queue]) {
+            if ([[ws serviceTag] isEqualToString:serviceTag]) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
 # pragma mark Private
 
 - (void)processQueue
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (![self paused] && ![self currentService] && [[self queue] count]>0) {
-            [self setCurrentService:[[self queue]  firstObject]];
+            [self setCurrentService:[[self queue] firstObject]];
             [self setServiceCallBack:[[self currentService] serviceCallBack]];
             [[self currentService] setServiceCallBack:^(NSError *error, SproutWebService *service) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     SproutServiceCallBack callback = [self serviceCallBack];
-                    if ([self currentService]) {
+                    if ([self currentService] && [[self queue] count]>0) {
                         [[self queue] removeObject:[self currentService]];
                     }
                     [self setCurrentService:nil];

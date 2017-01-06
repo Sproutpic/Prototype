@@ -22,7 +22,9 @@
 
 - (UITableView*)createBaseTableView:(UITableViewStyle)tableStyle;
 - (UIWebView*)createBaseWebView;
+- (void)showFeedbackViewController:(NSString*)additionalContent;
 - (void)addSproutLogoTableFooter:(UITableView*)tableView;
+- (void)addFeedbackButtonToFooter:(UITableView*)tableView;
 - (UIView*)fakeTableFooter;
 
 @end
@@ -39,6 +41,7 @@ typedef void (^ CameraCallBack)(Project *project);
 
 - (void)showCameraForNewSprout:(Project*)project withCameraCallback:(CameraCallBack)completion;
 
+- (void)displayMessageWithTitle:(NSString*)title andBody:(NSString*)message withHandler:(void (^)(UIAlertAction *action))handler;
 - (void)displayMessageWithTitle:(NSString*)title andBody:(NSString*)message;
 - (void)displayMessageWithBody:(NSString*)message;
 - (void)displayUnderConstructionAlert;

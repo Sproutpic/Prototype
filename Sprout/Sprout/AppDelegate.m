@@ -21,6 +21,7 @@
 #import "ProjectDetailViewController.h"
 #import "AccountWebService.h"
 #import "JDMLocalNotification.h"
+#import "SettingsViewController.h"
 
 @interface AppDelegate () <SproutWebServiceAuthDelegate>
 
@@ -29,28 +30,6 @@
 @end
 
 @implementation AppDelegate
-
-# pragma mark Dev Testing
-
-- (void)devCreateLocalNotificationForTesting
-{
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    
-    Project *project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:@"Project"
-                                                                     forPredicate:nil
-                                                                         withSort:nil
-                                                                            inMOC:[[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"Test" andConcurrency:NSMainQueueConcurrencyType]];
-    if (project) {
-        [JDMLocalNotification sendAlertNowWithMessage:[NSString stringWithFormat:NSLocalizedString(@"It's time to take a photo for your %@ project",
-                                                                                                   @"It's time to take a photo for your %@ project"),
-                                                       ([project title]) ? [project title] : NSLocalizedString(@"SproutPic", @"SproutPic")]
-                                             andSound:JDM_Notification_Sound_Default
-                                        andBadgeCount:NO_BADGE_UPDATE
-                                               onDate:nil
-                                       repeatInterval:NSCalendarUnitMinute
-                                         withUserInfo:@{ NOTIFICATION_KEY_PROJECT_UUID : [project uuid] }];
-    }
-}
 
 # pragma mark Private
 
@@ -94,30 +73,35 @@
     [[UITabBar appearance] setTranslucent:NO];
 }
 
+- (UINavigationController*)findNavigationController
+{
+    UINavigationController *nvc = nil;
+    UIViewController *vc = [[self window] rootViewController];
+    if ([vc isKindOfClass:[UITabBarController class]]) {
+        UITabBarController *tvc = (UITabBarController*)vc;
+        vc = [tvc selectedViewController];
+        if ([vc isKindOfClass:[UINavigationController class]]) {
+            nvc = (UINavigationController*)vc;
+        } else {
+            nvc = [vc navigationController];
+        }
+    }
+    if (!nvc) {
+        nvc = [vc navigationController];
+    }
+    return nvc;
+}
+
 - (void)gotoProjectDetailForNotification:(UILocalNotification *)notification withApplication:(UIApplication *)application
 {
     NSDictionary *userInfo = [notification userInfo];
     if (userInfo && [userInfo objectForKey:NOTIFICATION_KEY_PROJECT_UUID]) {
         NSString *uuid = [userInfo objectForKey:NOTIFICATION_KEY_PROJECT_UUID];
-        Project *project = [Project findByUUID:uuid withMOC:[[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"Test" andConcurrency:NSMainQueueConcurrencyType]];
+        Project *project = [Project findByUUID:uuid withMOC:[[CoreDataAccessKit sharedInstance] managedObjectContext]];
         if (project) {
             ProjectDetailViewController *pvc = [[ProjectDetailViewController alloc] init];
             [pvc setProject:project];
-            UINavigationController *nvc = nil;
-            UIViewController *vc = [[application keyWindow] rootViewController];
-            if ([vc isKindOfClass:[UITabBarController class]]) {
-                UITabBarController *tvc = (UITabBarController*)vc;
-                vc = [tvc selectedViewController];
-                if ([vc isKindOfClass:[UINavigationController class]]) {
-                    nvc = (UINavigationController*)vc;
-                } else {
-                    nvc = [vc navigationController];
-                }
-            }
-            if (!nvc) {
-                nvc = [vc navigationController];
-            }
-            
+            UINavigationController *nvc = [self findNavigationController];
             // If we have an nvc, go to the root and then show the project details...
             if (nvc) {
                 [CATransaction begin];
@@ -135,14 +119,29 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Set the sync flag
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_SHOULD_SYNC_BOOL];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    // Create timer to reset the sync value every X number of minutes (3 minutes)
+    [NSTimer scheduledTimerWithTimeInterval:(60*3) repeats:YES block:^(NSTimer * _Nonnull timer) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_SHOULD_SYNC_BOOL];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }];
+    
+    // Setup Crashlytics and Fabrics
     [Fabric with:@[[Crashlytics class],[Answers class],[Twitter class]]];
     [self configureGlobalTheme];
-    [self createDemoData];
+    //[self createDemoData]; // No need for demo data anymore...
     [self setMainWithControllers];
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     [application setApplicationIconBadgeNumber:0];
     
     [[AFNetworkActivityLogger sharedLogger] startLogging];
+    NSArray *loggers = [[[AFNetworkActivityLogger sharedLogger] loggers] allObjects];
+    for (id<AFNetworkActivityLoggerProtocol> logger in loggers) {
+        logger.level = AFLoggerLevelDebug;
+    }
     
     // To see if the app was open by tapping a local notification
     if ([launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey]) {
@@ -159,7 +158,9 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    //[self devCreateLocalNotificationForTesting];
+    // Set the sync flag (When placed in background)
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_SHOULD_SYNC_BOOL];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     self.bgTask = [application beginBackgroundTaskWithName:@"BackgroundTasks" expirationHandler:^{
         // Clean up any unfinished task business by marking where you
@@ -209,7 +210,7 @@
     }
 }
 
-- (void)authenticationNeeded:(void (^)(void))completion
+- (void)authenticationNeeded:(void (^)(NSError *error))completion
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Sign In", @"Sign In")
                                                                    message:NSLocalizedString(@"You need to Sign-In to use SproutPic",
@@ -219,13 +220,12 @@
         [textField setPlaceholder:NSLocalizedString(@"Username/Email", @"Username/Email")];
         [textField setClearButtonMode:UITextFieldViewModeAlways];
         [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
-        [textField setTag:919];
     }];
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         [textField setPlaceholder:NSLocalizedString(@"Password", @"Password")];
         [textField setClearButtonMode:UITextFieldViewModeAlways];
+        [textField setSecureTextEntry:YES];
         [textField addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
-        [textField setTag:616];
     }];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Sign In", @"Sign In")
                                               style:UIAlertActionStyleDefault
@@ -249,15 +249,25 @@
                                                           [[[self window] rootViewController] presentViewController:alert animated:YES completion:nil];
                                                       } else {
                                                           // We logged in, so not lets finish out this completion block.
-                                                          completion();
+                                                          completion(nil);
                                                       }
                                                   }] start];
                                             }]];
     [[[alert actions] objectAtIndex:0] setEnabled:NO];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Create an Account", @"Create an Account")
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                completion([NSError errorWithDomain:@"Don't Continue" code:0 userInfo:nil]);
+                                                SettingsViewController *vc = [SettingsViewController signUpViewController];
+                                                UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+                                                [[self findNavigationController] presentViewController:nvc
+                                                                                              animated:YES
+                                                                                            completion:nil];
+                                            }]];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                               style:UIAlertActionStyleCancel
                                             handler:^(UIAlertAction * _Nonnull action) {
-                                                completion();
+                                                completion([NSError errorWithDomain:@"Don't Continue" code:0 userInfo:nil]);
                                             }]];
     [[[self window] rootViewController] presentViewController:alert animated:YES completion:nil];
 }

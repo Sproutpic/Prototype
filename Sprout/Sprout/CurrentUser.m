@@ -25,8 +25,7 @@
 
 + (BOOL)isLoggedIn
 {
-    NSDictionary *user = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY];
-    return (user) ? YES : NO;
+    return ([CurrentUser getUser]) ? YES : NO;
 }
 
 + (void)setUser:(NSDictionary*)user
@@ -40,22 +39,33 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
++ (NSDictionary*)getUser
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY];
+}
+
 + (NSString*)fullName
 {
-    NSString *name = [[[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY] objectForKey:CURRENT_USER_NAME_KEY];
+    NSString *name = [[CurrentUser getUser] objectForKey:CURRENT_USER_NAME_KEY];
     return (!name) ? @"" : name;
 }
 
 + (NSString*)emailAddress
 {
-    NSString *email = [[[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY] objectForKey:CURRENT_USER_EMAIL_KEY];
+    NSString *email = [[CurrentUser getUser] objectForKey:CURRENT_USER_EMAIL_KEY];
+    return (!email) ? @"" : email;
+}
+
++ (NSString*)gender
+{
+    NSString *email = [[CurrentUser getUser] objectForKey:CURRENT_USER_GENDER_KEY];
     return (!email) ? @"" : email;
 }
 
 + (NSString*)authToken
 {
-    NSString *token = [[[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY] objectForKey:CURRENT_USER_ACCESS_TOKEN];
-    NSString *type = [[[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_USER_USER_KEY] objectForKey:CURRENT_USER_TOKEN_TYPE];
+    NSString *token = [[CurrentUser getUser] objectForKey:CURRENT_USER_ACCESS_TOKEN];
+    NSString *type = [[CurrentUser getUser] objectForKey:CURRENT_USER_TOKEN_TYPE];
     return (!token && !type) ? @"" : [NSString stringWithFormat:@"%@ %@",type,token];
 }
 

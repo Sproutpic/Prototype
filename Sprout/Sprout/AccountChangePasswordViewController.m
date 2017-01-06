@@ -91,10 +91,12 @@
               [self displayMessageWithTitle:NSLocalizedString(@"Problem", @"Problem")
                                     andBody:[error localizedDescription]];
           } else {
-              [[self navigationController] popViewControllerAnimated:YES];
               [self displayMessageWithTitle:NSLocalizedString(@"Success", @"Success")
                                     andBody:NSLocalizedString(@"Your password has been changed!",
-                                                              @"Your password has been changed!")];
+                                                              @"Your password has been changed!")
+                                withHandler:^(UIAlertAction *action) {
+                                    [[self navigationController] popViewControllerAnimated:YES];
+                                }];
           }
       }] start];
 }

@@ -14,6 +14,8 @@
 
 #define OAUTH_AUTHORIZATION_KEY @"Authorization"
 
+#define HEADER_CONTENT_TYPE_STR @"Content-Type"
+
 static NSInteger serviceCallCount = 0;
 static NSDateFormatter *df;
 
@@ -62,6 +64,14 @@ static NSDateFormatter *df;
     return _parameters;
 }
 
+- (NSDictionary *)headers
+{
+    if (!_headers) {
+        _headers = @{};
+    }
+    return _headers;
+}
+
 # pragma mark SproutWebService
 
 - (void)start
@@ -74,36 +84,100 @@ static NSDateFormatter *df;
         return;
     }
     
+    // Check to see if this is a fake service
+    if ([self fakeService]) {
+        [self completedSuccess:nil];
+        [self showStatusBarSpinner:NO];
+        return;
+    }
+    
     // Actually make the service call...
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager setRequestSerializer:[AFJSONRequestSerializer serializer]];
+    switch ([self contentType]) {
+        case ContentTypeRaw:
+            [[manager requestSerializer] setValue:@"text/plain" forHTTPHeaderField:HEADER_CONTENT_TYPE_STR];
+            break;
+        case ContentTypeBinary:
+            [[manager requestSerializer] setValue:@"application/octet-stream" forHTTPHeaderField:HEADER_CONTENT_TYPE_STR];
+            break;
+        case ContentTypeFormData:
+            [[manager requestSerializer] setValue:@"multipart/form-data" forHTTPHeaderField:HEADER_CONTENT_TYPE_STR];
+            break;
+        case ContentTypeFormUrlEncoded:
+            [[manager requestSerializer] setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:HEADER_CONTENT_TYPE_STR];
+            break;
+        default:
+            [[manager requestSerializer] setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:HEADER_CONTENT_TYPE_STR];
+            break;
+    }
+    
     // Check for oauth and add authorization to header parameters
     if ([self oauthEnabled]) {
         NSString *token = [CurrentUser authToken];
         if (token) {
-            [[manager requestSerializer] setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-            [[manager requestSerializer] setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            //[[manager requestSerializer] setValue:@"application/json" forHTTPHeaderField:@"Accept"];
             [[manager requestSerializer] setValue:token forHTTPHeaderField:OAUTH_AUTHORIZATION_KEY];
         }
     }
-    [[manager requestSerializer] setCachePolicy:NSURLRequestReloadIgnoringCacheData];
-    [manager setResponseSerializer:[AFJSONResponseSerializer serializer]];
-    [manager POST:[self url]
-       parameters:[self parameters]
-         progress:^(NSProgress * _Nonnull downloadProgress) {
-             NSLog(@"Progress - %0.0f",[downloadProgress fractionCompleted]);
-         }
-          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-              [self completedSuccess:responseObject];
-              [self showStatusBarSpinner:NO];
-          }
-          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-              [self completedFailure:error];
-              [self showStatusBarSpinner:NO];
-          }];
     
-    // Debug
-    NSLog(@"Params - %@",[self parameters]);
+    // Check for custom headers
+    for (NSString *key in [[self headers] allKeys]) {
+        NSString *value = [[self headers] objectForKey:key];
+        if ([value isKindOfClass:[NSNumber class]]) {
+            value = [NSString stringWithFormat:@"%ld",[(NSNumber*)value longValue]];
+        }
+        if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]]) {
+            [[manager requestSerializer] setValue:value forHTTPHeaderField:(NSString*)key];
+        }
+    }
+    [[manager requestSerializer] setCachePolicy:NSURLRequestReloadIgnoringCacheData];
+    [[manager requestSerializer] setStringEncoding:NSASCIIStringEncoding];
+    
+    // Set response serializer
+    [manager setResponseSerializer:[AFJSONResponseSerializer serializer]];
+    [[manager requestSerializer] setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    if ([self contentType]==ContentTypeFormData) {
+        NSMutableDictionary *formParameters = [@{} mutableCopy];
+        NSMutableDictionary *newParameters = [@{} mutableCopy];
+        for (NSString *key in [[self parameters] allKeys]) {
+            NSObject *obj = [[self parameters] valueForKey:key];
+            if ([obj isKindOfClass:[NSData class]]) {
+                [formParameters setObject:obj forKey:key];
+            } else {
+                [newParameters setObject:obj forKey:key];
+            }
+        }
+        [manager POST:[self url]
+           parameters:newParameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+               for (NSString *key in [formParameters allKeys]) {
+                   NSData *data = [formParameters valueForKey:key];
+                   [formData appendPartWithFileData:data name:key fileName:[NSString stringWithFormat:@"timeline-%@.png",[NSUUID UUID]] mimeType:@"image/png"];
+               }
+           } progress:^(NSProgress * _Nonnull uploadProgress) {
+               NSLog(@"Uploaded Progress - %0.2f",[uploadProgress fractionCompleted]);
+           } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+               [self completedSuccess:responseObject];
+               [self showStatusBarSpinner:NO];
+           } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+               [self completedFailure:error];
+               [self showStatusBarSpinner:NO];
+           }];
+        
+    } else {
+        
+        [manager POST:[self url]
+           parameters:[self parameters] progress:^(NSProgress * _Nonnull uploadProgress) {
+               NSLog(@"Upload Progress - %0.2f",[uploadProgress fractionCompleted]);
+           } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+               [self completedSuccess:responseObject];
+               [self showStatusBarSpinner:NO];
+           } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+               [self completedFailure:error];
+               [self showStatusBarSpinner:NO];
+           }];
+        
+    }
 }
 
 - (NSString*)encode64String:(NSString*)value
@@ -129,17 +203,22 @@ static NSDateFormatter *df;
             NSString *local = [[error userInfo] objectForKey:@"NSLocalizedDescription"];
             if ([local containsString:@"Request failed: unauthorized (401)"]) {
                 id<SproutWebServiceAuthDelegate> delegate = (id<SproutWebServiceAuthDelegate>)[[UIApplication sharedApplication] delegate];
-                [delegate authenticationNeeded:^{
-                    NSLog(@"Call service again...");
-                    //[self start];
+                [delegate authenticationNeeded:^(NSError *error) {
+                    if (error) {
+                        if ([self serviceCallBack]) {
+                            [self serviceCallBack](error, self);
+                        }
+                    } else {
+                        [self start];
+                    }
                 }];
-                //return;
+                return;
             }
         }
     }
     
     if ([self serviceCallBack]) {
-        _serviceCallBack(error, self);
+        [self serviceCallBack](error, self);
     }
 }
 
@@ -149,8 +228,8 @@ static NSDateFormatter *df;
 {
     if (df==nil) {
         df = [[NSDateFormatter alloc] init];
-        [df setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"PST"]]; // This should be using UTC
-        [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"]; // Ex: 2016-11-14T07:59:31.037
+        [df setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]]; // This should be using UTC
+        [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SS'Z'"]; // Ex: 2016-11-14T07:59:31.037
     }
     return df;
 }

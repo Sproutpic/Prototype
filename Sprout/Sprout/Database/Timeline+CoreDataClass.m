@@ -10,6 +10,8 @@
 #import "Project+CoreDataClass.h"
 #import "CoreDataAccessKit.h"
 #import "DataObjects.h"
+#import "TimelineWebService.h"
+#import "SyncQueue.h"
 
 #define NORMAL_SIZE     450.0
 #define THUMBNAIL_SIZE  150.0
@@ -100,6 +102,19 @@
     return timeline;
 }
 
++ (Timeline*)findByUUID:(NSString*)uuid
+                withMOC:(NSManagedObjectContext*)moc
+{
+    Timeline *timeline = nil;
+    if (uuid && moc) {
+        timeline = (Timeline*)[[CoreDataAccessKit sharedInstance] findAnObject:NSStringFromClass([Timeline class])
+                                                                  forPredicate:[NSPredicate predicateWithFormat:@"uuid = %@",uuid]
+                                                                      withSort:nil
+                                                                         inMOC:moc];
+    }
+    return timeline;
+}
+
 - (NSString*)saveImage:(UIImage*)img
 {
     if (img) {
@@ -116,32 +131,63 @@
     return [self saveImage:img withName:[NSString stringWithFormat:@"timeline-sm-%@.png",[[NSUUID UUID] UUIDString]]];
 }
 
+- (void)loadImageRemotely
+{
+    if ([self serverURL] && ![[SyncQueue manager] isServiceTagQueued:[self uuid]]) {
+        [[SyncQueue manager] addService:[TimelineWebService loadTimelineImage:self withCallback:nil]];
+    }
+    
+//    if ([self serverURL]) {
+//        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+//            UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[self serverURL]]]];
+//            if (img) {
+//                NSString *imageName = [self saveImage:img];
+//                NSString *thumbnailImgName = [self saveThumbnailImage:img];
+//                if (imageName && thumbnailImgName) {
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        NSDate *now = [NSDate date];
+//                        [self setLocalURL:imageName];
+//                        [self setLocalThumbnailURL:thumbnailImgName];
+//                        [self setLastModified:now];
+//                        [[self project] setLastModified:now];
+//                        [self save];
+//                        NSLog(@"Saved new image - %@",imageName);
+//                    });
+//                } else {
+//                    NSLog(@"Issue trying to save image");
+//                }
+//            }
+//        });
+//    }
+}
+
+- (NSURL*)URLToLocalImage
+{
+    NSURL *url = nil;
+    NSString *localPath = [self localPathToImage];
+    if (localPath) {
+        url = [NSURL URLWithString:localPath];
+    }
+    return url;
+}
+
+
+- (NSData*)imageData
+{
+    NSString *localFile = [self localPathToImage];
+    if (localFile) {
+        return [NSData dataWithContentsOfFile:localFile];
+    }
+    return nil;
+}
+
 - (UIImage*)image
 {
     NSString *localFile = [self localPathToImage];
     if (localFile) {
         return [UIImage imageWithContentsOfFile:localFile];
-    } else if ([self serverURL]) {
-        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-            UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[self serverURL]]]];
-            if (img) {
-                NSString *imageName = [self saveImage:img];
-                NSString *thumbnailImgName = [self saveThumbnailImage:img];
-                if (imageName && thumbnailImgName) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSDate *now = [NSDate date];
-                        [self setLocalURL:imageName];
-                        [self setLocalThumbnailURL:thumbnailImgName];
-                        [self setLastModified:now];
-                        [[self project] setLastModified:now];
-                        [self save];
-                        NSLog(@"Saved new image - %@",imageName);
-                    });
-                } else {
-                    NSLog(@"Issue trying to save image");
-                }
-            }
-        });
+    } else {
+        [self loadImageRemotely];
     }
     return nil;
 }
@@ -168,17 +214,7 @@
     return (image) ? image : [self tempImage];
 }
 
-# pragma mark NSManagedObject
-
-- (void)awakeFromInsert
-{
-    [super awakeFromInsert];
-    NSDate *now = [NSDate date];
-    [self setCreated:now];
-    [self setLastModified:now];
-}
-
-- (void)prepareForDeletion
+- (void)deleteLocalImages
 {
     if ([self localURL]) {
         NSString *localURL = [self localPathToImage];
@@ -191,6 +227,36 @@
             [[NSFileManager defaultManager] removeItemAtPath:localURL error:&error];
         }
     }
+}
+
+- (NSNumber*)serverPictureOrder
+{
+    return @([[[self project] timelinesArraySortedOldestToNewest] indexOfObject:self]+1);
+}
+
+# pragma mark NSManagedObject
+
+- (void)awakeFromFetch
+{
+    [super awakeFromFetch];
+    if (![self uuid]) {
+        [self setUuid:[[NSUUID UUID] UUIDString]];
+        [self save];
+    }
+}
+
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    NSDate *now = [NSDate date];
+    [self setCreated:now];
+    [self setLastModified:now];
+    [self setUuid:[[NSUUID UUID] UUIDString]];
+}
+
+- (void)prepareForDeletion
+{
+    [self deleteLocalImages];
 }
 
 @end

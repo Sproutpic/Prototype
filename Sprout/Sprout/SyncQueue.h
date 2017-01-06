@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SyncAllData.h"
 
 @class SproutWebService;
 
@@ -16,5 +17,8 @@
 
 - (void)addService:(SproutWebService*)service;
 - (void)emptyQueue;
+
+- (BOOL)isServiceTagQueued:(NSString*)serviceTag;
+
 
 @end

@@ -12,4 +12,6 @@
     
 }
 
++ (AccountInformationViewController*)signUpViewController;
+
 @end

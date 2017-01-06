@@ -135,6 +135,11 @@
 - (IBAction)tappedCloseButton:(UIButton *)sender
 {
     [UIUtils hapticFeedback];
+    // Check to see if we should delete and save the project (user canceled selection)
+    if ([self project] && [[[self project] serverId] integerValue]<=0 && [[[self project] timelines] count]<=0) {
+        [[self project] deleteAndSave];
+    }
+    // Now we can dismiss the view...
     [[self navigationController] dismissViewControllerAnimated:YES completion:^{
         if (_cameraCallBack) _cameraCallBack([self project]);
     }];
@@ -275,10 +280,16 @@
     }
     
     UIImage *img = nil;
-    NSArray *timelines = [[self project] timelinesArraySorted];
-    if ([timelines count]>0) {
-        Timeline *timeline = [timelines objectAtIndex:[timelines count]-1];
-        img = [timeline imageThumbnail];
+    if ([[[self project] useShadow] boolValue]) {
+        if ([[[self project] frontCameraEnabled] boolValue]) {
+            img = [UIImage imageNamed:@"overlay-silhouette"];
+        } else {
+            NSArray *timelines = [[self project] timelinesArraySorted];
+            if ([timelines count]>0) {
+                Timeline *timeline = [timelines objectAtIndex:[timelines count]-1];
+                img = [timeline imageThumbnail];
+            }
+        }
     }
     
     UIView *ol = [[UIView alloc] initWithFrame:[[self view] bounds]];
@@ -289,7 +300,7 @@
     
     UIImageView *imgView = [[UIImageView alloc] initWithFrame:frame];
     [imgView setImage:img];
-    [imgView setAlpha:0.3];
+    [imgView setAlpha:0.35];
     [imgView setClipsToBounds:YES];
     [imgView setUserInteractionEnabled:NO];
     [imgView setContentMode:UIViewContentModeScaleAspectFill];

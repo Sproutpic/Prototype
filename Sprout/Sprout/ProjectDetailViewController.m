@@ -53,6 +53,7 @@ typedef enum ProjectRowOrder {
     PO_LastUpdate,
     PO_SocialButtons,
     PO_DeleteButton,
+    PO_FeedbackButton,
     PO_SyncButton
 } ProjectRowOrder;
 
@@ -131,7 +132,7 @@ typedef enum RowDataOrder {
             [[tCell slider] setValue:[[[self project] slideTime] floatValue]];
             [tCell setSliderCallback:^(UISlider *slider, UITableViewCell *cell){
                 if (slider) {
-                    [[self project] setSlideTime:@([slider value])];
+                    [[self project] setSlideTime:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%0.5f",[slider value]]]];
                     [[self project] setLastModified:[NSDate date]];
                     [[self project] save];
                     SliderTableViewCell *tCell = (SliderTableViewCell*)cell;
@@ -258,6 +259,7 @@ typedef enum RowDataOrder {
                                                                     handler:
                                               ^(UIAlertAction * _Nonnull action) {
                                                   [[self project] setSproutSocial:@(NO)];
+                                                  [[self project] setLastModified:[NSDate date]];
                                                   [[self project] save];
                                                   [[self tableView] reloadData];
                                               }]];
@@ -266,6 +268,7 @@ typedef enum RowDataOrder {
                                                                     handler:
                                               ^(UIAlertAction * _Nonnull action) {
                                                   [[self project] setSproutSocial:@(YES)];
+                                                  [[self project] setLastModified:[NSDate date]];
                                                   [[self project] save];
                                                   [[self tableView] reloadData];
                                               }]];
@@ -302,6 +305,15 @@ typedef enum RowDataOrder {
             }];
             [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         } break;
+        case PO_FeedbackButton: {
+            ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
+            [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
+            [tCell setButtonCallBack:^(UIButton *button){
+                long projID = [[[self project] serverId] longValue];
+                [self showFeedbackViewController:[NSString stringWithFormat:@"Project ID: %ld - %@",projID,[[self project] title]]];
+            }];
+            [tCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        } break;
         case PO_SyncButton: {
             ButtonTableViewCell *tCell = (ButtonTableViewCell*)cell;
             [[tCell button] setTitle:NSLocalizedString([rowData objectAtIndex:RD_Title], [rowData objectAtIndex:RD_Title]) forState:UIControlStateNormal];
@@ -325,12 +337,8 @@ typedef enum RowDataOrder {
 - (void)setProject:(Project *)project
 {
     if (project) {
-        [self setMoc:[[CoreDataAccessKit sharedInstance] createNewManagedObjectContextwithName:@"EditProject"
-                                                                                andConcurrency:NSMainQueueConcurrencyType]];
-        _project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:NSStringFromClass([Project class])
-                                                                 forPredicate:[NSPredicate predicateWithFormat:@"self = %@",project]
-                                                                     withSort:nil
-                                                                        inMOC:[self moc]];
+        [self setMoc:[project managedObjectContext]];
+        _project = project;
     } else {
         _project = nil;
         [self setMoc:nil];
@@ -357,8 +365,9 @@ typedef enum RowDataOrder {
        @[@(PO_CreateDate),@"Created",@"UITableViewCellStyleValue1",@"",@(44)],
        //@[@(PO_LastUpdate),@"Last Updated",@"UITableViewCellStyleValue1",@"",@(44)],
        @[@(PO_SocialButtons),@"Socail Media",@"SocialMediaButtonsTableViewCell",@"SocialMediaButtonsTableViewCell",@(54)],
+       @[@(PO_FeedbackButton),@"Send Us Feedback",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
        @[@(PO_DeleteButton),@"Delete Sprout",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
-       @[@(PO_SyncButton),@"Sync Project",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
+       //@[@(PO_SyncButton),@"Sync Project",@"ButtonTableViewCell",@"ButtonTableViewCell",@(54)],
        ]];
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"Project Details", @"Project Details")];
@@ -386,6 +395,14 @@ typedef enum RowDataOrder {
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    if (!([[self project] isDeleted] || [[[self project] markedForDelete] boolValue]) && [[self project] showProjectBeSynced]) {
+        [[SyncQueue manager] addService:[ProjectWebService syncProject:[self project] withCallback:nil]];
+    }
+}
+
 # pragma mark BaseViewControllerDelegate
 
 - (void)setController
@@ -395,6 +412,7 @@ typedef enum RowDataOrder {
     [[self tableView] setKeyboardDismissMode:UIScrollViewKeyboardDismissModeOnDrag];
     [[self tableView] setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self addSproutLogoTableFooter:[self tableView]];
+    //[self addFeedbackButtonToFooter:[self tableView]];
     [[self view] addSubview:[self tableView]];
 }
 
@@ -522,6 +540,5 @@ typedef enum RowDataOrder {
     [[self project] setLastModified:[NSDate date]];
     [[self project] save];
 }
-
 
 @end

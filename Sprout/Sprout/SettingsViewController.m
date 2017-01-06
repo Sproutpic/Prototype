@@ -9,11 +9,14 @@
 #import "SettingsViewController.h"
 #import "UIUtils.h"
 #import "OnboardingManager.h"
+#import "CTFeedbackViewController.h"
+#import "AccountInformationViewController.h"
 
 @interface SettingsViewController () <UITableViewDelegate, UITableViewDataSource>
 
-@property (strong, nonatomic) NSArray *rows;
+@property (strong, nonatomic) NSArray *tableData;
 @property (strong, nonatomic) UITableView *tableView;
+@property (nonatomic) BOOL showSignIn;
 
 @end
 
@@ -27,34 +30,41 @@
     [[self navigationController] dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (NSArray*)currentRows
+- (NSArray*)rowDataAtIndex:(NSIndexPath*)indexPath
 {
-    NSMutableArray *temp = [@[] mutableCopy];
-    for (NSArray *row in [self rows]) {
-        if ([CurrentUser isLoggedIn] || ![[row objectAtIndex:0] boolValue]) {
-            [temp addObject:row];
-        }
-    }
-    return temp;
+    return [[[[self tableData] objectAtIndex:[indexPath section]] objectAtIndex:1] objectAtIndex:[indexPath row]];
 }
 
-- (NSArray*)rowDataAtIndex:(NSInteger)row
+# pragma mark SettingsViewController
+
++ (SettingsViewController*)signUpViewController
 {
-    return [[self currentRows] objectAtIndex:row];
+    SettingsViewController *vc = [[SettingsViewController alloc] init];
+    [vc setShowSignIn:YES];
+    return vc;
 }
 
 # pragma mark UIViewController
 
 - (void)viewDidLoad
 {
-    [self setRows:
+    [self setTableData:
      @[
-       @[@(NO),@"About Sproutpic",@"AboutViewController",@(NO)],
-       @[@(NO),@"FAQ",@"FAQViewController",@(NO)],
-       @[@(NO),@"Account Information",@"AccountInformationViewController",@(YES)],
-       @[@(YES),@"Change Password",@"AccountChangePasswordViewController",@(YES)],
-       @[@(NO),@"Welcome - Onboarding",@"OnboardingManager",@(NO)],
-       ]];
+       @[@"",
+         @[
+             @[@"About Sproutpic",@"AboutViewController",@(NO)],
+             @[@"FAQ",@"FAQViewController",@(NO)],
+             @[@"Account Information",@"AccountInformationViewController",@(YES)],
+             @[@"Welcome - Onboarding",@"OnboardingManager",@(NO)],
+             ]
+         ],
+       @[@"",
+         @[
+             @[@"Send Us Feedback",@"CTFeedbackViewController",@(NO)]
+             ]
+         ]
+       ]
+     ];
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"Settings", @"Settings")];
 }
@@ -64,6 +74,10 @@
     [super viewWillAppear:animated];
     [[self tableView] setFrame:[[self view] bounds]];
     [[self tableView] reloadData];
+    if ([self showSignIn]) {
+        [self setShowSignIn:NO];
+        [[self navigationController] pushViewController:[AccountInformationViewController signUpViewController] animated:NO];
+    }
 }
 
 - (UITabBarItem*)tabBarItem
@@ -97,27 +111,50 @@
 {
     [tv deselectRowAtIndexPath:indexPath animated:YES];
     [UIUtils hapticFeedback];
-    NSArray *dataRow = [self rowDataAtIndex:indexPath.row];
-    if ([[dataRow objectAtIndex:2] isEqualToString:@"OnboardingManager"]) {
+    NSArray *dataRow = [self rowDataAtIndex:indexPath];
+    if ([[dataRow objectAtIndex:1] isEqualToString:@"OnboardingManager"]) {
         [OnboardingManager showOnboardingOn:[self navigationController] forceShow:YES];
     } else {
         UIViewController *vc = nil;
-        if ([[dataRow objectAtIndex:3] boolValue]) {
-            vc = [[NSClassFromString([dataRow objectAtIndex:2]) alloc] initWithNibName:[dataRow objectAtIndex:2] bundle:nil];
+        if ([[dataRow objectAtIndex:2] boolValue]) {
+            vc = [[NSClassFromString([dataRow objectAtIndex:1]) alloc] initWithNibName:[dataRow objectAtIndex:1] bundle:nil];
         } else {
-            vc = [[NSClassFromString([dataRow objectAtIndex:2]) alloc] init];
+            vc = [[NSClassFromString([dataRow objectAtIndex:1]) alloc] init];
+        }
+        if ([[dataRow objectAtIndex:1] isEqualToString:@"CTFeedbackViewController"]) {
+            CTFeedbackViewController *cc = [[CTFeedbackViewController alloc]
+                                            initWithTopics:@[
+                                                             NSLocalizedString(@"General Feedback", @"General Feedback"),
+                                                             NSLocalizedString(@"Feature Request", @"Feature Request"),
+                                                             NSLocalizedString(@"Bug/Issue", @"Bug/Issue")
+                                                             ]
+                                            localizedTopics:@[
+                                                              NSLocalizedString(@"General Feedback", @"General Feedback"),
+                                                              NSLocalizedString(@"Feature Request", @"Feature Request"),
+                                                              NSLocalizedString(@"Bug/Issue", @"Bug/Issue")
+                                                              ]];
+            
+            [cc setUseHTML:YES];
+            [cc setToRecipients:@[@"info@sproutpic.com"]];
+            vc = cc;
         }
         if (vc) {
             [[self navigationController] pushViewController:vc animated:YES];
         }
     }
+
 }
 
 # pragma mark UITableViewDataSource
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return [[self tableData] count];
+}
+
 - (NSInteger)tableView:(UITableView *)tv numberOfRowsInSection:(NSInteger)section
 {
-    return [[self currentRows] count];
+    return [[[[self tableData] objectAtIndex:section] objectAtIndex:1] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -128,8 +165,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseCell];
         [cell setAccessoryView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow-right"]]];
     }
-    NSArray *dataRow = [self rowDataAtIndex:[indexPath row]];
-    [[cell textLabel] setText:[dataRow objectAtIndex:1]];
+    NSArray *dataRow = [self rowDataAtIndex:indexPath];
+    [[cell textLabel] setText:[dataRow objectAtIndex:0]];
     return cell;
 }
 

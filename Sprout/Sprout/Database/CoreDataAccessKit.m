@@ -15,6 +15,10 @@
 
 static CoreDataAccessKit *shared = nil;
 
+@interface CoreDataAccessKit ()
+@property (strong, nonatomic) NSManagedObjectContext *privateManagedObjectContext; // Only to be used for major data migrations.
+@end
+
 @implementation CoreDataAccessKit
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -62,13 +66,22 @@ static CoreDataAccessKit *shared = nil;
         }
         NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
         if (coordinator != nil) {
+            NSManagedObjectContext *pmoc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+            [pmoc setPersistentStoreCoordinator:coordinator];
+            [pmoc setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
+            [pmoc setAutomaticallyMergesChangesFromParent:YES];
+            [pmoc setName:@"PrivateMainContext"];
+            _privateManagedObjectContext = pmoc;
+            
             NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-            [moc setPersistentStoreCoordinator:coordinator];
             [moc setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
-            [moc setAutomaticallyMergesChangesFromParent:YES];
-            [moc setUndoManager:nil];
+            [moc setParentContext:_privateManagedObjectContext];
             [moc setName:@"MainContext"];
             _managedObjectContext = moc;
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(mergeChangesWithParent:)
+                                                         name:NSManagedObjectContextDidSaveNotification
+                                                       object:moc];
         }
         return _managedObjectContext;
     }
@@ -128,7 +141,6 @@ static CoreDataAccessKit *shared = nil;
             moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:concurrency];
             [moc setMergePolicy:NSMergeByPropertyStoreTrumpMergePolicy];
             [moc setParentContext:[self managedObjectContext]];
-            [moc setUndoManager:nil];
             if (name) [moc setName:name];
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(mergeChangesWithParent:)
@@ -175,41 +187,21 @@ static CoreDataAccessKit *shared = nil;
 
 - (void)mergeChangesWithParent:(NSNotification *)notification
 {
-    //NSLog(@"--[ NOTIFATION START ]-----------------------------------------------------");
     if ([[notification object] isKindOfClass:[NSManagedObjectContext class]]) {
         NSManagedObjectContext *moc = (NSManagedObjectContext*)[notification object];
-        NSManagedObjectContext *parent = moc.parentContext;
-        [moc performBlockAndWait:^{
-            NSError *error = nil;
-            //NSLog(@"--[ %@ ]----------------------------------------------------------",moc.name);
-            if ([moc hasChanges]) {
-                if (![parent save:&error]) {
-                    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-                    abort();
+        if (moc) {
+            NSManagedObjectContext *parent = moc.parentContext;
+            [parent performBlockAndWait:^{
+                NSError *error = nil;
+                if ([parent hasChanges]) {
+                    if (![parent save:&error]) {
+                        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                        abort();
+                    }
                 }
-                //NSLog(@"NSManagedObjectContext Name: %@ - Saved",[moc name]);
-            } else {
-                //NSLog(@"NSManagedObjectContext Name: %@ - No changes",[moc name]);
-            }
-            //NSLog(@"---------------------------------------------------------------------------");
-        }];
-        [parent performBlockAndWait:^{
-            NSError *error = nil;
-            //NSLog(@"--[ %@ ]----------------------------------------------------------",parent.name);
-            if ([parent hasChanges]) {
-                if (![parent save:&error]) {
-                    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-                    abort();
-                }
-                //NSLog(@"NSManagedObjectContext Name: %@ - Saved",[parent name]);
-            } else {
-                //NSLog(@"NSManagedObjectContext Name: %@ - No changes",[parent name]);
-            }
-            //NSLog(@"---------------------------------------------------------------------------");
-        }];
+            }];
+        }
     }
-    //NSLog(@"--[ NOTIFATION END ]-------------------------------------------------------");
-    //NSLog(@" ");
 }
 
 - (void)mergeChanges:(NSNotification *)notification

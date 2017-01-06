@@ -10,6 +10,7 @@
 #import "NSString+WhiteSpacing.h"
 #import "AccountWebService.h"
 #import "AccountSignInViewController.h"
+#import "TermsAndConditionsViewController.h"
 #import "JVFloatLabeledTextField.h"
 #import "UIUtils.h"
 
@@ -22,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet JVFloatLabeledTextField *passwordConfirmTxtField;
 @property (weak, nonatomic) IBOutlet UIButton *termsBtn;
 @property (weak, nonatomic) IBOutlet UILabel *termsLbl;
+@property (weak, nonatomic) IBOutlet UIButton *termsAndConditionsBtn;
 @property (weak, nonatomic) IBOutlet UIButton *signUpBtn;
 @property (weak, nonatomic) IBOutlet UIButton *signInBtn;
 @property (weak, nonatomic) IBOutlet UIView *textBKView1;
@@ -38,6 +40,12 @@
 @implementation AccountSignUpViewController
 
 # pragma mark Private
+
+- (IBAction)termsAndConditionsButtonTapped:(id)sender
+{
+    [UIUtils hapticFeedback];
+    [[self navigationController] pushViewController:[[TermsAndConditionsViewController alloc] init] animated:YES];
+}
 
 - (IBAction)termsButtonTapped:(id)sender
 {
@@ -165,6 +173,12 @@
     [self themeFloatTextField:[self emailAddressTxtField] withBK:[self textBKView2]];
     [self themeFloatTextField:[self passwordTxtField] withBK:[self textBKView3]];
     [self themeFloatTextField:[self passwordConfirmTxtField] withBK:[self textBKView4]];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[self mainView] setFrame:[[self view] bounds]];
 }
 
 # pragma mark UITextFieldDelegate

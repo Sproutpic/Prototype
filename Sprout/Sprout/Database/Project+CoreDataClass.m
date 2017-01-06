@@ -34,11 +34,7 @@
     UILocalNotification *ln = nil;
     if ([[self remindEnabled] boolValue]) {
         NSCalendarUnit unit = [self calendarUnitForRepeatFrequency];
-        //NSLog(@"--- NOW - %@",[[NSDate date] description]);
-        //NSLog(@"---- REPEAT - %@",[[self repeatNextDate] description]);
         while ([[self repeatNextDate] compare:[NSDate date]]!=NSOrderedDescending) {
-            //NSLog(@"NOW - %@",[[NSDate date] description]);
-            //NSLog(@"REPEAT - %@",[[self repeatNextDate] description]);
             NSDate *nextDate = [self repeatNextDate];
             switch ([[self repeatFrequency] integerValue]) {
                 case RF_Daily: {
@@ -62,9 +58,9 @@
             [self setRepeatNextDate:nextDate];
         }
         NSLog(@"Created Local Notification at - %@",[[self repeatNextDate] description]);
-        ln = [JDMLocalNotification sendAlertNowWithMessage:[NSString stringWithFormat:NSLocalizedString(@"It's time to take a photo for your %@ Sprout",
-                                                                                                        @"It's time to take a photo for your %@ Sprout"),
-                                                            ([self title]) ? [self title] : NSLocalizedString(@"awesome", @"awesome")]
+        ln = [JDMLocalNotification sendAlertNowWithMessage:[NSString stringWithFormat:NSLocalizedString(@"It's time to take a photo for your %@ project",
+                                                                                                        @"It's time to take a photo for your %@ project"),
+                                                            ([self title]) ? [self title] : NSLocalizedString(@"sprout", @"sprout")]
                                                   andSound:JDM_Notification_Sound_Default
                                              andBadgeCount:NO_BADGE_UPDATE
                                                     onDate:[self repeatNextDate]
@@ -84,13 +80,13 @@
     NSDate *date = [NSDate date];
     NSDate *noonDate = [[NSCalendar currentCalendar] dateBySettingHour:12 minute:0 second:0 ofDate:date options:NSCalendarWrapComponents];
     
-    Project *project = [NSEntityDescription insertNewObjectForEntityForName:@"Project"
+    Project *project = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([Project class])
                                                      inManagedObjectContext:managedObjectContext];
     [project setTitle:title];
     [project setSubtitle:subTitle];
     [project setRepeatNextDate:noonDate];
     [project setCreated:date];
-    [project setSlideTime:@(1)];
+    [project setSlideTime:[NSDecimalNumber decimalNumberWithString:@"1"]];
     [project setRepeatFrequency:@(0)];
     return project;
 }
@@ -100,7 +96,7 @@
 {
     Project *project = nil;
     if (uuid && moc) {
-        project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:@"Project"
+        project = (Project*)[[CoreDataAccessKit sharedInstance] findAnObject:NSStringFromClass([Project class])
                                                                 forPredicate:[NSPredicate predicateWithFormat:@"uuid = %@",uuid]
                                                                     withSort:nil
                                                                        inMOC:moc];
@@ -122,8 +118,17 @@
 {
     return [[[self timelines] allObjects] sortedArrayUsingDescriptors:
             @[
-              [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:NO],
               [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:NO],
+              [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:NO],
+              ]];
+}
+
+- (NSArray*)timelinesArraySortedOldestToNewest
+{
+    return [[[self timelines] allObjects] sortedArrayUsingDescriptors:
+            @[
+              [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES],
+              [NSSortDescriptor sortDescriptorWithKey:@"created" ascending:YES],
               ]];
 }
 
@@ -170,6 +175,11 @@
     }
 }
 
+- (BOOL)showProjectBeSynced
+{
+    return (![[self lastModified] isEqual:[self lastSync]]);
+}
+
 # pragma mark NSManagedObject
 
 - (void)awakeFromFetch
@@ -197,7 +207,5 @@
         if (ln) [JDMLocalNotification cancelLocalNotification:ln];
     }
 }
-
-
 
 @end

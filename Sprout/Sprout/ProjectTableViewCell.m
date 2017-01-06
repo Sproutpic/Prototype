@@ -24,6 +24,7 @@
 - (void)setProject:(Project *)project
 {
     _project = project;
+    [self layoutSubviews];
     [[self titleLabel] setText:[project title]];
     [[self descriptionLabel] setText:[project subtitle]];
     [[self collectionView] invalidateIntrinsicContentSize];
@@ -48,14 +49,57 @@
 
 # pragma mark UITableViewCell
 
-- (void)awakeFromNib
+- (void)layoutSubviews
 {
-    [super awakeFromNib];
-    [[self titleLabel] setTextColor:[UIUtils colorNavigationBar]];
-    [[self descriptionLabel] setTextColor:[UIColor grayColor]];
-    [[self collectionView] registerClass:[TimelineCollectionViewCell class]
-              forCellWithReuseIdentifier:@"TimelineCollectionViewCell"];
-    [[self collectionView] setBackgroundColor:[UIColor clearColor]];
+    if (![self titleLabel]) {
+        // Create Title Label
+        UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(8, 8, self.bounds.size.width-11-8, 21)];
+        [lbl setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [lbl setFont:[UIFont systemFontOfSize:18.0]];
+        [lbl setTextColor:[UIUtils colorNavigationBar]];
+        [[self contentView] addSubview:lbl];
+        [self setTitleLabel:lbl];
+        
+        // Create image for Accessor
+        UIImageView *imgV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow-right"]];
+        [imgV setFrame:CGRectMake(self.bounds.size.width-11-8, 8, 11, 21)];
+        [imgV setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];
+        [[self contentView] addSubview:imgV];
+    }
+    
+    if (![self collectionView]) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+        [layout setItemSize:CGSizeMake(120, 120)];
+        [layout setMinimumLineSpacing:10.0];
+        [layout setSectionInset:UIEdgeInsetsMake(1, 1, 1, 1)];
+        [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+        
+        UICollectionView * cv = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 35, self.bounds.size.width, 128)
+                                                   collectionViewLayout:layout];
+        [cv setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [cv setContentInset:UIEdgeInsetsMake(0, 8, 0, 8)];
+        [cv setAlwaysBounceHorizontal:YES];
+        [cv setContentMode:UIViewContentModeLeft];
+        [cv setShowsHorizontalScrollIndicator:NO];
+        
+        [cv registerClass:[TimelineCollectionViewCell class] forCellWithReuseIdentifier:@"TimelineCollectionViewCell"];
+        [cv setBackgroundColor:[UIColor clearColor]];
+        [[self contentView] addSubview:cv];
+        [self setCollectionView:cv];
+    }
+    
+    if (![self descriptionLabel]) {
+        // Create Description Label
+        UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(8, 169, self.bounds.size.width, 44)];
+        [lbl setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [lbl setFont:[UIFont systemFontOfSize:12.0]];
+        [lbl setNumberOfLines:3];
+        [lbl setTextColor:[UIColor grayColor]];
+        [[self contentView] addSubview:lbl];
+        [self setDescriptionLabel:lbl];
+    }
+    
+    // Update some elements
     [[self collectionView] setDelegate:self];
     [[self collectionView] setDataSource:self];
 }
@@ -69,7 +113,6 @@
 {
     [[self titleLabel] setText:nil];
     [[self descriptionLabel] setText:nil];
-    [[self collectionView] setContentOffset:CGPointMake(-8, 0) animated:NO];
 }
 
 # pragma mark UICollectionViewDelegate
@@ -82,7 +125,6 @@
         if ([self projectDelegate]) [[self projectDelegate] showProjectDetails:[self project]];
     }
 }
-
 # pragma mark UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)cv numberOfItemsInSection:(NSInteger)section

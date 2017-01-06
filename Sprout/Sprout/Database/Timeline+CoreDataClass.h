@@ -20,14 +20,26 @@ NS_ASSUME_NONNULL_BEGIN
                                  forProject:(Project*)project
                                     withMOC:(NSManagedObjectContext*)moc;
 
++ (Timeline*)findByUUID:(NSString*)uuid
+                withMOC:(NSManagedObjectContext*)moc;
+
 - (NSString*)saveImage:(UIImage*)img;
 - (NSString*)saveThumbnailImage:(UIImage*)img;
+
+- (void)loadImageRemotely;
+
+- (NSURL*)URLToLocalImage;
+- (NSData*)imageData;
 
 - (UIImage*)image;
 - (UIImage*)imageOrTempImage;
 
 - (UIImage*)imageThumbnail;
 - (UIImage*)imageThumbnailOrTempImage;
+
+- (void)deleteLocalImages;
+
+- (NSNumber*)serverPictureOrder;
 
 @end
 

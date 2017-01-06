@@ -45,6 +45,15 @@
 
 }
 
+- (void)checkNoDataViewStatus
+{
+    if ([[[self fetchedResultsController] fetchedObjects] count]<=0 && [self noDataView]) {
+        [[self tableView] setTableHeaderView:[self noDataView]];
+    } else if ([[self tableView] tableHeaderView]) { // && [[[self noDataView] superview] isEqual:[self tableView]]
+        [[self tableView] setTableHeaderView:nil];
+    }
+}
+
 # pragma mark TableAdapter
 
 - (instancetype)initForTableView:(UITableView*)tableView
@@ -69,12 +78,23 @@
     return self;
 }
 
+- (void)setNoDataView:(UIView *)noDataView
+{
+    _noDataView = noDataView;
+    [self checkNoDataViewStatus];
+}
+
 # pragma mark UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tv
 {
-    if ([self fetchedResultsController]==nil) return 1;
-    return [[[self fetchedResultsController] sections] count];
+    NSInteger sections = 0;
+    if ([self fetchedResultsController]==nil) {
+        sections = 1;
+    } else {
+        sections = [[[self fetchedResultsController] sections] count];
+    }
+    return sections;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -146,6 +166,7 @@
             if (_configureTableCellBlock) {
                 _configureTableCellBlock(tv,indexPath,anObject);
             }
+            //[tv reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
         case NSFetchedResultsChangeMove:
             [tv deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -157,6 +178,8 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [[self tableView] endUpdates];
+    [[self tableView] reloadData];
+    [self checkNoDataViewStatus];
 }
 
 @end

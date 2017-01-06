@@ -35,7 +35,7 @@
 
 - (IBAction)acknowledgementsButtonTapped:(id)sender
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Pods-SproutPic-acknowledgements" ofType:@"plist"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Pods-Sprout-acknowledgements" ofType:@"plist"];
     VTAcknowledgementsViewController *vc = [[VTAcknowledgementsViewController alloc] initWithPath:path];
     [vc setHeaderText:NSLocalizedString(@"We love open source software.", @"We love open source software.")];
     [[self navigationController] pushViewController:vc animated:YES];

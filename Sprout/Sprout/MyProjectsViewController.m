@@ -17,6 +17,7 @@
 #import "UIScrollView+SVPullToRefresh.h"
 #import "ProjectWebService.h"
 #import "SyncQueue.h"
+#import "NoDataView.h"
 
 @interface MyProjectsViewController () <UITableViewDelegate, ProjectTableViewCellDelegate>
 
@@ -49,10 +50,9 @@
 - (ConfigureTableCellBlock)createConfigureTableCellBlock
 {
     return ^(UITableView* tableView, NSIndexPath* indexPath, NSManagedObject* managedObject) {
-        ProjectTableViewCell *cell = (ProjectTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ProjectTableViewCell"];
+        ProjectTableViewCell *cell = (ProjectTableViewCell*)[tableView cellForRowAtIndexPath:indexPath];
         if (!cell) {
-            UIViewController *vc = [[UIViewController alloc] initWithNibName:@"ProjectTableViewCell" bundle:nil];
-            cell = (ProjectTableViewCell*)[vc view];
+            cell = (ProjectTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ProjectTableViewCell"];
         }
         [cell setProject:(Project*)managedObject];
         [cell setProjectDelegate:self];
@@ -69,6 +69,26 @@
     }
 }
 
+- (IBAction)noDataButtonTapped:(id)sender
+{
+    NSManagedObjectContext *moc = [[CoreDataAccessKit sharedInstance] managedObjectContext];
+    Project *project = [Project createNewProject:NSLocalizedString(@"My First Selfie Sprout", @"My First Selfie Sprout")
+                                        subTitle:NSLocalizedString(@"A Selfie Sprout is meant to be taken with the front facing camera. We'll remind you every day to update your selfie sprout.",
+                                                                   @"A Selfie Sprout is meant to be taken with the front facing camera. We'll remind you every day to update your selfie sprout.")
+                        withManagedObjectContext:moc];
+    [project setRepeatNextDate:[NSDate date]];
+    [project setRemindEnabled:@(YES)];
+    [project setFrontCameraEnabled:@(YES)];
+    [project setRepeatFrequency:@(RF_Daily)];
+    [self showCameraForNewSprout:project withCameraCallback:^(Project *project) {
+        if (project && [[project timelines] count]>0) {
+            ProjectDetailViewController *pdvc = [[ProjectDetailViewController alloc] init];
+            [pdvc setProject:project];
+            [[self navigationController] pushViewController:pdvc animated:YES];
+        }
+    }];
+}
+
 # pragma mark UIViewController
 
 - (void)viewDidLoad
@@ -76,15 +96,14 @@
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"My Sprouts", @"My Sprouts")];
     [self createTabBarItem];
+    [[self tableView] registerClass:[ProjectTableViewCell class] forCellReuseIdentifier:@"ProjectTableViewCell"];
     
     // Pull to refresh configuration
     [[self tableView] addPullToRefreshWithActionHandler:^{
-        [[SyncQueue manager] addService:[ProjectWebService getAllProjectsWithCallback:^(NSError *error, SproutWebService *service) {
-            [[[self tableView] pullToRefreshView] stopAnimating];
-        }]];
+        [SyncAllData now:^{ [[[self tableView] pullToRefreshView] stopAnimating]; }];
     }];
     [[[self tableView] pullToRefreshView] setArrowColor:[UIUtils colorNavigationBar]];
-    [[[self tableView] pullToRefreshView] setTextColor:[UIUtils colorNavigationBar]];    
+    [[[self tableView] pullToRefreshView] setTextColor:[UIUtils colorNavigationBar]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -98,7 +117,13 @@
     [super viewDidAppear:animated];
     [[self tableView] setFrame:[[self view] bounds]];
     
-    [OnboardingManager showOnboardingOn:[self navigationController] forceShow:NO];
+    if (![OnboardingManager hasOnboardingBeenShown]) {
+        [OnboardingManager showOnboardingOn:[self navigationController] forceShow:NO];
+    } else if ([[NSUserDefaults standardUserDefaults] boolForKey:PREF_SHOULD_SYNC_BOOL]) {
+        [SyncAllData now:nil];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_SHOULD_SYNC_BOOL];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 }
 
 - (UITabBarItem*)tabBarItem
@@ -121,6 +146,9 @@
                                                   sectionNameKey:nil
                                             managedObjectContext:[[CoreDataAccessKit sharedInstance] managedObjectContext]
                                      withConfigureTableCellBlock:[self createConfigureTableCellBlock]]];
+    NoDataView *ndv = (NoDataView*)[[[UIViewController alloc] initWithNibName:@"MyProjectNoDataVC" bundle:nil] view];
+    [[ndv button] addTarget:self action:@selector(noDataButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [[self tableAdapter] setNoDataView:ndv];
     [self addSproutLogoTableFooter:[self tableView]];
     [[self view] addSubview:[self tableView]];
 }

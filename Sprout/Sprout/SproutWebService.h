@@ -13,14 +13,23 @@
 
 #define DEMO_MODE               NO //YES
 #define SPROUT_URL              @"http://104.155.191.194"
-#define SPROUT_COMMUNITY_URL    [NSString stringWithFormat:@"%@/Community", SPROUT_URL]
+#define SPROUT_COMMUNITY_URL    [NSString stringWithFormat:@"%@/Community?hideMenu=true", SPROUT_URL]
 #define SPROUT_API_URL          [NSString stringWithFormat:@"%@/api/Mobile", SPROUT_URL]
+
+#define DEFAULT_DUMMY_PLACE_HOLDER      @"--"
+
+typedef enum : NSUInteger {
+    ContentTypeFormUrlEncoded, // The default...
+    ContentTypeFormData,
+    ContentTypeRaw,
+    ContentTypeBinary,
+} ContentTypes;
 
 // ---------------------------------------------------------------------------------------------------
 
 @protocol SproutWebServiceAuthDelegate <NSObject>
 
-- (void)authenticationNeeded:(void (^)(void))completion;
+- (void)authenticationNeeded:(void (^)(NSError *error))completion;
 
 @end
 
@@ -42,8 +51,11 @@ typedef void (^ SproutServiceCallBack)(NSError *error, SproutWebService* service
 
 @property (strong, nonatomic) NSString *url;
 @property (strong, nonatomic) NSDictionary *parameters;
+@property (strong, nonatomic) NSDictionary *headers;
+@property (nonatomic) ContentTypes contentType;
 @property (strong, nonatomic) NSString *serviceTag;
 @property (nonatomic) BOOL oauthEnabled;
+@property (nonatomic) BOOL fakeService;
 
 @property (strong, nonatomic) NSManagedObjectContext *moc;
 
